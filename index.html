@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>❤️ 21-11-2016</title>
+    <link rel="icon" href="https://i.pinimg.com/originals/38/e7/3a/38e73ab9ccd7da9649c2857f70e848b4.gif" type="image/gif">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {                                                        /* --- CABECERA --- */
+            color: cadetblue;
+            font-family: "Dancing Script", cursive;
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        h2 {
+            color: yellow;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .introduccion-amor {
+            max-width: 600px;
+            text-align: center;
+            font-style: italic;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+ 
+        .contador-container {                                       /* --- CONTADOR --- */
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid cadetblue;
+            border-radius: 20px;
+            padding: 10px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(95, 158, 160, 0.3);
+            margin-bottom: 50px;
+        }
+
+        .bloque-fecha {
+            font-size: 1.8rem;
+            color: #4da6ff;
+            font-weight: bold;
+        }
+
+        .bloque-tiempo {
+            font-size: 2.8rem;
+            color: #05877d;
+            font-weight: bold;
+            margin-top: 10px;
+            text-shadow: 0 0 15px rgba(0, 255, 242, 0.503);
+        }
+
+        .separador {
+            width: 80%;
+            max-width: 1400px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgb(44, 138, 84), transparent);
+            margin: 20px auto; /* 40px de espacio arriba y abajo */
+            border-radius: 2px;
+        }
+
+        .timeline {                                                  /* --- LÍNEA DE TIEMPO  --- */
+            position: relative;
+            max-width: 1300px;
+            margin: 25px auto;
+            padding: 60px 0;
+        }
+        
+        .timeline::after {                                          /* La línea central */
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: white;
+            top: 0;
+            bottom: 0;
+            left: 50%; 
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%; 
+            box-sizing: border-box;
+        }
+
+        .timeline-item:nth-child(even) {                            /* Lado derecho (Pares como 2016) */
+            left: 50%;
+
+            padding-left: 60px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+            padding-right: 60px;
+        }
+        
+        .year-circle {                                              /* --- ESFERA DEL AÑO (ANCLADA A LA LÍNEA) --- */
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: cadetblue;
+            border: 5px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 10;
+            top: 150px; 
+        }
+
+        .timeline-item:nth-child(even) .year-circle {
+           left: 50%; /* Centrado exacto sobre la línea de 4px */
+           padding-left: 100px;
+        }
+
+        .timeline-item:nth-child(odd) .year-circle {
+            right: -30px;
+        }
+        
+        .content {                                                       /* --- CUADRO DE CONTENIDO --- */
+            padding: 25px; 
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid cadetblue;
+            border-radius: 20px;
+            position: relative;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            max-width: 400px; 
+            width: 150%;
+            transform: translate(-150px, 0px);
+            
+        }
+
+        .content:hover {
+            transform: scale(1.03);
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: cadetblue;
+            box-shadow: 0 0 20px rgba(95, 158, 160, 0.5);
+            transform: translate(-150px) scale(1.05);
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            max-width: 350px;
+            transition: 0.8s;
+        }
+
+        .content:hover img {
+            transform: rotateY(10deg);
+        }
+
+        .mensaje-secreto {                                             /* --- MENSAJE SECRETO --- */
+            position: absolute;
+            top: 150px; 
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border: 1px dashed cadetblue;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #ffcccc;
+            opacity: 0;
+            transition: 0.4s;
+            pointer-events: none;
+            z-index: 100; 
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) .mensaje-secreto {              /* Aparece a la derecha del cuadro */
+            left: 50%; 
+            margin-left: 0px;
+        }
+
+        .timeline-item:nth-child(odd) .mensaje-secreto {               /* Aparece a la izquierda del cuadro */
+            right: 110%; 
+        }
+
+        .mensaje-secreto.visible {
+            opacity: 1;
+            transform: translatex(500px);
+            pointer-events: auto;
+        }
+        
+        .player-floating {                                                     /* Contenedor Principal */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 270px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid cadetblue;
+            border-radius: 15px;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(95, 158, 160, 0.5);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .player-header {                                                      /* Cabecera del reproductor */
+            background: cadetblue;
+            padding: 5px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #btn-minimizar {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        #player-icon {                                                      /* Icono cuando está minimizado */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: cadetblue;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 0 15px cadetblue;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+
+.btn-musica {
+    background: transparent;
+    color: white;
+    border: 2px solid cadetblue;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(95, 158, 160, 0.3);
+}
+
+.btn-musica:hover {
+    background: cadetblue;
+    box-shadow: 0 0 20px cadetblue;
+    transform: scale(1.05);
+}
+
+    
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .timeline::after { left: 20px; }
+            .timeline-item { width: 100%; left: 0 !important; padding-left: 50px !important; padding-right: 0 !important; align-items: flex-start !important; text-align: left !important;}
+            .year-circle { left: -10px !important; width: 50px; height: 50px; font-size: 1rem; }
+            .mensaje-secreto { position: relative; width: 90%; left: 0 !important; right: 0 !important; top: 0; margin-top: 10px;}
+            h1 { font-size: 2.5rem; }
+            .bloque-tiempo { font-size: 2rem; }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>Feliz Aniversario Amore</h1>
+    <h2>Ya 10 años juntos, ¡cómo pasa el tiempo!</h2>
+
+    <p class="introduccion-amor">
+        "Aquí empieza el viaje de nuestros primeros 10 años. Cada foto es un recuerdo de risas, aventuras y de todo lo que hemos construido juntos. Te amo por siempre."
+    </p>
+
+    <div class="contador-container">
+        <h3 style="margin-top:0">Llevamos juntos:</h3>
+        <div id="reloj">Cargando nuestro tiempo...</div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="timeline">
+        <div class="timeline-item" id="year-2016">
+            <div class="year-circle">2016</div>
+            <div class="content" onclick="revelarMensaje('msg-2016')">
+                <h3 style="color:cadetblue; margin-top:0">El Comienzo</h3>
+                <div class="image-wrapper">
+                    <img src="img/ejemp.jpeg" alt="Nuestra primera foto">
+                </div>
+                <p>21 de Noviembre: El día que todo cambió.</p>
+                <p style="font-size: 0.8rem; color: cadetblue; margin:0">(Toca para una sorpresa...)</p>
+                
+                <div id="msg-2016" class="mensaje-secreto">
+                    <p>Recuerdo que ese día estaba muy nervioso, pero tu sonrisa me dio toda la paz del mundo. ❤️</p>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+<div id="player-content" style="text-align: center; padding: 15px;">
+    <p style="font-size: 0.85rem; color: cadetblue; margin-bottom: 15px; font-style: italic;">
+        "Nuestra música favorita para este viaje..."
+    </p>
+    <button onclick="abrirVideo()" class="btn-musica">
+        🎵 Abrir Reproductor Mágico
+    </button>
+</div>
+   
+
+    
+    </div>
+
+
+    <script>
+        // Título dinámico
+        let toggle = true;
+        setInterval(() => {
+            document.title = toggle ? "❤️ 21-11-2016" : "🖤 21-11-2016";
+            toggle = !toggle;
+        }, 1000);
+
+        function revelarMensaje(id) {
+            const mensaje = document.getElementById(id);
+            if (mensaje) { mensaje.classList.toggle('visible'); }
+        }
+
+        const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
+
+        function actualizarContador() {
+            const ahora = new Date();
+            let años = ahora.getFullYear() - fechaInicio.getFullYear();
+            let meses = ahora.getMonth() - fechaInicio.getMonth();
+            let dias = ahora.getDate() - fechaInicio.getDate();
+
+            if (dias < 0) {
+                meses--;
+                const ultimoDiaMesAnterior = new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
+                dias += ultimoDiaMesAnterior;
+            }
+            if (meses < 0) {
+                años--;
+                meses += 12;
+            }
+
+            const horas = ahora.getHours();
+            const minutos = ahora.getMinutes();
+            const segundos = ahora.getSeconds();
+
+            document.getElementById('reloj').innerHTML = `
+                <div class="bloque-fecha">${años} años, ${meses} meses, ${dias} días</div>
+                <div class="bloque-tiempo">${horas}h : ${minutos}m : ${segundos}s</div>
+            `;
+        }
+
+        setInterval(actualizarContador, 1000);
+        actualizarContador();
+
+        function abrirVideo() {
+
+            const url = 'https://www.youtube.com/watch?v=zpWVMosq1oM&list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2';
+            window.open(url, 'reproductor', 'width=400,height=300,top=100,left=100,menubar=no,toolbar=no,location=no,status=no');
+        }
+
+    </script>
+
+    
+
+
+</body>
+
+</html>
+
+<!-- 
+PUNTOS A TOMAR
+1.- TRANSICIONES CON MENSAJES OCULTOS AL HACER CLICKS
+2.- En algunas imagenes que al hace click o pasar el mouse tenga mensajitos
+3.- Reproductor de nusica
+
+
+-->
