@@ -34,7 +34,7 @@
             margin-bottom: 30px;
         }
  
-        .contador-container {                                     
+        .contador-container {                                      
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid cadetblue;
             border-radius: 20px;
@@ -69,6 +69,7 @@
             border-radius: 2px;
         }
 
+        /* --- REPRODUCTOR --- */
         #contenedor-reproductor {
             position: fixed;
             bottom: 25px;
@@ -88,14 +89,19 @@
             font-size: 25px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
+            transition: all 0.3s ease; /* Transición suave */
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        #boton-musica:hover { transform: scale(1.1); }
-        
+        /* Clase para que el botón desaparezca */
+        .boton-oculto {
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+        }
+
         #reproductor-mini {
             position: relative;
             margin-bottom: 15px;
@@ -140,16 +146,22 @@
             margin-bottom: 0 !important;
         }
         
+        /* AJUSTE PARA TELÉFONO */
         @media (max-width: 600px) {
             #reproductor-mini { width: 250px; height: 150px; }
             h1 { font-size: 2.2rem; }
             h2 { font-size: 1.6rem; }
             .bloque-tiempo { font-size: 1.8rem; }
+            
+            #boton-musica {
+                width: 45px; /* Icono más pequeño en móvil */
+                height: 45px;
+                font-size: 18px;
+            }
         }
     </style>
 
     <script>
-        // Título dinámico
         let toggle = true;
         setInterval(() => {
             document.title = toggle ? "❤️ 21-11-2016" : "🖤 21-11-2016";
@@ -187,17 +199,17 @@
             }
         }
 
-        // FUNCIÓN CORREGIDA: Ahora el botón realmente abrirá el reproductor
+        // FUNCIÓN MEJORADA: Oculta el botón al abrir el reproductor
         function toggleReproductor() {
             const reproductor = document.getElementById('reproductor-mini');
             const botonMusica = document.getElementById('boton-musica');
             
             if (reproductor.classList.contains('oculto')) {
                 reproductor.classList.remove('oculto');
-                botonMusica.innerHTML = "❌";
+                botonMusica.classList.add('boton-oculto'); // Desaparece el botón
             } else {
                 reproductor.classList.add('oculto');
-                botonMusica.innerHTML = "🎵";
+                botonMusica.classList.remove('boton-oculto'); // Reaparece el botón
             }
         }
 
@@ -241,7 +253,6 @@
 
 </body>
 </html>
-
 
 
 
