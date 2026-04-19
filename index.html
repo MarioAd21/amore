@@ -69,10 +69,10 @@
             border-radius: 2px;
         }
 
-        /* --- REPRODUCTOR --- */
+        /* --- REPRODUCTOR ABAJO A LA DERECHA --- */
         #contenedor-reproductor {
             position: fixed;
-            top: 25px;       /* Cambiamos 'bottom' por 'top' */
+            bottom: 25px;
             right: 20px;
             z-index: 1000;
             display: flex;
@@ -89,13 +89,12 @@
             font-size: 25px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.3s ease; /* Transición suave */
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        /* Clase para que el botón desaparezca */
         .boton-oculto {
             opacity: 0;
             transform: scale(0);
@@ -146,7 +145,6 @@
             margin-bottom: 0 !important;
         }
         
-        /* AJUSTE PARA TELÉFONO */
         @media (max-width: 600px) {
             #reproductor-mini { width: 250px; height: 150px; }
             h1 { font-size: 2.2rem; }
@@ -154,7 +152,7 @@
             .bloque-tiempo { font-size: 1.8rem; }
             
             #boton-musica {
-                width: 45px; /* Icono más pequeño en móvil */
+                width: 45px; 
                 height: 45px;
                 font-size: 18px;
             }
@@ -199,17 +197,16 @@
             }
         }
 
-        // FUNCIÓN MEJORADA: Oculta el botón al abrir el reproductor
         function toggleReproductor() {
             const reproductor = document.getElementById('reproductor-mini');
             const botonMusica = document.getElementById('boton-musica');
             
             if (reproductor.classList.contains('oculto')) {
                 reproductor.classList.remove('oculto');
-                botonMusica.classList.add('boton-oculto'); // Desaparece el botón
+                botonMusica.classList.add('boton-oculto');
             } else {
                 reproductor.classList.add('oculto');
-                botonMusica.classList.remove('boton-oculto'); // Reaparece el botón
+                botonMusica.classList.remove('boton-oculto');
             }
         }
 
@@ -235,11 +232,7 @@
     <div class="separador"></div>
 
     <div id="contenedor-reproductor">
-        <button id="boton-musica" onclick="toggleReproductor()">
-            🎵
-        </button>
-    
-        <div id="reproductor-mini" class="oculto" style="margin-top: 15px; margin-bottom: 0;">
+        <div id="reproductor-mini" class="oculto">
             <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
             <iframe 
                 id="video-youtube"
@@ -249,11 +242,14 @@
                 allowfullscreen>
             </iframe>
         </div>
+
+        <button id="boton-musica" onclick="toggleReproductor()">
+            🎵
+        </button>
     </div>
 
 </body>
 </html>
-
 
 
 <!-- 
