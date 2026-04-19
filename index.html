@@ -26,7 +26,6 @@
         h1 {color: cadetblue; font-family: "Dancing Script", cursive; font-size: 3.5rem; margin-bottom: 5px; text-align: center;}
         h2 {color: yellow; font-family: 'Dancing Script', cursive; font-size: 2.2rem; margin-top: 0; text-align: center;}
     
-        /* --- PRESENTACION --- */
         .introduccion-amor {
             max-width: 600px;
             text-align: center;
@@ -35,8 +34,7 @@
             margin-bottom: 30px;
         }
  
-        /* --- CONTADOR --- */
-        .contador-container {                                      
+        .contador-container {                                     
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid cadetblue;
             border-radius: 20px;
@@ -48,14 +46,12 @@
             margin-bottom: 40px;
         }
 
-        /* --- FECHA --- */
         .bloque-fecha { 
             font-size: 1.4rem;
             color: #4da6ff;
             font-weight: bold;
         }
 
-        /* --- TIEMPO --- */
         .bloque-tiempo {
             font-size: 2rem;
             color: #05877d;
@@ -64,7 +60,6 @@
             text-shadow: 0 0 10px rgba(0, 255, 242, 0.503);
         }
 
-        /* LINEA QUE SEPARA EL TEXTO DE LA LINEA DE TIEMPO */
         .separador {
             width: 80%;
             max-width: 1400px;
@@ -74,173 +69,141 @@
             border-radius: 2px;
         }
 
-        /* --- LÍNEA DE TIEMPO  --- */
-      
-        
-
-                /* Contenedor principal en la esquina inferior derecha */
         #contenedor-reproductor {
             position: fixed;
-    bottom: 25px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+            bottom: 25px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
         
-        /* El círculo con la nota musical */
         #boton-musica {
             width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: cadetblue;
-    border: 3px solid white;
-    font-size: 25px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    transition: transform 0.3s;
+            height: 60px;
+            border-radius: 50%;
+            background-color: cadetblue;
+            border: 3px solid white;
+            font-size: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        #boton-musica:hover {
-            transform: scale(1.1);
-        }
+        #boton-musica:hover { transform: scale(1.1); }
         
-        /* El reproductor de YouTube */
         #reproductor-mini {
             position: relative;
-    margin-bottom: 15px;
-    width: 320px;
-    height: 180px;
-    border-radius: 20px; /* Bordes redondeados como en tu imagen */
-    overflow: visible;
-    border: 3px solid cadetblue;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    background: black;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 15px;
+            width: 320px;
+            height: 180px;
+            border-radius: 20px;
+            overflow: visible;
+            border: 3px solid cadetblue;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            background: black;
+            transition: all 0.4s ease;
         }
 
-/* Ajuste del video para que ocupe todo el espacio */
-#reproductor-mini iframe {
-    width: 100%;
-    height: 100%;
-    border-radius: 15px; /* Un poco menos que el padre para que encaje */
-}        
+        #reproductor-mini iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }        
 
         #btn-cerrar-repro {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    background: cadetblue;
-    color: white;
-    border: 3px solid white;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 14px;
-    z-index: 1001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: cadetblue;
+            color: white;
+            border: 3px solid white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         
-        /* Clase para ocultar/mostrar con suavidad */
         .oculto {
             opacity: 0;
-    transform: scale(0) translateY(100px);
-    pointer-events: none;
-    height: 0 !important;
-    margin-bottom: 0 !important;
+            transform: scale(0) translateY(100px);
+            pointer-events: none;
+            height: 0 !important;
+            margin-bottom: 0 !important;
         }
         
-        /* Ajuste para móvil: más pequeño */
         @media (max-width: 600px) {
-            #reproductor-mini {
-                width: 250px;
-                height: 150px;
-            }
+            #reproductor-mini { width: 250px; height: 150px; }
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.6rem; }
+            .bloque-tiempo { font-size: 1.8rem; }
         }
-
-
-         @media (max-width: 600px) {
-            h1 { 
-                font-size: 2.2rem; /* Título un poco más pequeño en móvil */
-            }
-            
-            h2 {
-                font-size: 1.6rem;
-            }
-    
-            .contador-container {
-                width: 95%; /* Que ocupe casi todo el ancho */
-                padding: 15px 5px;
-            }
-    
-            .bloque-fecha {
-                font-size: 1.3rem; /* Tamaño legible pero compacto */
-            }
-    
-            .bloque-tiempo {
-                font-size: 1.8rem; /* Evita que los números se amontonen */
-                margin-top: 5px;
-                letter-spacing: -1px; /* Junta un poco los números para ganar espacio */
-            }
-        }
-
-        
-
     </style>
 
- <script>
-    // Título dinámico
-    let toggle = true;
-    setInterval(() => {
-        document.title = toggle ? "❤️ 21-11-2016" : "🖤 21-11-2016";
-        toggle = !toggle;
-    }, 1000);
+    <script>
+        // Título dinámico
+        let toggle = true;
+        setInterval(() => {
+            document.title = toggle ? "❤️ 21-11-2016" : "🖤 21-11-2016";
+            toggle = !toggle;
+        }, 1000);
 
-    // Configuración de la fecha de inicio
-    const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
+        const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
 
-    function actualizarContador() {
-        const ahora = new Date();
-        let años = ahora.getFullYear() - fechaInicio.getFullYear();
-        let meses = ahora.getMonth() - fechaInicio.getMonth();
-        let dias = ahora.getDate() - fechaInicio.getDate();
+        function actualizarContador() {
+            const ahora = new Date();
+            let años = ahora.getFullYear() - fechaInicio.getFullYear();
+            let meses = ahora.getMonth() - fechaInicio.getMonth();
+            let dias = ahora.getDate() - fechaInicio.getDate();
 
-        if (dias < 0) {
-            meses--;
-            const ultimoDiaMesAnterior = new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
-            dias += ultimoDiaMesAnterior;
+            if (dias < 0) {
+                meses--;
+                const ultimoDiaMesAnterior = new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
+                dias += ultimoDiaMesAnterior;
+            }
+            if (meses < 0) {
+                años--;
+                meses += 12;
+            }
+
+            const horas = ahora.getHours().toString().padStart(2, '0');
+            const minutos = ahora.getMinutes().toString().padStart(2, '0');
+            const segundos = ahora.getSeconds().toString().padStart(2, '0');
+
+            const reloj = document.getElementById('reloj');
+            if (reloj) {
+                reloj.innerHTML = `
+                    <div class="bloque-fecha">${años} años, ${meses} meses, ${dias} días</div>
+                    <div class="bloque-tiempo">${horas}h : ${minutos}m : ${segundos}s</div>
+                `;
+            }
         }
-        if (meses < 0) {
-            años--;
-            meses += 12;
+
+        // FUNCIÓN CORREGIDA: Ahora el botón realmente abrirá el reproductor
+        function toggleReproductor() {
+            const reproductor = document.getElementById('reproductor-mini');
+            const botonMusica = document.getElementById('boton-musica');
+            
+            if (reproductor.classList.contains('oculto')) {
+                reproductor.classList.remove('oculto');
+                botonMusica.innerHTML = "❌";
+            } else {
+                reproductor.classList.add('oculto');
+                botonMusica.innerHTML = "🎵";
+            }
         }
 
-        const horas = ahora.getHours();
-        const minutos = ahora.getMinutes();
-        const segundos = ahora.getSeconds();
-
-        const reloj = document.getElementById('reloj');
-        if (reloj) {
-            reloj.innerHTML = `
-                <div class="bloque-fecha">${años} años, ${meses} meses, ${dias} días</div>
-                <div class="bloque-tiempo">${horas}h : ${minutos}m : ${segundos}s</div>
-            `;
-        }
-    }
-
-
-
-    // Iniciar funciones al cargar
-    setInterval(actualizarContador, 1000);
-    window.onload = actualizarContador;
-</script>
-
-
+        setInterval(actualizarContador, 1000);
+        window.onload = actualizarContador;
+    </script>
 </head>
 
 <body>
@@ -259,32 +222,28 @@
 
     <div class="separador"></div>
 
+    <div id="contenedor-reproductor">
+        <div id="reproductor-mini" class="oculto">
+            <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
+            <iframe 
+                id="video-youtube"
+                src="https://www.youtube.com/embed/zpWVMosq1oM?list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
+        </div>
 
-    
-   <div id="contenedor-reproductor">
-    <div id="reproductor-mini" class="oculto">
-        <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
-        <iframe 
-            id="video-youtube"
-            src="https://www.youtube.com/watch?v=zpWVMosq1oM&list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" 
-            frameborder="0" 
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
-        </iframe>
+        <button id="boton-musica" onclick="toggleReproductor()">
+            🎵
+        </button>
     </div>
 
-    <button id="boton-musica" onclick="toggleReproductor()">
-        🎵
-    </button>
-</div>
-
-   
-    
-
-
 </body>
-
 </html>
+
+
+
 
 <!-- 
 PUNTOS A TOMAR
