@@ -233,22 +233,7 @@
         }
     }
 
-    // Función del Reproductor Corregida
-    function toggleReproductor() {
-        const reproductor = document.getElementById('reproductor-mini');
-        const boton = document.getElementById('boton-musica');
-        
-        if (reproductor && boton) {
-            reproductor.classList.toggle('oculto');
-            
-            // Cambiar el icono del botón según si está oculto o no
-            if (reproductor.classList.contains('oculto')) {
-                boton.innerHTML = "🎵";
-            } else {
-                boton.innerHTML = "❌";
-            }
-        }
-    }
+
 
     // Iniciar funciones al cargar
     setInterval(actualizarContador, 1000);
