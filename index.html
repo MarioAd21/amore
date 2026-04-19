@@ -145,6 +145,87 @@
             margin-bottom: 0 !important;
         }
         
+        .carrusel-container {
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .carrusel-track {
+            display: flex;
+            width: max-content;
+            animation: scroll 60s linear infinite; /* Velocidad del carrusel */
+        }
+
+        .carrusel-track:hover {
+            animation-play-state: paused; /* Se pausa al poner el mouse encima */
+        }
+
+        .carrusel-foto {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin: 0 10px;
+            border-radius: 10px;
+            border: 2px solid cadetblue;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .carrusel-foto:hover { transform: scale(1.1); }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Modal / Ventana del mensaje */
+        #modal-foto {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            transition: 0.5s;
+        }
+
+        .modal-oculto { opacity: 0; pointer-events: none; }
+
+        .modal-contenido {
+            max-width: 90%;
+            max-height: 80%;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-contenido img {
+            max-width: 100%;
+            max-height: 60vh;
+            border: 5px solid white;
+            border-radius: 10px;
+        }
+
+        #marco-mensaje {
+            background: white;
+            color: black;
+            padding: 15px;
+            margin-top: -5px; /* Para que pegue con la foto */
+            border-radius: 0 0 10px 10px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+        }
+
+        .cerrar-modal {
+            position: absolute;
+            top: -40px; right: 0;
+            color: white; font-size: 40px; cursor: pointer;
+        }
+
         @media (max-width: 600px) {
             #reproductor-mini { width: 250px; height: 150px; }
             h1 { font-size: 2.2rem; }
@@ -212,6 +293,48 @@
 
         setInterval(actualizarContador, 1000);
         window.onload = actualizarContador;
+
+        //  FOTOS
+        // CONFIGURACIÓN DE TUS RECUERDOS
+const fotos = [
+    { url: 'foto1.jpg', msj: 'El día que nos conocimos... ❤️' },
+    { url: 'foto2.jpg', msj: 'Nuestra primera salida juntos.' },
+    { url: 'foto3.jpg', msj: 'Te veías hermosa esa tarde.' },
+    // Puedes agregar las 100 fotos siguiendo este formato
+];
+
+function cargarCarrusel() {
+    const track = document.getElementById('carrusel-track');
+    
+    // Duplicamos las fotos para que el efecto infinito no se corte
+    const listaCompleta = [...fotos, ...fotos]; 
+
+    listaCompleta.forEach((item) => {
+        const img = document.createElement('img');
+        img.src = item.url;
+        img.className = 'carrusel-foto';
+        img.onclick = () => abrirFoto(item.url, item.msj);
+        track.appendChild(img);
+    });
+}
+
+function abrirFoto(url, mensaje) {
+    document.getElementById('img-modal').src = url;
+    document.getElementById('texto-mensaje').innerText = mensaje;
+    document.getElementById('modal-foto').classList.remove('modal-oculto');
+    // Pausamos el carrusel de fondo
+    document.getElementById('carrusel-track').style.animationPlayState = 'paused';
+}
+
+function cerrarFoto() {
+    document.getElementById('modal-foto').classList.add('modal-oculto');
+    // Reanudamos el carrusel
+    document.getElementById('carrusel-track').style.animationPlayState = 'running';
+}
+
+// Llama a cargarCarrusel cuando cargue la página
+window.addEventListener('load', cargarCarrusel);
+                
     </script>
 </head>
 
@@ -231,15 +354,33 @@
 
     <div class="separador"></div>
 
-    <div id="contenedor-reproductor">
+            <h2 style="margin-top: 40px;">El Carrusel del Recuerdo</h2>
+
+        <div class="carrusel-container">
+            <div class="carrusel-track" id="carrusel-track">
+                </div>
+        </div>
+
+        <div id="modal-foto" class="modal-oculto">
+            <div class="modal-contenido">
+                <span class="cerrar-modal" onclick="cerrarFoto()">&times;</span>
+                <img id="img-modal" src="" alt="Recuerdo">
+                <div id="marco-mensaje">
+                    <p id="texto-mensaje"></p>
+                </div>
+            </div>
+        </div>
+
+    <div class="separador"></div>
+    
+        <div id="contenedor-reproductor">
         <div id="reproductor-mini" class="oculto">
             <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
-            
             <iframe 
                 id="video-youtube"
-                src="https://www.youtube.com/embed/videoseries?list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2&enablejsapi=1" 
+                src="https://www.youtube.com/embed/zpWVMosq1oM?list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" 
                 frameborder="0" 
-                allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allow="autoplay; encrypted-media"
                 allowfullscreen>
             </iframe>
         </div>
@@ -247,19 +388,21 @@
         <button id="boton-musica" onclick="toggleReproductor()">
             🎵
         </button>
-    </div>
-
+        </div>
+        
 </body>
 </html>
-
 
 <!-- 
 PUNTOS A TOMAR
 1.- TRANSICIONES CON MENSAJES OCULTOS AL HACER CLICKS
 2.- En algunas imagenes que al hace click o pasar el mouse tenga mensajitos
-3.- Reproductor de nusica
+
 4.- cuestionario donde deba respondera 10 preguntas de cada año y que cada respuesta correcta rellene una barra y al final de esa barra de un premio o algo - la fallar sale un capoo triste en cada pregunta
 5.- que cada año haga una funcion diferente no se que el 2016 tenga un custionario - 2017 un karaoke - 2018...... y asi sucesibamente
 6.- Linea de tiempo con cada año
 
 -->
+
+
+
