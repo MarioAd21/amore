@@ -193,66 +193,67 @@
 
     </style>
 
-    <script>
-        // Título dinámico
-        let toggle = true;
-        setInterval(() => {
-            document.title = toggle ? "❤️ 21-11-2016" : "🖤 21-11-2016";
-            toggle = !toggle;
-        }, 1000);
+ <script>
+    // Título dinámico
+    let toggle = true;
+    setInterval(() => {
+        document.title = toggle ? "❤️ 21-11-2016" : "🖤 21-11-2016";
+        toggle = !toggle;
+    }, 1000);
 
-        function revelarMensaje(id) {
-            const mensaje = document.getElementById(id);
-            if (mensaje) { mensaje.classList.toggle('visible'); }
+    // Configuración de la fecha de inicio
+    const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
+
+    function actualizarContador() {
+        const ahora = new Date();
+        let años = ahora.getFullYear() - fechaInicio.getFullYear();
+        let meses = ahora.getMonth() - fechaInicio.getMonth();
+        let dias = ahora.getDate() - fechaInicio.getDate();
+
+        if (dias < 0) {
+            meses--;
+            const ultimoDiaMesAnterior = new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
+            dias += ultimoDiaMesAnterior;
+        }
+        if (meses < 0) {
+            años--;
+            meses += 12;
         }
 
-        const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
+        const horas = ahora.getHours();
+        const minutos = ahora.getMinutes();
+        const segundos = ahora.getSeconds();
 
-        function actualizarContador() {
-            const ahora = new Date();
-            let años = ahora.getFullYear() - fechaInicio.getFullYear();
-            let meses = ahora.getMonth() - fechaInicio.getMonth();
-            let dias = ahora.getDate() - fechaInicio.getDate();
-
-            if (dias < 0) {
-                meses--;
-                const ultimoDiaMesAnterior = new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
-                dias += ultimoDiaMesAnterior;
-            }
-            if (meses < 0) {
-                años--;
-                meses += 12;
-            }
-
-            const horas = ahora.getHours();
-            const minutos = ahora.getMinutes();
-            const segundos = ahora.getSeconds();
-
-            document.getElementById('reloj').innerHTML = `
+        const reloj = document.getElementById('reloj');
+        if (reloj) {
+            reloj.innerHTML = `
                 <div class="bloque-fecha">${años} años, ${meses} meses, ${dias} días</div>
                 <div class="bloque-tiempo">${horas}h : ${minutos}m : ${segundos}s</div>
             `;
         }
+    }
 
-        setInterval(actualizarContador, 1000);
-        actualizarContador();
+    // Función del Reproductor Corregida
+    function toggleReproductor() {
+        const reproductor = document.getElementById('reproductor-mini');
+        const boton = document.getElementById('boton-musica');
         
-       function toggleReproductor() {
-    const reproductor = document.getElementById('reproductor-mini');
-    reproductor.classList.toggle('oculto');
-}
+        if (reproductor && boton) {
+            reproductor.classList.toggle('oculto');
             
-            // Cambiar el icono del botón según el estado
-            const boton = document.getElementById('boton-musica');
+            // Cambiar el icono del botón según si está oculto o no
             if (reproductor.classList.contains('oculto')) {
                 boton.innerHTML = "🎵";
             } else {
                 boton.innerHTML = "❌";
             }
         }
-        
-        
-    </script>
+    }
+
+    // Iniciar funciones al cargar
+    setInterval(actualizarContador, 1000);
+    window.onload = actualizarContador;
+</script>
 
 
 </head>
@@ -291,7 +292,6 @@
         🎵
     </button>
 </div>
-
 
    
     
