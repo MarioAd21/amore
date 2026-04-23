@@ -1,4 +1,6 @@
 /* script.js */
+
+// --- 1. CONFIGURACIÓN Y VARIABLES GLOBALES ---
 const misRecuerdos = [
     { url: 'foto1.jpg', msj: 'El día que nos conocimos... ❤️' },
     { url: 'foto2.jpg', msj: 'Nuestra primera salida juntos.' },
@@ -13,64 +15,75 @@ const total = misRecuerdos.length;
 const contenedor = document.getElementById('contenedor');
 let touchStartX = 0;
 let puedeGirar = true;
+let carruselPausado = false; // Control para detener el giro automático al ver una foto
 const cooldown = 400;     
 const sensibilidad = 80;  
 
-// TITULO DINÁMICO
+// Fecha de inicio corregida a 2016
+const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
+
+// --- 2. FUNCIONES DE TIEMPO Y TÍTULO ---
+
 setInterval(() => {
     document.title = (new Date().getSeconds() % 2 === 0) ? "❤️ 21-11-2016" : "🖤 21-11-2016";
 }, 1000);
 
-// CONTADOR
-const fechaInicio = new Date(2016, 10, 21, 0, 0, 0); 
 function actualizarContador() {
     const ahora = new Date();
     let años = ahora.getFullYear() - fechaInicio.getFullYear();
     let meses = ahora.getMonth() - fechaInicio.getMonth();
     let dias = ahora.getDate() - fechaInicio.getDate();
-    if (dias < 0) { meses--; dias += new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate(); }
-    if (meses < 0) { años--; meses += 12; }
+    
+    if (dias < 0) { 
+        meses--; 
+        dias += new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate(); 
+    }
+    if (meses < 0) { 
+        años--; 
+        meses += 12; 
+    }
+    
     const h = ahora.getHours().toString().padStart(2, '0');
     const m = ahora.getMinutes().toString().padStart(2, '0');
     const s = ahora.getSeconds().toString().padStart(2, '0');
+    
     document.getElementById('reloj').innerHTML = `
         <div class="bloque-fecha">${años} años, ${meses} meses, ${dias} días</div>
         <div class="bloque-tiempo">${h}h : ${m}m : ${s}s</div>`;
 }
 
+// --- 3. INICIALIZACIÓN Y EVENTOS ---
+
 function inicializar() {
+    // Crear las cartas
     misRecuerdos.forEach((r, i) => {
         const img = document.createElement('img');
         img.src = r.url;
         img.className = 'foto-card oculta';
         img.id = 'img-' + i;
-        img.onclick = () => { if(img.classList.contains('pos-centro')) abrirFoto(r.url, r.msj); };
+        img.onclick = () => { 
+            if(img.classList.contains('pos-centro')) abrirFoto(r.url, r.msj); 
+        };
         contenedor.appendChild(img);
     });
+    
     actualizarAbanico();
 
-    // SCROLL DEL MOUSE
+    // Evento de rueda del ratón (Scroll Independiente)
     contenedor.addEventListener('wheel', (e) => {
-    // Evita que la página suba o baje mientras el mouse está sobre el carrusel
-    e.preventDefault(); 
-    
-    if (!puedeGirar) return;
-
-    // Sensibilidad: solo girar si el movimiento es claro
-    if (Math.abs(e.deltaY) > 5) { 
-        puedeGirar = false;
+        e.preventDefault(); // Bloquea el movimiento de la página
         
-        // Invertimos la lógica para que se sienta más natural con el scroll
-        indiceActual = (indiceActual + (e.deltaY > 0 ? 1 : -1) + total) % total;
-        actualizarAbanico();
+        if (!puedeGirar) return;
 
-        setTimeout(() => {
-            puedeGirar = true;
-        }, cooldown);
-    }
+        if (Math.abs(e.deltaY) > 5) { 
+            puedeGirar = false;
+            indiceActual = (indiceActual + (e.deltaY > 0 ? 1 : -1) + total) % total;
+            actualizarAbanico();
+            setTimeout(() => { puedeGirar = true; }, cooldown);
+        }
     }, { passive: false });
 
-    // TÁCTIL
+    // Eventos Táctiles
     contenedor.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
     contenedor.addEventListener('touchmove', (e) => {
         if (!puedeGirar) return;
@@ -83,13 +96,23 @@ function inicializar() {
         }
     });
 
-    setInterval(() => { if(puedeGirar) { indiceActual = (indiceActual + 1) % total; actualizarAbanico(); } }, 5000);
+    // Giro automático (solo si no está pausado por el modal)
+    setInterval(() => { 
+        if(puedeGirar && !carruselPausado) { 
+            indiceActual = (indiceActual + 1) % total; 
+            actualizarAbanico(); 
+        } 
+    }, 5000);
 }
+
+// --- 4. LÓGICA DEL CARRUSEL (ABANICO) ---
 
 function actualizarAbanico() {
     const cards = document.querySelectorAll('.foto-card');
     cards.forEach(f => { f.className = 'foto-card oculta'; f.style.zIndex = "0"; });
+    
     const getIdx = (off) => (indiceActual + off + total) % total;
+    
     const mapa = [
         { idx: getIdx(0), clase: 'pos-centro', z: 50 },
         { idx: getIdx(1), clase: 'pos-d1', z: 40 },
@@ -99,41 +122,46 @@ function actualizarAbanico() {
         { idx: getIdx(-2), clase: 'pos-i2', z: 30 },
         { idx: getIdx(-3), clase: 'pos-i3', z: 20 }
     ];
+    
     mapa.forEach(item => {
         const el = document.getElementById('img-' + item.idx);
-        if (el) { el.className = 'foto-card ' + item.clase; el.style.zIndex = item.z; }
+        if (el) { 
+            el.className = 'foto-card ' + item.clase; 
+            el.style.zIndex = item.z; 
+        }
     });
 }
 
-let carruselPausado = false;
+// --- 5. MODAL Y REPRODUCTOR ---
 
 function abrirFoto(url, msj) {
-    carruselPausado = true; // Pausamos el giro automático
+    carruselPausado = true; // Pausa el giro automático
+    const modal = document.getElementById('modal-foto');
     document.getElementById('img-modal').src = url;
-    // ... resto del código
+    document.getElementById('texto-mensaje').innerText = msj;
+    modal.classList.remove('modal-oculto');
 }
 
 function cerrarFoto() {
-    carruselPausado = false; // Reanudamos
+    carruselPausado = false; // Reanuda el giro
     document.getElementById('modal-foto').classList.add('modal-oculto');
 }
-
-// Y en tu intervalo de giro automático:
-setInterval(() => { 
-    if(puedeGirar && !carruselPausado) { // Añadimos la condición
-        indiceActual = (indiceActual + 1) % total; 
-        actualizarAbanico(); 
-    } 
-}, 5000);
-}
-
-function cerrarFoto() { document.getElementById('modal-foto').classList.add('modal-oculto'); }
 
 function toggleReproductor() {
     const r = document.getElementById('reproductor-mini');
     const b = document.getElementById('boton-musica');
-    if (r.classList.contains('oculto')) { r.classList.remove('oculto'); b.classList.add('boton-oculto'); }
-    else { r.classList.add('oculto'); b.classList.remove('boton-oculto'); }
+    if (r.classList.contains('oculto')) { 
+        r.classList.remove('oculto'); 
+        b.classList.add('boton-oculto'); 
+    } else { 
+        r.classList.add('oculto'); 
+        b.classList.remove('boton-oculto'); 
+    }
 }
 
-window.onload = () => { actualizarContador(); inicializar(); setInterval(actualizarContador, 1000); };
+// Lanzamiento inicial
+window.onload = () => { 
+    actualizarContador(); 
+    inicializar(); 
+    setInterval(actualizarContador, 1000); 
+};
