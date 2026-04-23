@@ -105,10 +105,26 @@ function actualizarAbanico() {
     });
 }
 
+let carruselPausado = false;
+
 function abrirFoto(url, msj) {
+    carruselPausado = true; // Pausamos el giro automático
     document.getElementById('img-modal').src = url;
-    document.getElementById('texto-mensaje').innerText = msj;
-    document.getElementById('modal-foto').classList.remove('modal-oculto');
+    // ... resto del código
+}
+
+function cerrarFoto() {
+    carruselPausado = false; // Reanudamos
+    document.getElementById('modal-foto').classList.add('modal-oculto');
+}
+
+// Y en tu intervalo de giro automático:
+setInterval(() => { 
+    if(puedeGirar && !carruselPausado) { // Añadimos la condición
+        indiceActual = (indiceActual + 1) % total; 
+        actualizarAbanico(); 
+    } 
+}, 5000);
 }
 
 function cerrarFoto() { document.getElementById('modal-foto').classList.add('modal-oculto'); }
