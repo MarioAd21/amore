@@ -1,0 +1,187 @@
+/* --- CONTENEDOR ESPECÍFICO --- */
+.galaxybody {
+    position: relative !important;
+    width: 100% !important;
+    height: 600px !important; 
+    background-color:  black !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-top: 50px;
+}
+
+.estrellas {
+    position: fixed;
+    width: 100%; height: 100%;
+    background: radial-gradient(white, rgba(255,255,255,0) 1px);
+    background-size: 70px 70px;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+#universo {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95), opacity 0.8s;
+}
+
+.corazon-central {
+    position: absolute;
+    font-size: 50px;
+    filter: drop-shadow(0 0 20px var(--color-amor));
+    animation: latido 2.2s infinite ease-in-out;
+    z-index: 10;
+}
+
+@keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+}
+
+.orbita-elipse {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* --- OBJETOS ORBITANTES --- */
+.planeta {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 20;
+    background: radial-gradient(circle at 30% 30%, #fff, var(--p-color) 60%, #000);
+    box-shadow: 0 0 15px var(--p-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Clase para cuando el año está completado */
+.planeta.completado {
+    background: none !important;
+    box-shadow: none !important;
+    cursor: default;
+}
+
+.planeta.completado::before {
+    content: '❤️';
+    font-size: 18px;
+    filter: drop-shadow(0 0 5px var(--p-color));
+}
+
+.planeta span {
+    position: absolute;
+    top: -24px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px #000;
+    pointer-events: none;
+}
+
+/* --- EL COMETA --- */
+#cometa {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 2px white, 0 0 10px var(--color-primario);
+    z-index: 100;
+    cursor: pointer;
+    display: none;
+}
+
+#cometa::after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(to left, white, transparent);
+    right: 2px;
+    top: 1px;
+    transform-origin: right;
+}
+
+/* --- TRIVIA Y MODALES --- */
+#contenedor-trivia, #modal-cometa {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; max-width: 400px;
+    background: rgba(8, 8, 20, 0.98);
+    border: 2px solid var(--color-primario);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 1000;
+    backdrop-filter: blur(15px);
+}
+
+.boton-opcion {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-primario);
+    color: white;
+    padding: 12px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.boton-opcion:hover { background: var(--color-primario); color: black; }
+
+.pixel {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--p-color);
+    border-radius: 1px;
+    z-index: 2000;
+    box-shadow: 0 0 8px var(--p-color);
+}
+
+/* --- ADAPTACIÓN PARA TELÉFONOS --- */
+@media (max-width: 768px) {
+    .galaxybody {
+        height: 500px !important; 
+    }
+
+    .corazon-central {
+        font-size: 40px !important; 
+    }
+
+    .planeta {
+        width: 18px !important;  
+        height: 18px !important;
+    }
+
+    .planeta span {
+        font-size: 10px !important; 
+        top: -20px !important;
+    }
+
+    #universo {
+        transform: scale(0.7); 
+    }
+
+    #contenedor-trivia, #modal-cometa {
+        width: 95% !important;
+        padding: 20px !important;
+    }
+
+    .boton-opcion {
+        padding: 15px !important; 
+        font-size: 16px !important;
+    }
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>❤️ 21-11-2016</title>
+    <link rel="icon" href="https://i.pinimg.com/originals/38/e7/3a/38e73ab9ccd7da9649c2857f70e848b4.gif" type="image/gif">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="contador.css">
+    <link rel="stylesheet" href="carrusel.css">
+    <link rel="stylesheet" href="reproductor.css">
+    <link rel="stylesheet" href="galaxia.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+</head>
+<body>
+
+    <section id="REPROCUTOR">
+    <div id="contenedor-reproductor">
+        <div id="reproductor-mini" class="oculto">
+            <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
+            <iframe id="video-youtube" src="https://www.youtube.com/embed/zpWVMosq1oM?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <button id="boton-musica" onclick="toggleReproductor()">🎵</button>
+    </div> <script src="reproductor.js"></script>
+    </section>
+
+    <section id="ESCRITURA"> 
+    <h1>Feliz Aniversario Amore</h1>
+    <h2>Ya 10 años juntos, ¡cómo pasa el tiempo!</h2>
+
+    <p class="introduccion-amor">
+        "Aquí empieza el viaje de nuestros primeros 10 años. Cada foto es un recuerdo de risas, aventuras y de todo lo que hemos construido juntos. Te amo por siempre."
+    </p>
+    </section>
+
+    <section id="CONTADOR">
+    <div class="contador-container">
+        <h3 style="margin-top:0">Llevamos juntos:</h3>
+        <div id="reloj">Cargando nuestro tiempo...</div>
+    </div> <script src="contador.js"></script>
+    </section>
+
+    <div class="separador"></div>
+
+    <section id="CARRUSEL">
+    <h2 style="margin-top: 20px;">El Carrusel del Recuerdo</h2>
+    <p style="font-size: 0.9rem; color: #888;">(Desliza o usa la rueda del mouse para navegar)</p>
+    
+    <div class="escena-stack" id="contenedor"></div>
+
+    <div id="modal-foto" class="modal-oculto" onclick="cerrarFoto()">
+        <div class="modal-contenido">
+            <img id="img-modal" src="" alt="Recuerdo">
+            <div id="marco-mensaje">
+                <p id="texto-mensaje"></p>
+            </div>
+        </div>
+    </div> <script src="carrusel.js"></script>
+    </section>
+
+    <div class="separador"></div>
+
+    <section id="GALAXIA">
+        <div class="galaxybody">
+            <div class="estrellas-fondo"></div> <div id="cometa"></div>
+
+            <div id="universo">
+                <div class="corazon-central">❤️</div>
+            </div>
+
+            <div id="contenedor-trivia">
+                <h2 id="trivia-titulo"></h2>
+                <p id="trivia-pregunta"></p>
+                <div id="trivia-opciones"></div>
+            </div>
+
+            <div id="modal-cometa">
+                <h3 style="color: var(--color-primario);">✨ Susurro del Espacio ✨</h3>
+                <p id="texto-cometa"></p>
+                <button class="boton-opcion" onclick="cerrarCometa()">Cerrar</button>
+            </div>
+        </div> <script src="trivias.js"></script> <script src="galaxia.js"></script>
+    </section>
+
+
+</body>
+</html>
+<!-- 
+PUNTOS A TOMAR
+1.- TRANSICIONES CON MENSAJES OCULTOS AL HACER CLICKS
+2.- En algunas imagenes que al hace click o pasar el mouse tenga mensajitos
+3.- corregir los cometas
+4.- cuestionario donde deba respondera 10 preguntas de cada año y que cada respuesta correcta rellene una barra y al final de esa barra de un premio o algo - la fallar sale un capoo triste en cada pregunta
+5.- que cada año haga una funcion diferente no se que el 2016 tenga un custionario - 2017 un karaoke - 2018...... y asi sucesibamente
+6.- Linea de tiempo con cada año
+
+-->
+
+
+
