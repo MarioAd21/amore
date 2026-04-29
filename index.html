@@ -68,34 +68,72 @@
     <div class="separador"></div>
 
     <section id="GALAXIA">
-        <div class="galaxybody">
-            <div class="estrellas-fondo"></div> <div id="cometa"></div>
 
-            <div id="universo">
-                <div class="corazon-central">❤️</div>
-            </div>
+    <div class="galaxybody">
 
-            <div id="contenedor-trivia" style="display: none;">
-                <button id="btn-cerrar-trivia" onclick="reintentarTrivia()">×</button>
+        <div class="estrellas-fondo"></div>
 
-                <h2 id="trivia-titulo">Cargando...</h2>
-                <p id="trivia-pregunta">Preparando preguntas...</p>
-                <div id="trivia-opciones"></div>
-            </div>
+        <div id="cometa"></div>
 
-            <div id="modal-cometa">
-                <h3 style="color: var(--color-primario);">✨ Susurro del Espacio ✨</h3>
-                <p id="texto-cometa"></p>
-                <button class="boton-opcion" onclick="cerrarCometa()">Cerrar</button>
-            </div>
-        </div> 
-        <script src="javascript/trivias.js"></script> 
-        <script src="javascript/galaxia.js"></script>
-    </section>
+
+        <div id="universo">
+            <div class="corazon-central">❤️</div>
+        </div>
+
+
+        <div id="contenedor-trivia" style="display:none;">
+
+            <!-- ahora sí cierra -->
+            <button
+              id="btn-cerrar-trivia"
+              onclick="cerrarTrivia()">
+              ×
+            </button>
+
+            <h2 id="trivia-titulo">
+                Cargando...
+            </h2>
+
+            <p id="trivia-pregunta">
+                Preparando preguntas...
+            </p>
+
+            <div id="trivia-opciones"></div>
+
+        </div>
+
+
+        <div id="modal-cometa">
+
+            <h3 style="color:var(--color-primario);">
+                ✨ Susurro del Espacio ✨
+            </h3>
+
+            <p id="texto-cometa"></p>
+
+            <button
+             class="boton-opcion"
+             onclick="closeCometModal()">
+             Cerrar
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- trivia primero -->
+    <script src="javascript/trivias.js"></script>
+
+    <!-- luego galaxia -->
+    <script src="javascript/galaxia.js"></script>
+
+</section>
 
     <div class="separador"></div>
 
 </body>
+
 </html>
 <!-- 
 PUNTOS A TOMAR
