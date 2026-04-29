@@ -31,7 +31,8 @@
     filter: brightness(1.1); 
     opacity: 1; 
     pointer-events: auto !important; 
-    border-color: yellow; 
+    border-color: gold;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
 }
 
 .pos-d1 { transform: translateX(180px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); }
