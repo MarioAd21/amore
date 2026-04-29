@@ -25,7 +25,7 @@ function initCarousel() {
         img.className = 'foto-card oculta';
         img.id = 'img-' + i;
         img.onclick = () => { 
-            if(img.classList.contains('pos-centro')) openPhotoModal(memory.url, memory.message); 
+            if(img.classList.contains('pos-centro')) openPhotoModal(memory.url, memory.msj); 
         };
         container.appendChild(img);
     });
