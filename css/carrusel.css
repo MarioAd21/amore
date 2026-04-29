@@ -77,6 +77,19 @@
     text-align: center; 
 }
 
+#btn-cerrar-foto { 
+    position: absolute; 
+    top: -15px; 
+    right: -15px; 
+    background: cadetblue; 
+    border: 3px solid white; 
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    color: white; 
+    cursor: pointer; 
+}
+
 /* --- ADAPTACIÓN PARA TELÉFONOS (CARRUSEL) --- */
 @media (max-width: 768px) {
     .carrusel-container {
