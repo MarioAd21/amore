@@ -1,0 +1,97 @@
+/* Main Panel with Heartbeat Effect */
+.contador-container {
+    background-color: #0b0e11;
+    border: 2px solid #76d7c4;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    color: white;
+    
+    /* Rhythm: 1.8s feels more like a real heartbeat than 2s or 2.5s */
+
+    animation: edgeHeartbeat 3s ease-in-out infinite;
+    will-change: box-shadow, transform;
+}
+
+/* Anniversary Date Block */
+.bloque-fecha { 
+    font-size: 1.8rem; 
+    color: #4da6ff; 
+    font-weight: bold; 
+    margin-bottom: 15px;
+}
+
+/* Time Grid Layout */
+.contador-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Individual Boxes */
+.tiempo-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 80px;
+}
+
+.tiempo-box span {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #5F9EA0;
+    text-shadow: 0 0 15px rgba(95, 158, 160, 0.6);
+}
+
+.tiempo-box label {
+    font-size: 0.7rem;
+    color: #d9eaeb; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contador-container {
+        width: 95% !important; /* A bit wider for mobile */
+        padding: 20px 10px !important;
+    }
+
+    .bloque-fecha {
+        font-size: 1.4rem !important;
+    }
+
+    .contador-grid {
+        gap: 8px;
+    }
+
+    .tiempo-box {
+        min-width: 65px;
+        padding: 8px;
+    }
+
+    .tiempo-box span {
+        font-size: 1.6rem !important;
+    }
+}
+
+/* Double-Pulse Heartbeat Animation */
+@keyframes edgeHeartbeat {
+    0% {
+        /* Brillo base elegante */
+        box-shadow: 0 0 15px rgba(118, 215, 196, 0.5);
+        transform: scale(1);
+    }
+    50% {
+        /* Expansión suave y luminosa (el punto máximo del latido) */
+        box-shadow: 0 0 40px rgba(118, 215, 196, 0.8), 
+                    0 0 15px rgba(118, 215, 196, 0.6);
+        transform: scale(1.015); /* Un crecimiento muy sutil */
+    }
+    100% {
+        /* Retorno suave al inicio */
+        box-shadow: 0 0 15px rgba(118, 215, 196, 0.5);
+        transform: scale(1);
+    }
+}
