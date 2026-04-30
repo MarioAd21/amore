@@ -113,7 +113,10 @@ function openPhotoModal(url, message) {
 
 function closePhotoModal() {
     isCarouselPaused = false; 
-    document.getElementById('modal-foto').classList.add('modal-oculto');
+    const modal = document.getElementById('modal-foto');
+    if (modal) {
+        modal.classList.add('modal-oculto');
+    }
 }
 
 // Start carousel on load
