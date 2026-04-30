@@ -119,3 +119,55 @@ function closePhotoModal() {
 // Start carousel on load
 document.addEventListener('DOMContentLoaded', initCarousel);
 
+// ============================================================
+// SISTEMA DE POLVO ESTELAR PARA EL MODAL (NUEVO)
+// ============================================================
+
+const numberOfStars = 50; // Cantidad de partículas
+const starContainer = document.getElementById('polvo-estelar');
+
+function createStardust() {
+    if (!starContainer) return;
+
+    for (let i = 0; i < numberOfStars; i++) {
+        const star = document.createElement('div');
+        
+        // Estilos básicos de la partícula
+        star.style.position = 'absolute';
+        star.style.backgroundColor = 'rgba(240, 230, 210, 0.8)'; // Color crema suave
+        star.style.borderRadius = '50%';
+        star.style.pointerEvents = 'none';
+
+        // Tamaño aleatorio (entre 1px y 3px)
+        const size = Math.random() * 2 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+
+        // Posición inicial aleatoria
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.left = Math.random() * 100 + 'vw';
+
+        // Resplandor individual aleatorio
+        const glow = Math.random() * 5 + 2;
+        star.style.boxShadow = `0 0 ${glow}px rgba(240, 230, 210, 0.6)`;
+
+        // Animación de parpadeo y movimiento flotante (usando GSAP si está cargado, si no, es estático)
+        if (typeof gsap !== 'undefined') {
+            gsap.to(star, {
+                duration: Math.random() * 3 + 2, // Duración aleatoria
+                opacity: Math.random() * 0.5 + 0.2, // Parpadeo
+                y: '-=' + (Math.random() * 20 + 10), // Flotar hacia arriba
+                x: '+=' + (Math.random() * 10 - 5), // Ligeramente a los lados
+                repeat: -1, // Infinito
+                yoyo: true, // Ida y vuelta
+                ease: 'sine.inOut',
+                delay: Math.random() * 2 // Retraso de inicio aleatorio
+            });
+        }
+
+        starContainer.appendChild(star);
+    }
+}
+
+// Ejecutar la creación de partículas cuando cargue el DOM
+document.addEventListener('DOMContentLoaded', createStardust);
