@@ -49,14 +49,13 @@
     position: fixed; 
     top: 0; left: 0; 
     width: 100vw; height: 100vh; 
-    /* Degradado sutil de fondo: Amatista oscuro a Zafiro profundo */
-    background: radial-gradient(circle at center, #1a0b2e 0%, #050a1a 100%);
+    background: radial-gradient(circle at center, rgba(26, 11, 46, 0.65) 0%, rgba(5, 10, 26, 0.95) 100%);
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    z-index: 9999; /* Muy alto para estar sobre la galaxia */
-    transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
-    overflow: hidden;
+    z-index: 9999; 
+    transition: opacity 0.6s ease; 
+    backdrop-filter: blur(8px); 
 }
 
 .modal-oculto { opacity: 0; pointer-events: none; }
@@ -80,35 +79,46 @@
 /* --- El "Cuadro" (Marco Dorado y Resplandor) --- */
 .marco-arte-gloria {
     position: relative;
-    padding: 15px; /* Espacio para el marco */
-    border-radius: 12px;
-    background-color: transparent;
-    
-    /* El Marco Dorado Ornato (usando un degradado cónico para simular metal) */
-    border: 10px solid;
-    border-image: conic-gradient(
+    padding: 12px; 
+    border-radius: 15px;
+    display: inline-block;
+    overflow: hidden; /* Corta el brillo para que no salga del borde */
+    background: #1a1a1a; /* Fondo de seguridad tras la foto */
+    box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
+}
+
+.marco-arte-gloria::before {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    /* Creamos un "abanico" de colores dorados */
+    background: conic-gradient(
         from 0deg,
-        #b8860b, /* Oro oscuro */
-        #e6c35c, /* Oro claro */
-        #ffd700, /* Oro puro */
-        #b8860b,
-        #8b6508  /* Oro bronce */
-    ) 1;
-    
-    /* Resplandor suave ámbar/zafiro detrás del cuadro */
-    box-shadow: 0 0 50px rgba(184, 134, 11, 0.4), 
-                0 0 100px rgba(65, 105, 225, 0.2);
-    
-    transition: box-shadow 0.5s ease;
+        transparent 0deg,
+        #b8860b 90deg, 
+        #ffd700 180deg, 
+        #e6c35c 270deg,
+        transparent 360deg
+    );
+    animation: rotarOro 4s linear infinite; /* Animación de giro */
+    z-index: 1;
 }
 
 /* La imagen dentro del cuadro */
 .marco-arte-gloria img { 
+    position: relative;
     display: block;
-    max-width: 80vw; /* Responsivo */
-    max-height: 65vh; /* Evita que pise el texto */
-    border-radius: 5px; /* Esquinas ligeramente suaves */
-    object-fit: contain;
+    max-width: 80vw;
+    max-height: 65vh;
+    border-radius: 8px;
+    z-index: 2; /* Importante para estar sobre el brillo */
+    border: 2px solid rgba(255, 215, 0, 0.3); /* Un fino borde interno */
+}
+
+@keyframes rotarOro {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* --- El Mensaje Flotante --- */
