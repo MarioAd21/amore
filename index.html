@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    <section id="REPROCUTOR">
+    <section id="REPRODUCTOR">
     <div id="contenedor-reproductor">
         <div id="reproductor-mini" class="oculto">
             <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
@@ -72,34 +72,72 @@
     <div class="separador"></div>
 
     <section id="GALAXIA">
-        <div class="galaxybody">
-            <div class="estrellas-fondo"></div> <div id="cometa"></div>
 
-            <div id="universo">
-                <div class="corazon-central">❤️</div>
-            </div>
+    <div class="galaxybody">
 
-            <div id="contenedor-trivia" style="display: none;">
-                <button id="btn-cerrar-trivia" onclick="reintentarTrivia()">×</button>
+        <div class="estrellas-fondo"></div>
 
-                <h2 id="trivia-titulo">Cargando...</h2>
-                <p id="trivia-pregunta">Preparando preguntas...</p>
-                <div id="trivia-opciones"></div>
-            </div>
+        <div id="cometa"></div>
 
-            <div id="modal-cometa">
-                <h3 style="color: var(--color-primario);">✨ Susurro del Espacio ✨</h3>
-                <p id="texto-cometa"></p>
-                <button class="boton-opcion" onclick="cerrarCometa()">Cerrar</button>
-            </div>
-        </div> 
-        <script src="javascript/trivias.js"></script> 
-        <script src="javascript/galaxia.js"></script>
-    </section>
+
+        <div id="universo">
+            <div class="corazon-central">❤️</div>
+        </div>
+
+
+        <div id="contenedor-trivia" style="display:none;">
+
+            <!-- ahora sí cierra -->
+            <button
+              id="btn-cerrar-trivia"
+              onclick="cerrarTrivia()">
+              ×
+            </button>
+
+            <h2 id="trivia-titulo">
+                Cargando...
+            </h2>
+
+            <p id="trivia-pregunta">
+                Preparando preguntas...
+            </p>
+
+            <div id="trivia-opciones"></div>
+
+        </div>
+
+
+        <div id="modal-cometa">
+
+            <h3 style="color:var(--color-primario);">
+                ✨ Susurro del Espacio ✨
+            </h3>
+
+            <p id="texto-cometa"></p>
+
+            <button
+             class="boton-opcion"
+             onclick="closeCometModal()">
+             Cerrar
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- trivia primero -->
+    <script src="javascript/trivias.js"></script>
+
+    <!-- luego galaxia -->
+    <script src="javascript/galaxia.js"></script>
+
+</section>
 
     <div class="separador"></div>
 
 </body>
+
 </html>
 <!-- 
 PUNTOS A TOMAR
@@ -109,7 +147,7 @@ PUNTOS A TOMAR
 4.- cuestionario donde deba respondera 10 preguntas de cada año y que cada respuesta correcta rellene una barra y al final de esa barra de un premio o algo - la fallar sale un capoo triste en cada pregunta
 5.- que cada año haga una funcion diferente no se que el 2016 tenga un custionario - 2017 un karaoke - 2018...... y asi sucesibamente
 6.- Linea de tiempo con cada año
-7.- click exterior y  
+7.- click exterior y corregir el scroll para que suba con la rueda del mouse no afecte  
 
 
 -->
