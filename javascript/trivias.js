@@ -107,8 +107,11 @@ function showTrivia(ref){
  const contenedor = document.getElementById("contenedor-trivia");
  const preguntas = anniversaryData[ref.year] || [];
 
- let preguntaActual = 0;
- let aciertos = 0;
+ // Usamos el objeto ref para persistir el estado si ya existía
+ if (ref.preguntaActual === undefined) {
+     ref.preguntaActual = 0;
+     ref.aciertos = 0;
+ }
 
  if(!preguntas.length){
    alert("Aún no hay preguntas para " + ref.year);
@@ -120,11 +123,11 @@ function showTrivia(ref){
  contenedor.style.display = "block";
 
  function renderizarPregunta(){
-   if(preguntaActual < preguntas.length){
-      const data = preguntas[preguntaActual];
+   if(ref.preguntaActual < preguntas.length){
+      const data = preguntas[ref.preguntaActual]; // Usamos ref.preguntaActual
 
       document.getElementById("trivia-titulo").innerText = 
-      `Año ${ref.year} (${preguntaActual + 1}/${preguntas.length})`;
+      `Año ${ref.year} (${ref.preguntaActual + 1}/${preguntas.length})`;
 
       document.getElementById("trivia-pregunta").innerText = data.question;
 
@@ -145,45 +148,36 @@ function showTrivia(ref){
  }
 
  function validarRespuesta(indice){
-   if(indice === preguntas[preguntaActual].correct){
-      aciertos++;
+   if(indice === preguntas[ref.preguntaActual].correct){
+      ref.aciertos++; // Usamos ref.aciertos
    }
-   preguntaActual++;
+   ref.preguntaActual++; // Usamos ref.preguntaActual
    renderizarPregunta();
  }
 
  function finalizarTrivia(){
    const opcionesDiv = document.getElementById("trivia-opciones");
 
-   // Aprueba con el 70% o más
-   if(aciertos >= Math.ceil(preguntas.length * 0.7)){
-      
+   if(ref.aciertos >= Math.ceil(preguntas.length * 0.7)){
       ref.isCompleted = true;
-
-      document.getElementById("trivia-pregunta").innerText = `¡Logrado! 🎉\n${aciertos}/${preguntas.length}`;
-
-      opcionesDiv.innerHTML = `
-      <button class="boton-opcion" onclick="cerrarTriviaExito()">
-      Desbloquear Año ❤️
-      </button>
-      `;
-
-      // Invocar efectos visuales de éxito
+      document.getElementById("trivia-pregunta").innerText = `¡Logrado! 🎉\n${ref.aciertos}/${preguntas.length}`;
+      opcionesDiv.innerHTML = `<button class="boton-opcion" onclick="cerrarTriviaExito()">Desbloquear Año ❤️</button>`;
       celebrate();
       createExplosiveHeart("#ff4d4d");
-
    } else {
-      document.getElementById("trivia-pregunta").innerText = `Casi... 😢\n${aciertos}/${preguntas.length}\n¡Intentémoslo otra vez!`;
-
-      opcionesDiv.innerHTML = `
-      <button class="boton-opcion" onclick="showTrivia(window.currentPlanet)">
-      Reintentar
-      </button>
-      `;
+      document.getElementById("trivia-pregunta").innerText = `Casi... 😢\n${ref.aciertos}/${preguntas.length}\n¡Intentémoslo otra vez!`;
+      opcionesDiv.innerHTML = `<button class="boton-opcion" onclick="reiniciarTrivia(window.currentPlanet)">Reintentar</button>`;
    }
  }
 
  renderizarPregunta();
+}
+
+// Función extra para limpiar el estado si el usuario quiere empezar de cero
+function reiniciarTrivia(ref) {
+    ref.preguntaActual = 0;
+    ref.aciertos = 0;
+    showTrivia(ref);
 }
 
 /* --- EFECTOS VISUALES (Evita que el código muera si no existían) --- */

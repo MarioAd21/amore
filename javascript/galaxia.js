@@ -156,86 +156,87 @@ function showLockedMessage(year){
 
 
 function launchComet(){
-
-    const galaxySection=document.querySelector(".galaxybody");
-
+    const galaxySection = document.querySelector(".galaxybody");
     if(!galaxySection || !cometEl) return;
 
-    const rect=galaxySection.getBoundingClientRect();
+    const rect = galaxySection.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    
+    const startX = Math.random() * (width / 2); 
+    const startY = -50; 
+    
+    const distance = height + 400; 
+    
+    cometEl.style.display = "block";
+    cometEl.style.left = `${startX}px`;
+    cometEl.style.top = `${startY}px`;
 
-    const width=rect.width;
-    const height=rect.height;
+    // 22 SEGUNDOS: Movimiento súper lento, pacífico y fácil de cliquear
+    const duracionViaje = 22000; 
 
-    const startX=Math.random()*width;
-    const endX=Math.random()*width;
-
-    cometEl.style.display="block";
-    cometEl.style.left=`${startX}px`;
-    cometEl.style.top="-50px";
-
-    const animation=cometEl.animate(
+    const animation = cometEl.animate(
       [
-       {
-        transform:"translate(0,0) rotate(45deg)",
-        opacity:0
-       },
-       {
-        opacity:1,
-        offset:0.2
-       },
-       {
-        transform:
-        `translate(${endX-startX}px,
-                   ${height+50}px)
-         rotate(45deg)`,
-        opacity:0
-       }
+       { transform: "translate3d(0,0,0) rotate(45deg)", opacity: 0 },
+       { opacity: 1, offset: 0.05 },
+       { opacity: 1, offset: 0.95 },
+       { transform: `translate3d(${distance}px, ${distance}px, 0) rotate(45deg)`, opacity: 0 }
       ],
-      {
-        duration:8000,
-        easing:"linear"
+      { 
+        duration: duracionViaje, 
+        easing: "linear" 
       }
     );
 
-    animation.onfinish=()=>{
-       cometEl.style.display="none";
-    };
+    // SISTEMA DE PARTICULAS: Rastrea el cometa y suelta polvo estelar
+    const relojPartculas = setInterval(() => {
+        if (cometEl.style.display === "none") {
+            clearInterval(relojPartculas);
+            return;
+        }
 
+        // Medimos las coordenadas exactas de la animación en este milisegundo
+        const rectComet = cometEl.getBoundingClientRect();
+        const rectUniverse = universeContainer.getBoundingClientRect();
+
+        // Calculamos el centro de la cabeza del cometa relativo al universo
+        const x = rectComet.left - rectUniverse.left + (rectComet.width / 2);
+        const y = rectComet.top - rectUniverse.top + (rectComet.height / 2);
+
+        // Soltamos una partícula en esa posición exacta
+        spawnCometParticle(x, y);
+    }, 60); // Frecuencia perfecta para que queden conectadas pero individuales
+
+    animation.onfinish = () => { 
+        cometEl.style.display = "none"; 
+        clearInterval(relojPartculas);
+    };
 }
 
+// NUEVA FUNCIÓN: Inyecta y configura cada partícula de forma orgánica
+function spawnCometParticle(x, y) {
+    const particula = document.createElement("div");
+    particula.className = "cometa-particula";
+    particula.style.left = `${x}px`;
+    particula.style.top = `${y}px`;
 
+    // Tamaños alternados para que parezca una estela cósmica natural
+    const tamano = Math.random() * 3 + 1; // Entre 1px y 4px
+    particula.style.width = `${tamano}px`;
+    particula.style.height = `${tamano}px`;
 
-if(cometEl){
+    // Mezcla de colores (Brillo blanco puro y destellos turquesas de tu paleta)
+    const colores = ["#ffffff", "#ffffff", "#e0f7fa", "#5f9ea0"];
+    const colorElegido = colores[Math.floor(Math.random() * colores.length)];
+    particula.style.background = colorElegido;
+    particula.style.boxShadow = `0 0 6px ${colorElegido}`;
 
-    cometEl.onclick=()=>{
+    universeContainer.appendChild(particula);
 
-        cometEl.style.display="none";
-
-        const randomWhisper=
-          whispers[
-            Math.floor(
-             Math.random()*whispers.length
-            )
-          ];
-
-        document.getElementById(
-          "texto-cometa"
-        ).innerText=randomWhisper;
-
-        document.getElementById(
-          "modal-cometa"
-        ).style.display="block";
-
-    };
-
-}
-
-
-
-function closeCometModal(){
-    document.getElementById(
-      "modal-cometa"
-    ).style.display="none";
+    // Limpieza de memoria: se remueve del HTML en cuanto termina su animación CSS
+    setTimeout(() => {
+        particula.remove();
+    }, 1200);
 }
 
 
