@@ -25,10 +25,10 @@ const anniversaryData = {
    message:"¡Al mirarte supe que tu eras la mujer que queria pasar el resto de mi vida! ⏳"
   },
   {
-   question:"¿En qué medio de transporte te pedí pololeo?",
-   options:["En un auto", "Caminando", "En una micro", "En el parque"],
+   question:"¿Donde te pedí pololeo?",
+   options:["En un auto", "De camino a casa", "En una micro", "En el parque"],
    correct:2,
-   message:"¡Nuestra micro testigo! 🚌"
+   message:"¡Nuestra micro testigo, de los nervios que tenia ese dia! 🚌"
   },
   {
    question:"¿Qué actividad extracurricular compartíamos los sábados?",
@@ -38,34 +38,28 @@ const anniversaryData = {
   },
   {
    question:"¿Dónde fue nuestro primer beso?",
-   options:["En el liceo", "En una micro", "En tu casa", "En el cine"],
+   options:["En el liceo", "En una micro", "En la calle", "En el cine"],
    correct:1,
    message:"¡Fue mágico! 💋"
   },
   {
-   question:"¿En qué mes del 2016 empezamos a salir?",
+   question:"¿En qué mes del 2016 nos conocimos?",
    options:["Septiembre", "Octubre", "Noviembre", "Diciembre"],
    correct:2,
-   message:"¡Noviembre, nuestro mes! 🗓️"
+   message:"🎵 Noviembre sin ti es pedirle a luna, que brille la noche de mi corazon 🎵"
   },
   {
    question:"¿Cómo me sentía yo al momento de pedirte pololeo en la micro?",
-   options:["Muy seguro", "Estaba nervioso y no sabía qué hacer", "Muy tranquilo", "Estaba aburrido"],
+   options:["Muy seguro", "Estaba nervioso", "Muy tranquilo", "Estaba desesperado"],
    correct:1,
    message:"¡Los nervios valieron la pena! 😊"
   },
   {
-   question:"¿Qué es lo que me hace estar seguro de que eres mi alma gemela?",
-   options:["Nuestra conexión desde el primer día", "Que tenemos los mismos gustos", "Todo lo que hemos construido juntos", "Todas las anteriores"],
+   question:"Simpre te decia que eras mi...",
+   options:["Amor", "Mi vida", "Mi alma Gemela", "Mi mundo"],
    correct:3,
-   message:"¡Definitivamente todo! ❤️"
+   message:"Simpre seras mi alma Gemela aunque ya no lo diga ❤️"
   },
-  {
-   question:"¿Cómo describirías mi nivel de experiencia en el amor al iniciar nuestra relación?",
-   options:["Todo un experto", "Muy inocente", "Tenía dudas", "Ya había tenido muchas parejas"],
-   correct:1,
-   message:"¡Fuimos aprendiendo juntos! 👶"
-  }
  ],
  "2017":[
   {
