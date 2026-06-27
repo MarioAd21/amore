@@ -101,13 +101,12 @@ function cerrarTriviaExito(){
  }
 }
 
-
 function showTrivia(ref){
  window.currentPlanet = ref;
  const contenedor = document.getElementById("contenedor-trivia");
  const preguntas = anniversaryData[ref.year] || [];
 
- // Usamos el objeto ref para persistir el estado si ya existía
+ // Persistencia de estado
  if (ref.preguntaActual === undefined) {
      ref.preguntaActual = 0;
      ref.aciertos = 0;
@@ -115,8 +114,6 @@ function showTrivia(ref){
 
  if(!preguntas.length){
    alert("Aún no hay preguntas para " + ref.year);
-   ref.isActive = true;
-   resetUniverse();
    return;
  }
 
@@ -124,11 +121,10 @@ function showTrivia(ref){
 
  function renderizarPregunta(){
    if(ref.preguntaActual < preguntas.length){
-      const data = preguntas[ref.preguntaActual]; // Usamos ref.preguntaActual
-
+      const data = preguntas[ref.preguntaActual];
+      
       document.getElementById("trivia-titulo").innerText = 
       `Año ${ref.year} (${ref.preguntaActual + 1}/${preguntas.length})`;
-
       document.getElementById("trivia-pregunta").innerText = data.question;
 
       const opcionesDiv = document.getElementById("trivia-opciones");
@@ -138,34 +134,50 @@ function showTrivia(ref){
         const btn = document.createElement("button");
         btn.className = "boton-opcion";
         btn.innerText = opcion;
+        // Al hacer clic, enviamos el índice
         btn.onclick = () => { validarRespuesta(index); };
         opcionesDiv.appendChild(btn);
       });
-
    } else {
       finalizarTrivia();
    }
  }
 
  function validarRespuesta(indice){
-   if(indice === preguntas[ref.preguntaActual].correct){
-      ref.aciertos++; // Usamos ref.aciertos
+   const data = preguntas[ref.preguntaActual];
+   const opcionesDiv = document.getElementById("trivia-opciones");
+   
+   // Deshabilitamos botones para evitar clicks múltiples
+   const botones = document.querySelectorAll(".boton-opcion");
+   botones.forEach(b => b.disabled = true);
+
+   if(indice === data.correct){
+      ref.aciertos++;
+      document.getElementById("trivia-pregunta").innerHTML = 
+      `<span style="color: #4CAF50;">¡Correcto!</span><br>${data.message}`;
+   } else {
+      document.getElementById("trivia-pregunta").innerHTML = 
+      `<span style="color: #f44336;">¡Oh no! Fallaste...</span><br>La respuesta era: ${data.options[data.correct]}`;
    }
-   ref.preguntaActual++; // Usamos ref.preguntaActual
-   renderizarPregunta();
+
+   // Esperamos 2 segundos para que lea el mensaje y luego pasamos a la siguiente
+   setTimeout(() => {
+     ref.preguntaActual++;
+     renderizarPregunta();
+   }, 2000);
  }
 
  function finalizarTrivia(){
    const opcionesDiv = document.getElementById("trivia-opciones");
+   const porcentaje = (ref.aciertos / preguntas.length) * 100;
 
-   if(ref.aciertos >= Math.ceil(preguntas.length * 0.7)){
+   if(porcentaje >= 70){
       ref.isCompleted = true;
-      document.getElementById("trivia-pregunta").innerText = `¡Logrado! 🎉\n${ref.aciertos}/${preguntas.length}`;
+      document.getElementById("trivia-pregunta").innerText = `¡Logrado! 🎉\nTu puntaje: ${ref.aciertos}/${preguntas.length}`;
       opcionesDiv.innerHTML = `<button class="boton-opcion" onclick="cerrarTriviaExito()">Desbloquear Año ❤️</button>`;
       celebrate();
-      createExplosiveHeart("#ff4d4d");
    } else {
-      document.getElementById("trivia-pregunta").innerText = `Casi... 😢\n${ref.aciertos}/${preguntas.length}\n¡Intentémoslo otra vez!`;
+      document.getElementById("trivia-pregunta").innerText = `Casi... 😢\nLograste ${ref.aciertos}/${preguntas.length}.\n¡Inténtalo otra vez!`;
       opcionesDiv.innerHTML = `<button class="boton-opcion" onclick="reiniciarTrivia(window.currentPlanet)">Reintentar</button>`;
    }
  }
