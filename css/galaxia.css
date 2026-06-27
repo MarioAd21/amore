@@ -102,15 +102,14 @@
 
 /* --- EL COMETA --- */
 #cometa {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 20px 2px white, 0 0 40px 4px rgba(255, 255, 255, 0.5);
-    z-index: 2;
+    position: absolute; /* Ahora relativo a #universo */
+    width: 40px;  /* Área grande para facilitar el click */
+    height: 40px;
+    z-index: 50; /* Siempre por encima de todo */
     cursor: pointer;
     display: none;
+    pointer-events: auto; /* Asegura que capture el click */
+    transition: none;
 }
 
 #cometa::after {

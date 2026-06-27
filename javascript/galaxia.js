@@ -104,6 +104,8 @@ function travelToPlanet(ref){
 
     ref.isActive=false;
 
+    cometEl.style.display = "none";
+
     const targetSection=document.getElementById("GALAXIA");
 
     if(targetSection){
@@ -160,8 +162,8 @@ function launchComet(){
     if(!galaxySection || !cometEl) return;
 
     const rect = galaxySection.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     
     const startX = Math.random() * (width / 2); 
     const startY = -50; 
@@ -178,12 +180,12 @@ function launchComet(){
     const animation = cometEl.animate(
       [
        { transform: "translate3d(0,0,0) rotate(45deg)", opacity: 0 },
-       { opacity: 1, offset: 0.05 },
-       { opacity: 1, offset: 0.95 },
-       { transform: `translate3d(${distance}px, ${distance}px, 0) rotate(45deg)`, opacity: 0 }
+       { opacity: 1, offset: 0.1 },
+       { opacity: 1, offset: 0.9 },
+       { transform: `translate3d(${width + 100}px, ${height + 100}px, 0) rotate(45deg)`, opacity: 0 }
       ],
       { 
-        duration: duracionViaje, 
+        duration: 22000, 
         easing: "linear" 
       }
     );
