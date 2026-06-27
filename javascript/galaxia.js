@@ -130,18 +130,14 @@ function travelToPlanet(ref){
     },1000);
 }
 
-
-
 function resetUniverse(){
 
     universeContainer.style.transform="scale(1)";
     universeContainer.style.opacity="1";
 
 }
-
-
-
-function showLockedMessage(year){
+    // Aquí defines qué GIF se muestra en cada año
+   function showLockedMessage(year){
 
     const yearMessages={
         "2016":"Donde todo comenzó... nuestra primera micro. 🚌",
@@ -149,10 +145,35 @@ function showLockedMessage(year){
         "2018":"Cuando aprendimos que juntos todo es mejor. ✨"
     };
 
-    alert(
-      yearMessages[year] ||
-      "Este recuerdo ya vive en nuestro corazón. ❤️"
-    );
+    // Aquí defines qué GIF se muestra en cada año
+    const yearGifs={
+        "2016": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWdtcm9wYnk1Y2Z3Y29wZXBlbXg1M3N5bXN0Yms1cXA0d3F0Ym02byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vERfN7D9c7rSo/giphy.gif", // Cambia por el tuyo de la micro o amor
+        "2017": "https://media.giphy.com/media/3oriO0OEd9hmgFsi5O/giphy.gif", // Cambia por uno de playa/viajes
+        "2018": "https://media.giphy.com/media/l41JWm5vUeWSkvFp6/giphy.gif"
+    };
+
+    const mensaje = yearMessages[year] || "Este recuerdo ya vive en nuestro corazón. ❤️";
+    
+    // Si el año no tiene un GIF asignado, ponemos uno por defecto para que nunca quede vacío
+    const gifElegido = yearGifs[year] || "https://media.giphy.com/media/l0EwZ92cG9x9JKPLu/giphy.gif"; 
+
+    Swal.fire({
+        title: `Año ${year}`,
+        text: mensaje,
+        imageUrl: gifElegido,
+        imageWidth: 200, // Ajusta el ancho en píxeles a tu gusto
+        imageHeight: 200, // Ajusta el alto en píxeles
+        imageAlt: `Recuerdo del año ${year}`,
+        iconColor: '#5f9ea0',
+        background: 'rgba(10, 10, 20, 0.95)',
+        color: '#ffffff',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: 'cadetblue',
+        backdrop: 'rgba(0, 0, 0, 0.4)',
+        customClass: {
+            popup: 'modal-espacial-borde'
+        }
+    });
 }
 
 

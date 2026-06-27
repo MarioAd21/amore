@@ -143,29 +143,62 @@ function showTrivia(ref){
    }
  }
 
- function validarRespuesta(indice){
+function validarRespuesta(indice){
    const data = preguntas[ref.preguntaActual];
    const opcionesDiv = document.getElementById("trivia-opciones");
+   const preguntaEl = document.getElementById("trivia-pregunta");
    
-   // Deshabilitamos botones para evitar clicks múltiples
-   const botones = document.querySelectorAll(".boton-opcion");
-   botones.forEach(b => b.disabled = true);
+   // 1. Limpiamos las opciones del recuadro
+   opcionesDiv.innerHTML = "";
 
+   // 2. Evaluamos si es correcta
    if(indice === data.correct){
       ref.aciertos++;
-      document.getElementById("trivia-pregunta").innerHTML = 
-      `<span style="color: #4CAF50;">¡Correcto!</span><br>${data.message}`;
-   } else {
-      document.getElementById("trivia-pregunta").innerHTML = 
-      `<span style="color: #f44336;">¡Oh no! Fallaste...</span><br>La respuesta era: ${data.options[data.correct]}`;
-   }
+      
+      // PANTALLA CORRECTA: Cambia título, muestra mensaje y botón "Siguiente"
+      document.getElementById("trivia-titulo").innerText = "¡Excelente! ❤️";
+      preguntaEl.innerHTML = `
+        <div style="text-align: center; padding: 10px;">
+          <span style="color: #4CAF50; font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 15px;">
+            ¡Correcto!
+          </span>
+          <p style="font-size: 1.1rem; line-height: 1.4;">${data.message}</p>
+        </div>
+      `;
 
-   // Esperamos 2 segundos para que lea el mensaje y luego pasamos a la siguiente
-   setTimeout(() => {
-     ref.preguntaActual++;
-     renderizarPregunta();
-   }, 2000);
- }
+      const btnSiguiente = document.createElement("button");
+      btnSiguiente.className = "boton-opcion";
+      btnSiguiente.style.marginTop = "20px";
+      btnSiguiente.innerText = "Siguiente pregunta ➡️";
+      btnSiguiente.onclick = () => {
+         ref.preguntaActual++; // Aquí SÍ avanza al siguiente índice
+         renderizarPregunta();
+      };
+      opcionesDiv.appendChild(btnSiguiente);
+
+   } else {
+      // PANTALLA INCORRECTA: Cambia título, da el aviso de fallo y botón "Reintentar"
+      document.getElementById("trivia-titulo").innerText = "¡Oh no! 😢";
+      preguntaEl.innerHTML = `
+        <div style="text-align: center; padding: 10px;">
+          <span style="color: #f44336; font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 15px;">
+            ¡Te equivocaste!
+          </span>
+          <p style="font-size: 1.1rem;">¡No te preocupes, puedes volver a intentarlo ahora mismo!</p>
+        </div>
+      `;
+
+      const btnReintentar = document.createElement("button");
+      btnReintentar.className = "boton-opcion";
+      btnReintentar.style.marginTop = "20px";
+      btnReintentar.innerText = "🔄 Intentar de nuevo";
+      btnReintentar.onclick = () => {
+         // NO aumentamos ref.preguntaActual para volver a pintar la misma pregunta
+         renderizarPregunta();
+      };
+      opcionesDiv.appendChild(btnReintentar);
+   }
+}
 
  function finalizarTrivia(){
    const opcionesDiv = document.getElementById("trivia-opciones");

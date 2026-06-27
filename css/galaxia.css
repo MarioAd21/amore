@@ -261,4 +261,9 @@ body.modal-abierto {
     }
 }
 
-
+/* Borde personalizado para los mensajes de SweetAlert */
+.modal-espacial-borde {
+    border: 2px solid cadetblue !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(10px);
+}

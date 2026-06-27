@@ -42,114 +42,114 @@
 
 <body>
 
-<section id="REPRODUCTOR">
-        <div id="contenedor-reproductor">
-            <div id="reproductor-mini" class="oculto">
-                <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
-                <iframe id="video-youtube" src="https://www.youtube.com/watch?v=_xOiNkOP4pU&list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-            <button id="boton-musica" onclick="toggleReproductor()">🎵</button>
-        </div> <script src="javascript/reproductor.js"></script>
-</section>
+    <section id="REPRODUCTOR">
+            <div id="contenedor-reproductor">
+                <div id="reproductor-mini" class="oculto">
+                    <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
+                    <iframe id="video-youtube" src="https://www.youtube.com/watch?v=_xOiNkOP4pU&list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+                <button id="boton-musica" onclick="toggleReproductor()">🎵</button>
+            </div> <script src="javascript/reproductor.js"></script>
+    </section>
 
-<section id="TITULOS"> 
-        <h1>Feliz Aniversario Amore</h1>
-        <h2>Ya 10 años juntos, ¡cómo pasa el tiempo!</h2>
-</section>
+    <section id="TITULOS"> 
+            <h1>Feliz Aniversario Amore</h1>
+            <h2>Ya 10 años juntos, ¡cómo pasa el tiempo!</h2>
+    </section>
 
-<section id="CONTADOR">
-        <div class="contador-container" id="main-panel">
-            <h3 style="margin-top:0">Llevamos juntos:</h3>
-            <div id="reloj">Cargando nuestro tiempo...</div>
-        </div> 
-        <script src="javascript/contador.js"></script>
-</section>
+    <section id="CONTADOR">
+            <div class="contador-container" id="main-panel">
+                <h3 style="margin-top:0">Llevamos juntos:</h3>
+                <div id="reloj">Cargando nuestro tiempo...</div>
+            </div> 
+            <script src="javascript/contador.js"></script>
+    </section>
 
-<Section id="INTRODUCCION">
-        <p class="introduccion-amor">
-            "Aquí empieza el viaje de nuestros primeros 10 años. Cada foto es un recuerdo de risas, aventuras y de todo lo que hemos construido juntos. Te amo por siempre."
-        </p>
-</Section>
-
-<section id="CARRUSEL">
-    <h2 style="margin-top: 20px; text-align: center;">El Carrusel del Recuerdo</h2>
-    <p style="font-size: 0.9rem; color: #888; text-align: center; margin: 5px auto;">(Desliza o usa la rueda del mouse para navegar)</p>
-    
-    <div class="escena-stack" id="contenedor"></div>
-
-    <div id="modal-foto" class="modal-oculto" onclick="closePhotoModal()">
-        <div class="modal-contenedor-arte">
-            <div id="polvo-estelar"></div>
-            <div class="marco-arte-gloria">
-                <img id="img-modal" src="" alt="Recuerdo">
-            </div>
-            <div id="marco-mensaje-flotante">
-                <p id="texto-mensaje"></p>
-            </div>
-        </div>
-    </div>
-    </div> <script src="javascript/carrusel.js"></script>
-</section>
-
-    <div class="separador"></div>
-
-<section id="GALAXIA">
-
-    <div class="galaxybody">
-        <div id="cometa"></div>
-        <div id="universo">
-            <div class="corazon-central">❤️</div> 
-        </div>
-
-        <div id="contenedor-trivia" style="display:none;">
-
-            <!-- ahora sí cierra -->
-            <button
-              id="btn-cerrar-trivia"
-              onclick="cerrarTrivia()">
-              ×
-            </button>
-
-            <h2 id="trivia-titulo">
-                Cargando...
-            </h2>
-
-            <p id="trivia-pregunta">
-                Preparando preguntas...
+    <Section id="INTRODUCCION">
+            <p class="introduccion-amor">
+                "Aquí empieza el viaje de nuestros primeros 10 años. Cada foto es un recuerdo de risas, aventuras y de todo lo que hemos construido juntos. Te amo por siempre."
             </p>
+    </Section>
 
-            <div id="trivia-opciones"></div>
+    <section id="CARRUSEL">
+        <h2 style="margin-top: 20px; text-align: center;">El Carrusel del Recuerdo</h2>
+        <p style="font-size: 0.9rem; color: #888; text-align: center; margin: 5px auto;">(Desliza o usa la rueda del mouse para navegar)</p>
+        
+        <div class="escena-stack" id="contenedor"></div>
+
+        <div id="modal-foto" class="modal-oculto" onclick="closePhotoModal()">
+            <div class="modal-contenedor-arte">
+                <div id="polvo-estelar"></div>
+                <div class="marco-arte-gloria">
+                    <img id="img-modal" src="" alt="Recuerdo">
+                </div>
+                <div id="marco-mensaje-flotante">
+                    <p id="texto-mensaje"></p>
+                </div>
+            </div>
+        </div>
+        </div> <script src="javascript/carrusel.js"></script>
+    </section>
+
+        <div class="separador"></div>
+
+    <section id="GALAXIA">
+
+        <div class="galaxybody">
+            <div id="cometa"></div>
+            <div id="universo">
+                <div class="corazon-central">❤️</div> 
+            </div>
+
+            <div id="contenedor-trivia" style="display:none;">
+
+                <!-- ahora sí cierra -->
+                <button
+                id="btn-cerrar-trivia"
+                onclick="cerrarTrivia()">
+                ×
+                </button>
+
+                <h2 id="trivia-titulo">
+                    Cargando...
+                </h2>
+
+                <p id="trivia-pregunta">
+                    Preparando preguntas...
+                </p>
+
+                <div id="trivia-opciones"></div>
+
+            </div>
+
+
+            <div id="modal-cometa">
+
+                <h3 style="color:var(--color-primario);">
+                    ✨ Susurro del Espacio ✨
+                </h3>
+
+                <p id="texto-cometa"></p>
+
+                <button
+                class="boton-opcion"
+                onclick="closeCometModal()">
+                Cerrar
+                </button>
+
+            </div>
 
         </div>
 
+        <!-- trivia primero -->
+        <script src="javascript/trivias.js"></script>
 
-        <div id="modal-cometa">
+        <!-- luego galaxia -->
+        <script src="javascript/galaxia.js"></script>
 
-            <h3 style="color:var(--color-primario);">
-                ✨ Susurro del Espacio ✨
-            </h3>
+    </section>
 
-            <p id="texto-cometa"></p>
-
-            <button
-             class="boton-opcion"
-             onclick="closeCometModal()">
-             Cerrar
-            </button>
-
-        </div>
-
-    </div>
-
-    <!-- trivia primero -->
-    <script src="javascript/trivias.js"></script>
-
-    <!-- luego galaxia -->
-    <script src="javascript/galaxia.js"></script>
-
-</section>
-
-    <div class="separador"></div>
+        <div class="separador"></div>
 
 </body>
 
