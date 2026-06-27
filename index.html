@@ -1,0 +1,175 @@
+<!DOCTYPE html> 
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>❤️ 21-11-2016</title>
+    
+    <!-- 1. Preconectores de Google Fonts (Siempre van primero para acelerar la carga) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 2. Fuentes Web (Agrupadas en un solo enlace para mayor eficiencia) -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- 3. Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 4. Favicon (Icono de la pestaña) -->
+    <link rel="icon" href="https://i.pinimg.com/originals/38/e7/3a/38e73ab9ccd7da9649c2857f70e848b4.gif" type="image/gif">
+
+    <!-- 5. Tus Hojas de Estilo CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/contador.css">
+    <link rel="stylesheet" href="css/carrusel.css">
+    <link rel="stylesheet" href="css/reproductor.css">
+    <link rel="stylesheet" href="css/galaxia.css">
+
+    <!-- 6. Librerías de JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- 7. Optimizador de nitidez para pantallas Retina (iPad/iPhone) -->
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+
+<body>
+
+<section id="REPRODUCTOR">
+        <div id="contenedor-reproductor">
+            <div id="reproductor-mini" class="oculto">
+                <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
+                <iframe id="video-youtube" src="https://www.youtube.com/watch?v=_xOiNkOP4pU&list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <button id="boton-musica" onclick="toggleReproductor()">🎵</button>
+        </div> <script src="javascript/reproductor.js"></script>
+</section>
+
+<section id="TITULOS"> 
+        <h1>Feliz Aniversario Amore</h1>
+        <h2>Ya 10 años juntos, ¡cómo pasa el tiempo!</h2>
+</section>
+
+<section id="CONTADOR">
+        <div class="contador-container" id="main-panel">
+            <h3 style="margin-top:0">Llevamos juntos:</h3>
+            <div id="reloj">Cargando nuestro tiempo...</div>
+        </div> 
+        <script src="javascript/contador.js"></script>
+</section>
+
+<Section id="INTRODUCCION">
+        <p class="introduccion-amor">
+            "Aquí empieza el viaje de nuestros primeros 10 años. Cada foto es un recuerdo de risas, aventuras y de todo lo que hemos construido juntos. Te amo por siempre."
+        </p>
+</Section>
+
+<section id="CARRUSEL">
+    <h2 style="margin-top: 20px; text-align: center;">El Carrusel del Recuerdo</h2>
+    <p style="font-size: 0.9rem; color: #888; text-align: center; margin: 5px auto;">(Desliza o usa la rueda del mouse para navegar)</p>
+    
+    <div class="escena-stack" id="contenedor"></div>
+
+    <div id="modal-foto" class="modal-oculto" onclick="closePhotoModal()">
+        <div class="modal-contenedor-arte">
+            <div id="polvo-estelar"></div>
+            <div class="marco-arte-gloria">
+                <img id="img-modal" src="" alt="Recuerdo">
+            </div>
+            <div id="marco-mensaje-flotante">
+                <p id="texto-mensaje"></p>
+            </div>
+        </div>
+    </div>
+    </div> <script src="javascript/carrusel.js"></script>
+</section>
+
+    <div class="separador"></div>
+
+<section id="GALAXIA">
+
+    <div class="galaxybody">
+
+        <div id="cometa"></div>
+
+
+        <div id="universo">
+            <div class="corazon-central">❤️</div>
+        </div>
+
+
+        <div id="contenedor-trivia" style="display:none;">
+
+            <!-- ahora sí cierra -->
+            <button
+              id="btn-cerrar-trivia"
+              onclick="cerrarTrivia()">
+              ×
+            </button>
+
+            <h2 id="trivia-titulo">
+                Cargando...
+            </h2>
+
+            <p id="trivia-pregunta">
+                Preparando preguntas...
+            </p>
+
+            <div id="trivia-opciones"></div>
+
+        </div>
+
+
+        <div id="modal-cometa">
+
+            <h3 style="color:var(--color-primario);">
+                ✨ Susurro del Espacio ✨
+            </h3>
+
+            <p id="texto-cometa"></p>
+
+            <button
+             class="boton-opcion"
+             onclick="closeCometModal()">
+             Cerrar
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- trivia primero -->
+    <script src="javascript/trivias.js"></script>
+
+    <!-- luego galaxia -->
+    <script src="javascript/galaxia.js"></script>
+
+</section>
+
+    <div class="separador"></div>
+
+</body>
+
+</html>
+<!-- 
+PUNTOS A TOMAR
+1.- TRANSICIONES CON MENSAJES OCULTOS AL HACER CLICKS
+2.- En algunas imagenes que al hace click o pasar el mouse tenga mensajitos
+3.- corregir los cometas - Precarga de imágenes - 
+4.- cuestionario donde deba respondera 10 preguntas de cada año y que cada respuesta correcta rellene una barra y al final de esa barra de un premio o algo - la fallar sale un capoo triste en cada pregunta
+5.- que cada año haga una funcion diferente no se que el 2016 tenga un custionario - 2017 un karaoke - 2018...... y asi sucesibamente
+6.- Linea de tiempo con cada año
+7.- click exterior y corregir el scroll para que suba con la rueda del mouse no afecte  
+
+
+-->
+
+
+

@@ -1,0 +1,211 @@
+const anniversaryData = {
+ "2016":[
+  {
+   question:"¿Fecha de cuando te pedi pololeo?",
+   options:["15 Nov","11 Nov","21 Nov","30 Nov"],
+   correct:2,
+   message:"¡El inicio de todo! ❤️"
+  },
+  {
+   question:"¿Quién fue nuestra 'cupido' o la persona que nos presentó?",
+   options:["Karen", "Carla", "María", "Sofía"],
+   correct:0,
+   message:"¡Gracias a ella pude conocerte! ✨"
+  },
+  {
+   question:"¿Qué CANTANTE nos unía en el 2016 - 2017?",
+   options:["Zarcort", "Kronno zomber", "Yandel", "Porta"],
+   correct:0,
+   message:"https://www.youtube.com/watch?v=XXfntpmrQ08&list=RDXXfntpmrQ08&start_radio=1 🎵"
+  },
+  {
+   question:"¿Cuánto tiempo pasó desde que nos conocimos hasta que te pedí pololeo?",
+   options:["1 semana", "2 semanas", "3 semanas", "4 semanas"],
+   correct:3,
+   message:"¡Al mirarte supe que tu eras la mujer que queria pasar el resto de mi vida! ⏳"
+  },
+  {
+   question:"¿En qué medio de transporte te pedí pololeo?",
+   options:["En un auto", "Caminando", "En una micro", "En el parque"],
+   correct:2,
+   message:"¡Nuestra micro testigo! 🚌"
+  },
+  {
+   question:"¿Qué actividad extracurricular compartíamos los sábados?",
+   options:["Fútbol", "Ping Pong", "Teatro", "Taller de arte"],
+   correct:1,
+   message:"¡Duelos inolvidables! 🏓"
+  },
+  {
+   question:"¿Dónde fue nuestro primer beso?",
+   options:["En el liceo", "En una micro", "En tu casa", "En el cine"],
+   correct:1,
+   message:"¡Fue mágico! 💋"
+  },
+  {
+   question:"¿En qué mes del 2016 empezamos a salir?",
+   options:["Septiembre", "Octubre", "Noviembre", "Diciembre"],
+   correct:2,
+   message:"¡Noviembre, nuestro mes! 🗓️"
+  },
+  {
+   question:"¿Cómo me sentía yo al momento de pedirte pololeo en la micro?",
+   options:["Muy seguro", "Estaba nervioso y no sabía qué hacer", "Muy tranquilo", "Estaba aburrido"],
+   correct:1,
+   message:"¡Los nervios valieron la pena! 😊"
+  },
+  {
+   question:"¿Qué es lo que me hace estar seguro de que eres mi alma gemela?",
+   options:["Nuestra conexión desde el primer día", "Que tenemos los mismos gustos", "Todo lo que hemos construido juntos", "Todas las anteriores"],
+   correct:3,
+   message:"¡Definitivamente todo! ❤️"
+  },
+  {
+   question:"¿Cómo describirías mi nivel de experiencia en el amor al iniciar nuestra relación?",
+   options:["Todo un experto", "Muy inocente", "Tenía dudas", "Ya había tenido muchas parejas"],
+   correct:1,
+   message:"¡Fuimos aprendiendo juntos! 👶"
+  }
+ ],
+ "2017":[
+  {
+   question:"¿Primer viaje juntos?",
+   options:["Playa","Montaña","Campo"],
+   correct:0,
+   message:"Inolvidable... 🌊"
+  }
+ ]
+ // Aquí puedes seguir agregando los demás años siguiendo la misma estructura
+};
+
+
+/* GLOBAL: Cerrar desde la X */
+window.cerrarTrivia = function(){
+ document.getElementById("contenedor-trivia").style.display="none";
+ 
+ resetUniverse();
+
+ if(window.currentPlanet){
+   window.currentPlanet.isActive = true; // Devuelve el movimiento si cierra a medias
+ }
+};
+
+/* CORRECCIÓN: Cerrar con éxito y transformar el planeta */
+function cerrarTriviaExito(){
+ document.getElementById("contenedor-trivia").style.display="none";
+ 
+ resetUniverse();
+
+ if(window.currentPlanet){
+   // 1. Reactivamos el planeta para el render
+   window.currentPlanet.isActive = true;
+   
+   // 2. Le añadimos la clase CSS para que tu galaxia.css lo pinte como un corazón ❤️
+   if(window.currentPlanet.el){
+     window.currentPlanet.el.classList.add("completado");
+   }
+ }
+}
+
+
+function showTrivia(ref){
+ window.currentPlanet = ref;
+ const contenedor = document.getElementById("contenedor-trivia");
+ const preguntas = anniversaryData[ref.year] || [];
+
+ let preguntaActual = 0;
+ let aciertos = 0;
+
+ if(!preguntas.length){
+   alert("Aún no hay preguntas para " + ref.year);
+   ref.isActive = true;
+   resetUniverse();
+   return;
+ }
+
+ contenedor.style.display = "block";
+
+ function renderizarPregunta(){
+   if(preguntaActual < preguntas.length){
+      const data = preguntas[preguntaActual];
+
+      document.getElementById("trivia-titulo").innerText = 
+      `Año ${ref.year} (${preguntaActual + 1}/${preguntas.length})`;
+
+      document.getElementById("trivia-pregunta").innerText = data.question;
+
+      const opcionesDiv = document.getElementById("trivia-opciones");
+      opcionesDiv.innerHTML = "";
+
+      data.options.forEach((opcion, index) => {
+        const btn = document.createElement("button");
+        btn.className = "boton-opcion";
+        btn.innerText = opcion;
+        btn.onclick = () => { validarRespuesta(index); };
+        opcionesDiv.appendChild(btn);
+      });
+
+   } else {
+      finalizarTrivia();
+   }
+ }
+
+ function validarRespuesta(indice){
+   if(indice === preguntas[preguntaActual].correct){
+      aciertos++;
+   }
+   preguntaActual++;
+   renderizarPregunta();
+ }
+
+ function finalizarTrivia(){
+   const opcionesDiv = document.getElementById("trivia-opciones");
+
+   // Aprueba con el 70% o más
+   if(aciertos >= Math.ceil(preguntas.length * 0.7)){
+      
+      ref.isCompleted = true;
+
+      document.getElementById("trivia-pregunta").innerText = `¡Logrado! 🎉\n${aciertos}/${preguntas.length}`;
+
+      opcionesDiv.innerHTML = `
+      <button class="boton-opcion" onclick="cerrarTriviaExito()">
+      Desbloquear Año ❤️
+      </button>
+      `;
+
+      // Invocar efectos visuales de éxito
+      celebrate();
+      createExplosiveHeart("#ff4d4d");
+
+   } else {
+      document.getElementById("trivia-pregunta").innerText = `Casi... 😢\n${aciertos}/${preguntas.length}\n¡Intentémoslo otra vez!`;
+
+      opcionesDiv.innerHTML = `
+      <button class="boton-opcion" onclick="showTrivia(window.currentPlanet)">
+      Reintentar
+      </button>
+      `;
+   }
+ }
+
+ renderizarPregunta();
+}
+
+/* --- EFECTOS VISUALES (Evita que el código muera si no existían) --- */
+function celebrate() {
+  // Usando la librería Canvas Confetti que ya importaste en tu index.html
+  if (typeof confetti === "function") {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+}
+
+function createExplosiveHeart(color) {
+  // Por ahora dejamos el contenedor listo. 
+  // Aquí puedes meter la animación de GSAP para crear partículas flotantes si quieres.
+  console.log("Efecto de corazón explosivo color: " + color);
+}
