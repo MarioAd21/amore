@@ -1,11 +1,11 @@
+
 const memoryGallery = [
     { url: 'img/ejemp.jpeg', msj: 'El día que nos conocimos... ❤️' },
     { url: 'img/ejemp.jpeg', msj: 'Nuestra primera salida juntos.' },
     { url: 'img/ejemp.jpeg', msj: 'Te veías hermosa esa tarde.' },
     { url: 'img/ejemp.jpeg', msj: 'Construyendo sueños juntos.' },
     { url: 'img/ejemp.jpeg', msj: '10 años de pura magia.' },
-    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' },
-    { url: 'img/ejemp.jpeg', msj: 'Nuestro futuro juntos.' } // <--- AGREGADA ESTA 7MA TARJETA
+    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' }
 ];
 
 let currentIndex = 0;
@@ -34,21 +34,19 @@ function initCarousel() {
 
 
     container.addEventListener('wheel', (e) => {
-    const triviaModal = document.getElementById('contenedor-trivia');
-    if (triviaModal && triviaModal.style.display === 'block') return;
+        const triviaModal = document.getElementById('contenedor-trivia');
+        if (triviaModal && triviaModal.style.display === 'block') return;
 
-    e.preventDefault(); 
-    if (!canRotate) return;
+        e.preventDefault(); 
+        if (!canRotate) return;
 
-    if (Math.abs(e.deltaY) > 5) { 
-        canRotate = false;
-        // Si deltaY es positivo (rueda hacia abajo), queremos que el carrusel gire a la DERECHA.
-        // Para girar a la derecha en tu arreglo, debemos RESTAR al índice.
-        currentIndex = (currentIndex - (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
-        updateFanLayout();
-        setTimeout(() => { canRotate = true; }, rotationCooldown);
-    }
-}, { passive: false });
+        if (Math.abs(e.deltaY) > 5) { 
+            canRotate = false;
+            currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
+            updateFanLayout();
+            setTimeout(() => { canRotate = true; }, rotationCooldown);
+        }
+    }, { passive: false });
 
     container.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
     
@@ -72,40 +70,13 @@ function initCarousel() {
         const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
 
         if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            currentIndex = (currentIndex + -1) % totalMemories; 
+            currentIndex = (currentIndex + 1) % totalMemories; 
             updateFanLayout(); 
         } 
     }, 5000);
 }
 
-function updateFanLayout() {
-    const cards = document.querySelectorAll('.foto-card');
-    cards.forEach(card => { 
-        card.className = 'foto-card oculta'; 
-        card.style.zIndex = "0"; 
-    });
-    
-    // Función de índice circular corregida
-    const getIndexAtOffset = (offset) => (currentIndex + offset + totalMemories) % totalMemories;
-    
-    const layoutMap = [
-        { idx: getIndexAtOffset(0), className: 'pos-centro', z: 70 },
-        { idx: getIndexAtOffset(1), className: 'pos-d1', z: 60 },
-        { idx: getIndexAtOffset(2), className: 'pos-d2', z: 50 },
-        { idx: getIndexAtOffset(3), className: 'pos-d3', z: 40 },
-        { idx: getIndexAtOffset(-1), className: 'pos-i1', z: 60 },
-        { idx: getIndexAtOffset(-2), className: 'pos-i2', z: 50 },
-        { idx: getIndexAtOffset(-3), className: 'pos-i3', z: 40 }
-    ];
-    
-    layoutMap.forEach(item => {
-        const element = document.getElementById('img-' + item.idx);
-        if (element) { 
-            element.className = 'foto-card ' + item.className; 
-            element.style.zIndex = item.z; 
-        }
-    });
-}
+
 
 function openPhotoModal(url, message) {
     isCarouselPaused = true; 
