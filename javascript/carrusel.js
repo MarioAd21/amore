@@ -76,7 +76,33 @@ function initCarousel() {
     }, 5000);
 }
 
-
+function updateFanLayout() {
+    const cards = document.querySelectorAll('.foto-card');
+    cards.forEach(card => { 
+        card.className = 'foto-card oculta'; 
+        card.style.zIndex = "0"; 
+    });
+    
+    const getIndexAtOffset = (offset) => (currentIndex + offset + totalMemories) % totalMemories;
+    
+    const layoutMap = [
+        { idx: getIndexAtOffset(0), className: 'pos-centro', z: 50 },
+        { idx: getIndexAtOffset(1), className: 'pos-d1', z: 40 },
+        { idx: getIndexAtOffset(2), className: 'pos-d2', z: 30 },
+        { idx: getIndexAtOffset(3), className: 'pos-d3', z: 20 },
+        { idx: getIndexAtOffset(-1), className: 'pos-i1', z: 40 },
+        { idx: getIndexAtOffset(-2), className: 'pos-i2', z: 30 },
+        { idx: getIndexAtOffset(-3), className: 'pos-i3', z: 20 }
+    ];
+    
+    layoutMap.forEach(item => {
+        const element = document.getElementById('img-' + item.idx);
+        if (element) { 
+            element.className = 'foto-card ' + item.className; 
+            element.style.zIndex = item.z; 
+        }
+    });
+}
 
 function openPhotoModal(url, message) {
     isCarouselPaused = true; 
