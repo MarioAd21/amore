@@ -8,6 +8,13 @@
     --color-titulo: #B0C4DE;
 }
 
+html, body {
+    overflow-x: hidden; /* Evita el scroll horizontal */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: #000000; /* Color base negro */
     margin: 0;
