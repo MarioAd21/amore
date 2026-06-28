@@ -1,13 +1,29 @@
-
-const memoryGallery = [
-    { url: 'img/ejemp.jpeg', msj: 'El día que nos conocimos... ❤️' },
-    { url: 'img/ejemp.jpeg', msj: 'Nuestra primera salida juntos.' },
-    { url: 'img/ejemp.jpeg', msj: 'Te veías hermosa esa tarde.' },
-    { url: 'img/ejemp.jpeg', msj: 'Construyendo sueños juntos.' },
-    { url: 'img/ejemp.jpeg', msj: '10 años de pura magia.' },
-    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' },
-    { url: 'img/ejemp.jpeg', msj: 'Nuestra séptima foto de prueba.' }
+const mensajesAmor = [
+    "El día que nos conocimos... ❤️",
+    "Nuestra primera salida juntos.",
+    "Te veías hermosa esa tarde.",
+    "Construyendo sueños juntos.",
+    "10 años de pura magia.",
+    "Te amo cada día más.",
+    "Mi lugar favorito es a tu lado.",
+    "Por mil aventuras más.",
+    "Eres mi casualidad más hermosa.",
+    "Mi compañera de vida y de viajes.",
+    "Aún conservo cada una de tus cartas."
 ];
+
+const memoryGallery = [];
+
+for (let i = 1; i <= 50; i++) {
+    const msjAleatorio = mensajesAmor[Math.floor(Math.random() * mensajesAmor.length)];
+    
+    memoryGallery.push({ 
+        // Usamos tu imagen de prueba para las 50 cartas
+        url: 'img/ejemp.jpeg', 
+        msj: msjAleatorio 
+    });
+}
+
 
 let currentIndex = 0;
 const totalMemories = memoryGallery.length;

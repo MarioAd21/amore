@@ -13,7 +13,7 @@
 }
 
 /* Cartas de las Fotos */
-.foto-card {
+foto-card {
     position: absolute; 
     width: 220px; 
     height: 340px;
@@ -21,28 +21,43 @@
     border: 2px solid cadetblue;
     background-color: #1a1a1a; 
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.9); 
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease, filter 0.4s ease;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.85); /* Más sombra para dar más sensación de flotación */
+    pointer-events: none; 
+    backface-visibility: hidden;
+}
+
+.oculta { 
+    opacity: 0; 
+    transform: scale(0) translateZ(-1000px) translateX(0); 
     pointer-events: none; 
 }
 
 .pos-centro { 
-    transform: translateZ(250px) translateX(0); 
+    transform: translateZ(350px) translateX(0) rotateY(0deg); /* Trae la carta muy al frente */
     filter: brightness(1.1); 
     opacity: 1; 
     pointer-events: auto !important; 
-    border-color: gold;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    z-index: 10;
 }
 
-.pos-d1 { transform: translateX(180px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); }
-.pos-d2 { transform: translateX(320px) translateZ(-100px) rotateY(-25deg) scale(0.7); filter: brightness(0.4); opacity: 0.8; }
-.pos-d3 { transform: translateX(450px) translateZ(-300px) rotateY(-35deg) scale(0.5); filter: brightness(0.2); opacity: 0.4; }
-.pos-i1 { transform: translateX(-180px) translateZ(50px) rotateY(15deg) scale(0.85); filter: brightness(0.6); }
-.pos-i2 { transform: translateX(-320px) translateZ(-100px) rotateY(25deg) scale(0.7); filter: brightness(0.4); opacity: 0.8; }
-.pos-i3 { transform: translateX(-450px) translateZ(-300px) rotateY(35deg) scale(0.5); filter: brightness(0.2); opacity: 0.4; }
-.oculta { opacity: 0; transform: scale(0) translateZ(-500px); }
+.pos-d1 { transform: translateX(190px) translateZ(180px) rotateY(-25deg); opacity: 0.85; z-index: 5; }
+.pos-i1 { transform: translateX(-190px) translateZ(180px) rotateY(25deg); opacity: 0.85; z-index: 5; }
 
+.pos-d2 { transform: translateX(350px) translateZ(30px) rotateY(-45deg); opacity: 0.55; z-index: 3; }
+.pos-i2 { transform: translateX(-350px) translateZ(30px) rotateY(45deg); opacity: 0.55; z-index: 3; }
+
+/* Las posiciones de los extremos ahora están más hacia los lados y más al fondo */
+.pos-d3 { transform: translateX(480px) translateZ(-150px) rotateY(-65deg); opacity: 0.25; z-index: 1; }
+.pos-i3 { transform: translateX(-480px) translateZ(-150px) rotateY(65deg); opacity: 0.25; z-index: 1; }
+
+.oculta { 
+    opacity: 0; 
+    transform: translateZ(-800px) scale(0.6); 
+    pointer-events: none; 
+    /* Al pasar a oculta, la opacidad cae de inmediato para evitar que cruce la pantalla de forma fea */
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease;
+}
 
 /* Modal de Foto Grande */
 #modal-foto { 
