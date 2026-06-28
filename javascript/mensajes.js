@@ -1,5 +1,4 @@
-<script>
-function mostrarMensaje(palabra) {git status
+function mostrarMensaje(palabra) {
     let mensaje = "";
     
     // Aquí defines qué mensaje sale según la palabra tocada
@@ -17,6 +16,7 @@ function mostrarMensaje(palabra) {git status
             mensaje = "¡Un recuerdo especial escondido solo para ti! ❤️";
     }
 
+    // Ventana emergente elegante utilizando SweetAlert2
     Swal.fire({
         text: mensaje,
         confirmButtonText: 'Cerrar',
@@ -25,4 +25,3 @@ function mostrarMensaje(palabra) {git status
         color: '#E0E0E0'
     });
 }
-</script>
