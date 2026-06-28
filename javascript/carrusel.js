@@ -1,11 +1,11 @@
-
 const memoryGallery = [
     { url: 'img/ejemp.jpeg', msj: 'El día que nos conocimos... ❤️' },
     { url: 'img/ejemp.jpeg', msj: 'Nuestra primera salida juntos.' },
     { url: 'img/ejemp.jpeg', msj: 'Te veías hermosa esa tarde.' },
     { url: 'img/ejemp.jpeg', msj: 'Construyendo sueños juntos.' },
     { url: 'img/ejemp.jpeg', msj: '10 años de pura magia.' },
-    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' }
+    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' },
+    { url: 'img/ejemp.jpeg', msj: 'Nuestro futuro juntos.' } // <--- AGREGADA ESTA 7MA TARJETA
 ];
 
 let currentIndex = 0;
@@ -35,47 +35,44 @@ function initCarousel() {
 
     container.addEventListener('wheel', (e) => {
     const triviaModal = document.getElementById('contenedor-trivia');
-        if (triviaModal && triviaModal.style.display === 'block') return;
+    if (triviaModal && triviaModal.style.display === 'block') return;
 
-        // Solo bloqueamos el scroll si detectamos una intención de rotación horizontal
-        // O si quieres que el scroll sea más suave, elimina el e.preventDefault()
-        // y deja que el carrusel reaccione solo cuando el usuario haga scroll activo.
-        if (Math.abs(e.deltaY) > 20) { 
-            e.preventDefault(); 
-            if (!canRotate) return;
-            
-            canRotate = false;
-            currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
-            updateFanLayout();
-            setTimeout(() => { canRotate = true; }, rotationCooldown);
-        }
-    }, { passive: false });
+    e.preventDefault(); 
+    if (!canRotate) return;
+
+    if (Math.abs(e.deltaY) > 5) { 
+        canRotate = false;
+        // Si deltaY es positivo (rueda hacia abajo), queremos que el carrusel gire a la DERECHA.
+        // Para girar a la derecha en tu arreglo, debemos RESTAR al índice.
+        currentIndex = (currentIndex - (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
+        updateFanLayout();
+        setTimeout(() => { canRotate = true; }, rotationCooldown);
+    }
+}, { passive: false });
 
     container.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
     
     container.addEventListener('touchmove', (e) => {
+        const triviaModal = document.getElementById('contenedor-trivia');
+        if (triviaModal && triviaModal.style.display === 'block') return;
+
         if (!canRotate) return;
+        const diffX = touchStartX - e.touches[0].clientX;
         
-        const touchMoveX = e.touches[0].clientX;
-        const diffX = touchStartX - touchMoveX;
-        
-        // Solo activamos el carrusel si el movimiento horizontal es mayor que el vertical
-        // Esto permite que el usuario pueda hacer scroll hacia abajo sin problemas
         if (Math.abs(diffX) > touchSensitivity) {
-            e.preventDefault(); // Ahora sí lo bloqueamos porque sabemos que quiere rotar
             canRotate = false;
             currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
-    }, { passive: false });
+    });
 
     setInterval(() => { 
         const triviaModal = document.getElementById('contenedor-trivia');
         const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
 
         if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            currentIndex = (currentIndex + 1) % totalMemories; 
+            currentIndex = (currentIndex + -1) % totalMemories; 
             updateFanLayout(); 
         } 
     }, 5000);
@@ -88,16 +85,17 @@ function updateFanLayout() {
         card.style.zIndex = "0"; 
     });
     
+    // Función de índice circular corregida
     const getIndexAtOffset = (offset) => (currentIndex + offset + totalMemories) % totalMemories;
     
     const layoutMap = [
-        { idx: getIndexAtOffset(0), className: 'pos-centro', z: 50 },
-        { idx: getIndexAtOffset(1), className: 'pos-d1', z: 40 },
-        { idx: getIndexAtOffset(2), className: 'pos-d2', z: 30 },
-        { idx: getIndexAtOffset(3), className: 'pos-d3', z: 20 },
-        { idx: getIndexAtOffset(-1), className: 'pos-i1', z: 40 },
-        { idx: getIndexAtOffset(-2), className: 'pos-i2', z: 30 },
-        { idx: getIndexAtOffset(-3), className: 'pos-i3', z: 20 }
+        { idx: getIndexAtOffset(0), className: 'pos-centro', z: 70 },
+        { idx: getIndexAtOffset(1), className: 'pos-d1', z: 60 },
+        { idx: getIndexAtOffset(2), className: 'pos-d2', z: 50 },
+        { idx: getIndexAtOffset(3), className: 'pos-d3', z: 40 },
+        { idx: getIndexAtOffset(-1), className: 'pos-i1', z: 60 },
+        { idx: getIndexAtOffset(-2), className: 'pos-i2', z: 50 },
+        { idx: getIndexAtOffset(-3), className: 'pos-i3', z: 40 }
     ];
     
     layoutMap.forEach(item => {
