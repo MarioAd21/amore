@@ -1,74 +1,72 @@
-/* Configuración General del Cuerpo */
+/* Variables de Color */
+:root {
+    --color-fondo: #000000;
+    --color-primario: cadetblue;
+    --color-acento: #7FFFD4; /* Electric Mint */
+    --color-tarjeta: #121212; /* Un gris muy oscuro para la tarjeta */
+    --color-texto: #E0E0E0;
+    --color-titulo: #B0C4DE;
+}
+
 body {
-    background-color: black;
-    color: white;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
     margin: 0;
     padding: 20px;
-    /* Mantenemos tu tipografía, pero añadimos el suavizado de Apple */
-    font-family: 'Times New Roman', Times, serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 
-/* ¡ESTA ES LA CLAVE PARA LOS ICONOS!
-   Forzamos a que todo lo que use Font Awesome mantenga su propia fuente 
-   y el iPad no intente ponerle Times New Roman por error.
-*/
-.fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", sans-serif !important;
+/* Tarjeta para la carta */
+#CUERPO {
+    max-width: 750px;
+    background-color: var(--color-tarjeta);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(95, 158, 160, 0.2);
+    margin: 40px auto;
+    text-align: center;
+    border: 1px solid #222;
 }
 
-/* Títulos y Textos */
-h1 { 
-    color: cadetblue; 
-    font-family: "Dancing Script", cursive; 
-    font-size: 3.5rem; 
-    margin-bottom: 5px; 
-    text-align: center; 
+#CUERPO p, #CUERPO h3 {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: #cccccc;
 }
 
-h2 { 
-    color: yellow; 
-    font-family: 'Dancing Script', cursive; 
-    font-size: 2.2rem; 
-    margin-top: 0; 
-    text-align: center; 
+/* Poema con estilo destacado */
+.poema-aniversario {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem !important;
+    color: var(--color-acento) !important;
+    margin-top: 40px !important;
+    padding: 30px;
+    border: 2px solid var(--color-acento);
+    border-radius: 15px;
+    background: rgba(127, 255, 212, 0.05);
 }
 
-.introduccion-amor { 
-    max-width: 600px; 
-    text-align: center; 
-    font-style: italic; 
-    color: #ccc; 
-    margin-bottom: 30px; 
-    font-family: 'Times New Roman', Times, serif;
-}
+h1 { color: var(--color-primario); font-family: "Dancing Script", cursive; font-size: 3.5rem; text-align: center; }
+h2 { color: var(--color-titulo); font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-align: center; }
 
 .separador {
-    width: 80%; 
-    max-width: 1400px; 
+    width: 60%;
     height: 2px;
-    background: linear-gradient(to right, transparent, rgb(44, 138, 84), transparent);
+    background: linear-gradient(to right, transparent, var(--color-acento), transparent);
     margin: 40px auto;
 }
 
-.separadorgalaxia {
-    height: 100px;
-    background: linear-gradient(to bottom, #000, #0a0a0a);
-    width: 100%;
-}
 
 .introduccion-amor { 
     max-width: 600px; 
     text-align: center; 
     font-style: italic; 
-    color: #ccc; 
-    margin-top: 35px;    /* <--- AGREGA ESTA LÍNEA para separarlo del contador */
-    margin-bottom: 30px; 
+    color: #999999; 
+    margin: 35px auto 30px auto; 
+    font-family: 'Poppins', sans-serif;
 }
