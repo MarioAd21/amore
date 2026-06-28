@@ -1,5 +1,5 @@
 <script>
-function mostrarMensaje(palabra) {
+function mostrarMensaje(palabra) {git status
     let mensaje = "";
     
     // Aquí defines qué mensaje sale según la palabra tocada
