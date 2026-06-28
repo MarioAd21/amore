@@ -8,7 +8,7 @@
     justify-content: center;
     perspective: 1500px; 
     cursor: grab;
-    touch-action: none; 
+    touch-action: pan-y;
     overscroll-behavior: contain; 
 }
 

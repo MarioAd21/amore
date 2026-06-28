@@ -34,13 +34,16 @@ function initCarousel() {
 
 
     container.addEventListener('wheel', (e) => {
-        const triviaModal = document.getElementById('contenedor-trivia');
+    const triviaModal = document.getElementById('contenedor-trivia');
         if (triviaModal && triviaModal.style.display === 'block') return;
 
-        e.preventDefault(); 
-        if (!canRotate) return;
-
-        if (Math.abs(e.deltaY) > 5) { 
+        // Solo bloqueamos el scroll si detectamos una intención de rotación horizontal
+        // O si quieres que el scroll sea más suave, elimina el e.preventDefault()
+        // y deja que el carrusel reaccione solo cuando el usuario haga scroll activo.
+        if (Math.abs(e.deltaY) > 20) { 
+            e.preventDefault(); 
+            if (!canRotate) return;
+            
             canRotate = false;
             currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
@@ -51,19 +54,21 @@ function initCarousel() {
     container.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
     
     container.addEventListener('touchmove', (e) => {
-        const triviaModal = document.getElementById('contenedor-trivia');
-        if (triviaModal && triviaModal.style.display === 'block') return;
-
         if (!canRotate) return;
-        const diffX = touchStartX - e.touches[0].clientX;
         
+        const touchMoveX = e.touches[0].clientX;
+        const diffX = touchStartX - touchMoveX;
+        
+        // Solo activamos el carrusel si el movimiento horizontal es mayor que el vertical
+        // Esto permite que el usuario pueda hacer scroll hacia abajo sin problemas
         if (Math.abs(diffX) > touchSensitivity) {
+            e.preventDefault(); // Ahora sí lo bloqueamos porque sabemos que quiere rotar
             canRotate = false;
             currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
-    });
+    }, { passive: false });
 
     setInterval(() => { 
         const triviaModal = document.getElementById('contenedor-trivia');
