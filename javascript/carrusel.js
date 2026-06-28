@@ -1,3 +1,4 @@
+// --- 1. MENSAJES ALEATORIOS ---
 const mensajesAmor = [
     "El día que nos conocimos... ❤️",
     "Nuestra primera salida juntos.",
@@ -12,30 +13,30 @@ const mensajesAmor = [
     "Aún conservo cada una de tus cartas."
 ];
 
+// --- 2. GENERAMOS LAS 50 CARTAS AUTOMÁTICAMENTE ---
 const memoryGallery = [];
-
 for (let i = 1; i <= 50; i++) {
     const msjAleatorio = mensajesAmor[Math.floor(Math.random() * mensajesAmor.length)];
-    
     memoryGallery.push({ 
-        // Usamos tu imagen de prueba para las 50 cartas
-        url: 'img/ejemp.jpeg', 
+        url: 'img/ejemp.jpeg', // Imagen de prueba para que no se rompa
         msj: msjAleatorio 
     });
 }
 
-
+// --- 3. VARIABLES DE CONTROL ---
 let currentIndex = 0;
-const totalMemories = memoryGallery.length;
+const totalMemories = memoryGallery.length; // Ahora sí detectará 50
 let touchStartX = 0;
 let canRotate = true;
 let isCarouselPaused = false; 
 const rotationCooldown = 400;      
 const touchSensitivity = 80;  
 
+// --- 4. FUNCIÓN PRINCIPAL ---
 function initCarousel() {
     const container = document.getElementById('contenedor');
     if (!container) return;
+    
     memoryGallery.forEach((memory, i) => {
         const img = document.createElement('img');
         img.src = memory.url;
@@ -49,7 +50,7 @@ function initCarousel() {
 
     updateFanLayout();
 
-
+    // Control Mouse
     container.addEventListener('wheel', (e) => {
         const triviaModal = document.getElementById('contenedor-trivia');
         if (triviaModal && triviaModal.style.display === 'block') return;
@@ -59,12 +60,14 @@ function initCarousel() {
 
         if (Math.abs(e.deltaY) > 5) { 
             canRotate = false;
-            currentIndex = (currentIndex + (e.deltaY < 0 ? 1 : -1) + totalMemories) % totalMemories;
+            // Dirección invertida
+            currentIndex = (currentIndex + (e.deltaY > 0 ? -1 : 1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
     }, { passive: false });
 
+    // Control Táctil
     container.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
     
     container.addEventListener('touchmove', (e) => {
@@ -76,21 +79,24 @@ function initCarousel() {
         
         if (Math.abs(diffX) > touchSensitivity) {
             canRotate = false;
-            currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
+            // Dirección invertida
+            currentIndex = (currentIndex + (diffX > 0 ? -1 : 1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
     });
 
+    // Giro Automático
     setInterval(() => { 
         const triviaModal = document.getElementById('contenedor-trivia');
         const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
 
         if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            currentIndex = (currentIndex + 1) % totalMemories;
+            // Avanza hacia la derecha
+            currentIndex = (currentIndex + 1) % totalMemories; 
             updateFanLayout(); 
         } 
-    }, 5000);
+    }, 4000); // Lo subí a 4 segundos para que no maree tanto
 }
 
 function updateFanLayout() {
@@ -136,14 +142,10 @@ function closePhotoModal() {
     }
 }
 
-// Start carousel on load
 document.addEventListener('DOMContentLoaded', initCarousel);
 
-// ============================================================
-// SISTEMA DE POLVO ESTELAR PARA EL MODAL (NUEVO)
-// ============================================================
-
-const numberOfStars = 50; // Cantidad de partículas
+// --- POLVO ESTELAR ---
+const numberOfStars = 50; 
 const starContainer = document.getElementById('polvo-estelar');
 
 function createStardust() {
@@ -152,42 +154,34 @@ function createStardust() {
     for (let i = 0; i < numberOfStars; i++) {
         const star = document.createElement('div');
         
-        // Estilos básicos de la partícula
         star.style.position = 'absolute';
-        star.style.backgroundColor = 'rgba(240, 230, 210, 0.8)'; // Color crema suave
+        star.style.backgroundColor = 'rgba(240, 230, 210, 0.8)'; 
         star.style.borderRadius = '50%';
         star.style.pointerEvents = 'none';
 
-        // Tamaño aleatorio (entre 1px y 3px)
         const size = Math.random() * 2 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-
-        // Posición inicial aleatoria
         star.style.top = Math.random() * 100 + 'vh';
         star.style.left = Math.random() * 100 + 'vw';
-
-        // Resplandor individual aleatorio
+        
         const glow = Math.random() * 5 + 2;
         star.style.boxShadow = `0 0 ${glow}px rgba(240, 230, 210, 0.6)`;
 
-        // Animación de parpadeo y movimiento flotante (usando GSAP si está cargado, si no, es estático)
         if (typeof gsap !== 'undefined') {
             gsap.to(star, {
-                duration: Math.random() * 3 + 2, // Duración aleatoria
-                opacity: Math.random() * 0.5 + 0.2, // Parpadeo
-                y: '-=' + (Math.random() * 20 + 10), // Flotar hacia arriba
-                x: '+=' + (Math.random() * 10 - 5), // Ligeramente a los lados
-                repeat: -1, // Infinito
-                yoyo: true, // Ida y vuelta
+                duration: Math.random() * 3 + 2, 
+                opacity: Math.random() * 0.5 + 0.2, 
+                y: '-=' + (Math.random() * 20 + 10), 
+                x: '+=' + (Math.random() * 10 - 5), 
+                repeat: -1, 
+                yoyo: true, 
                 ease: 'sine.inOut',
-                delay: Math.random() * 2 // Retraso de inicio aleatorio
+                delay: Math.random() * 2 
             });
         }
-
         starContainer.appendChild(star);
     }
 }
 
-// Ejecutar la creación de partículas cuando cargue el DOM
 document.addEventListener('DOMContentLoaded', createStardust);
