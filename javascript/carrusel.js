@@ -5,7 +5,8 @@ const memoryGallery = [
     { url: 'img/ejemp.jpeg', msj: 'Te veías hermosa esa tarde.' },
     { url: 'img/ejemp.jpeg', msj: 'Construyendo sueños juntos.' },
     { url: 'img/ejemp.jpeg', msj: '10 años de pura magia.' },
-    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' }
+    { url: 'img/ejemp.jpeg', msj: 'Te amo cada día más.' },
+    { url: 'img/ejemp.jpeg', msj: 'Nuestra séptima foto de prueba.' }
 ];
 
 let currentIndex = 0;
