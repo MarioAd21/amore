@@ -28,14 +28,11 @@
 
 .oculta { 
     opacity: 0; 
-    /* Quitamos el scale(0) para que no se encoja y lo mandamos bien al fondo */
+    /* Quitamos el scale(0) para evitar que se encoja al desaparecer */
     transform: translateZ(-800px); 
     pointer-events: none; 
-    
-    /* EL TRUCO: Hacemos que la opacidad baje muy rápido (0.15s) 
-       Así la carta se vuelve invisible ANTES de viajar al centro, 
-       dando la ilusión de que se perdió por el costado. */
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease; 
+    /* Transición suave para que la opacidad desaparezca antes de que se note el viaje al fondo */
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; 
 }
 
 .pos-centro { 
