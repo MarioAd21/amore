@@ -43,7 +43,7 @@ function initCarousel() {
 
         if (Math.abs(e.deltaY) > 5) { 
             canRotate = false;
-            currentIndex = (currentIndex + (e.deltaY > 0 ? -1 : 1) + totalMemories) % totalMemories;
+            currentIndex = (currentIndex + (e.deltaY < 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
@@ -60,7 +60,7 @@ function initCarousel() {
         
         if (Math.abs(diffX) > touchSensitivity) {
             canRotate = false;
-            currentIndex = (currentIndex + (diffX > 0 ? -1 : 1) + totalMemories) % totalMemories;
+            currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
@@ -71,7 +71,7 @@ function initCarousel() {
         const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
 
         if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            currentIndex = (currentIndex - 1 + totalMemories) % totalMemories;
+            currentIndex = (currentIndex + 1) % totalMemories;
             updateFanLayout(); 
         } 
     }, 5000);
