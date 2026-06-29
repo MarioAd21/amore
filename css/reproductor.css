@@ -1,4 +1,3 @@
-/* --- CONTENEDOR REPRODUCTOR --- */
 #contenedor-reproductor {
     position: fixed;
     bottom: 20px;
@@ -19,7 +18,10 @@
     cursor: pointer; 
     display: flex; 
     align-items: center; 
-    justify-content: center; 
+    justify-content: center;
+    touch-action: manipulation; /* Elimina el retraso táctil de 300ms */
+    -webkit-tap-highlight-color: transparent; /* Quita el destello azul en Android */
+    transition: all 0.3s ease; 
 }
 
 #reproductor-mini {
@@ -29,14 +31,18 @@
     padding: 15px;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
-    
-    /* AGREGA ESTO: Tamaño por defecto para pantallas de PC */
     width: 350px;
     height: 200px;
-    position: relative; /* Asegura que el botón de cerrar se posicione bien */
+    position: relative; 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto de rebote */
+    transform-origin: bottom right; /* Hace que se anime saliendo desde el botón */
 }
 
-#reproductor-mini iframe { width: 100%; height: 100%; border-radius: 15px; }
+#reproductor-mini iframe { 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 15px; 
+}
 
 #btn-cerrar-repro { 
     position: absolute; 
@@ -49,16 +55,23 @@
     border-radius: 50%; 
     color: white; 
     cursor: pointer; 
+    touch-action: manipulation;
 }
 
+/* CLASES DE ESTADO (Reescritas para evitar lag) */
 .oculto { 
     opacity: 0; 
-    transform: scale(0) translateY(100px); 
+    visibility: hidden; /* Reemplaza a height: 0 para no congelar el iframe */
+    transform: scale(0.5) translateY(50px); 
     pointer-events: none; 
-    height: 0 !important; 
 }
 
-.boton-oculto { opacity: 0; pointer-events: none; }
+.boton-oculto { 
+    opacity: 0; 
+    visibility: hidden;
+    transform: scale(0.5);
+    pointer-events: none; 
+}
 
 .boton-opcion {
     display: block;
