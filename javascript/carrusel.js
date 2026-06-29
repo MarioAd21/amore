@@ -67,22 +67,45 @@ function initCarousel() {
         }
     }, { passive: false });
 
-    // Control Táctil
+// --- 1. NUEVO: Detectar dónde empieza a tocar el dedo ---
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    // --- 2. Control Táctil (Corregido) ---
     container.addEventListener('touchmove', (e) => {
         const triviaModal = document.getElementById('contenedor-trivia');
         if (triviaModal && triviaModal.style.display === 'block') return;
 
         if (!canRotate) return;
+        
+        // Ahora sí puede calcular la diferencia correctamente
         const diffX = touchStartX - e.touches[0].clientX;
         
         if (Math.abs(diffX) > touchSensitivity) {
             canRotate = false;
-            // CAMBIO AQUÍ: Invertimos el signo para que el arrastre sea lógico
+            // Deslizar izquierda suma 1, deslizar derecha resta 1
             currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
+            
+            // Actualizamos la posición inicial para que el arrastre sea fluido si el usuario no levanta el dedo
+            touchStartX = e.touches[0].clientX; 
+            
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
-    });
+    }, { passive: false }); // Recomendado para prevenir comportamientos raros de scroll al arrastrar
+
+    // --- 3. Giro Automático (Corregido a la derecha) ---
+    setInterval(() => { 
+        const triviaModal = document.getElementById('contenedor-trivia');
+        const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
+
+        if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
+            // CAMBIO AQUÍ: Restamos 1 para que visualmente gire hacia la derecha
+            currentIndex = (currentIndex - 1 + totalMemories) % totalMemories; 
+            updateFanLayout(); 
+        } 
+    }, 4000);
 
     // Giro Automático
     setInterval(() => { 
