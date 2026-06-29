@@ -42,67 +42,44 @@ function initCarousel() {
         img.src = memory.url;
         img.className = 'foto-card oculta';
         img.id = 'img-' + i;
-        img.onclick = () => { 
-            if(img.classList.contains('pos-centro')) openPhotoModal(memory.url, memory.msj); 
-        };
+        // Solo pausamos al hacer clic para abrir la carta
+        img.onclick = () => { openPhotoModal(memory.url, memory.msj); };
         container.appendChild(img);
     });
 
     updateFanLayout();
 
-    // --- Control Mouse (Rueda) ---
+    // --- Control Mouse (Movimiento manual fluido) ---
     container.addEventListener('wheel', (e) => {
-        const triviaModal = document.getElementById('contenedor-trivia');
-        if (triviaModal && triviaModal.style.display === 'block') return;
-
-        e.preventDefault(); 
-        
-        // La rueda del mouse sí necesita el bloqueo de tiempo para no volverse loca
-        if (!canRotate) return;
-
-        if (Math.abs(e.deltaY) > 5) { 
-            canRotate = false;
-            currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
-            updateFanLayout();
-            setTimeout(() => { canRotate = true; }, rotationCooldown);
-        }
+        e.preventDefault();
+        // Sin bloqueos: cada giro de rueda mueve el carrusel instantáneamente
+        currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
+        updateFanLayout();
     }, { passive: false });
 
-    // --- Detectar inicio del toque ---
+    // --- Control Táctil (Movimiento manual fluido) ---
     container.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
     }, { passive: true });
 
-    // --- Control Táctil (Fluido y proporcional SIN bloqueos de tiempo) ---
     container.addEventListener('touchmove', (e) => {
-        const triviaModal = document.getElementById('contenedor-trivia');
-        if (triviaModal && triviaModal.style.display === 'block') return;
-
         const diffX = touchStartX - e.touches[0].clientX;
-        
-        // Si el dedo recorrió los 45px (touchSensitivity)
-        if (Math.abs(diffX) > touchSensitivity) {
-            // Giramos dependiendo de la dirección
+        // Si el movimiento es significativo, actualizamos
+        if (Math.abs(diffX) > 20) { 
             currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
-            
-            // Reiniciamos el punto de inicio para que, si el dedo sigue en pantalla, 
-            // siga calculando los siguientes 45px de forma continua y sin pausas.
-            touchStartX = e.touches[0].clientX; 
+            touchStartX = e.touches[0].clientX; // Actualizamos para que sea continuo
         }
-    }, { passive: false }); 
+    }, { passive: false });
 
-    // --- Giro Automático (ÚNICO Y CORREGIDO) ---
+    // --- Giro Automático (Constante y sin pausas) ---
     setInterval(() => { 
-        const triviaModal = document.getElementById('contenedor-trivia');
-        const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
-
-        if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            // Restamos 1 para que visualmente gire hacia la derecha
+        if (!isCarouselPaused) { 
+            // Movimiento constante a la derecha
             currentIndex = (currentIndex - 1 + totalMemories) % totalMemories; 
             updateFanLayout(); 
         } 
-    }, 4000); 
+    }, 2500); // 2.5 segundos para que sea un ritmo agradable pero constante
 }
 
 function updateFanLayout() {
