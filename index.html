@@ -37,15 +37,22 @@
 <body>
 
     <section id="REPRODUCTOR">
-        <div id="contenedor-reproductor">
-            <div id="reproductor-mini" class="oculto">
-                <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
-                <a href="https://www.youtube.com/playlist?list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2"></a>
+    <div id="contenedor-reproductor">
+        <div id="reproductor-mini" class="oculto">
+            <button id="btn-cerrar-repro" onclick="toggleReproductor()">❌</button>
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; text-align: center;">
+                <a href="https://www.youtube.com/playlist?list=PLJ0fMJ7LYBVA0M0KhkAJKpFETJVpdJzv2" 
+                   target="_blank" 
+                   style="color: white; text-decoration: none; font-family: 'Poppins', sans-serif;">
+                   🎵 Presiona aquí para abrir nuestra playlist en YouTube y celebrar nuestros 10 años
+                </a>
             </div>
-            <button id="boton-musica" onclick="toggleReproductor()">🎵</button>
-        </div> 
-        <script src="javascript/reproductor.js"></script>
-    </section>
+        </div>
+        
+        <button id="boton-musica" onclick="toggleReproductor()">🎵</button>
+    </div> 
+    <script src="javascript/reproductor.js"></script>
+</section>
 
     <section id="TITULOS"> 
             <h1>Feliz Aniversario Amore</h1>
