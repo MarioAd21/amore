@@ -60,16 +60,14 @@ function initCarousel() {
 
         if (Math.abs(e.deltaY) > 5) { 
             canRotate = false;
-            // Dirección invertida
-            currentIndex = (currentIndex + (e.deltaY > 0 ? -1 : 1) + totalMemories) % totalMemories;
+            // CAMBIO AQUÍ: Invertimos el signo para que siga el movimiento natural
+            currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
     }, { passive: false });
 
     // Control Táctil
-    container.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
-    
     container.addEventListener('touchmove', (e) => {
         const triviaModal = document.getElementById('contenedor-trivia');
         if (triviaModal && triviaModal.style.display === 'block') return;
@@ -79,8 +77,8 @@ function initCarousel() {
         
         if (Math.abs(diffX) > touchSensitivity) {
             canRotate = false;
-            // Dirección invertida
-            currentIndex = (currentIndex + (diffX > 0 ? -1 : 1) + totalMemories) % totalMemories;
+            // CAMBIO AQUÍ: Invertimos el signo para que el arrastre sea lógico
+            currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
