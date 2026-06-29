@@ -25,12 +25,12 @@ for (let i = 1; i <= 50; i++) {
 
 // --- 3. VARIABLES DE CONTROL ---
 let currentIndex = 0;
-const totalMemories = memoryGallery.length; 
+const totalMemories = memoryGallery.length; // Ahora sí detectará 50
 let touchStartX = 0;
-let canRotate = true; 
+let canRotate = true;
 let isCarouselPaused = false; 
-const rotationCooldown = 250; 
-const touchSensitivity = 45;
+const rotationCooldown = 400;      
+const touchSensitivity = 80;  
 
 // --- 4. FUNCIÓN PRINCIPAL ---
 function initCarousel() {
@@ -42,44 +42,61 @@ function initCarousel() {
         img.src = memory.url;
         img.className = 'foto-card oculta';
         img.id = 'img-' + i;
-        // Solo pausamos al hacer clic para abrir la carta
-        img.onclick = () => { openPhotoModal(memory.url, memory.msj); };
+        img.onclick = () => { 
+            if(img.classList.contains('pos-centro')) openPhotoModal(memory.url, memory.msj); 
+        };
         container.appendChild(img);
     });
 
     updateFanLayout();
 
-    // --- Control Mouse (Movimiento manual fluido) ---
+    // Control Mouse
     container.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        // Sin bloqueos: cada giro de rueda mueve el carrusel instantáneamente
-        currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
-        updateFanLayout();
-    }, { passive: false });
+        const triviaModal = document.getElementById('contenedor-trivia');
+        if (triviaModal && triviaModal.style.display === 'block') return;
 
-    // --- Control Táctil (Movimiento manual fluido) ---
-    container.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-    }, { passive: true });
+        e.preventDefault(); 
+        if (!canRotate) return;
 
-    container.addEventListener('touchmove', (e) => {
-        const diffX = touchStartX - e.touches[0].clientX;
-        // Si el movimiento es significativo, actualizamos
-        if (Math.abs(diffX) > 20) { 
-            currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
+        if (Math.abs(e.deltaY) > 5) { 
+            canRotate = false;
+            // Dirección invertida
+            currentIndex = (currentIndex + (e.deltaY > 0 ? -1 : 1) + totalMemories) % totalMemories;
             updateFanLayout();
-            touchStartX = e.touches[0].clientX; // Actualizamos para que sea continuo
+            setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
     }, { passive: false });
 
-    // --- Giro Automático (Constante y sin pausas) ---
+    // Control Táctil
+    container.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
+    
+    container.addEventListener('touchmove', (e) => {
+        const triviaModal = document.getElementById('contenedor-trivia');
+        if (triviaModal && triviaModal.style.display === 'block') return;
+
+        if (!canRotate) return;
+        const diffX = touchStartX - e.touches[0].clientX;
+        
+        if (Math.abs(diffX) > touchSensitivity) {
+            canRotate = false;
+            // Dirección invertida
+            currentIndex = (currentIndex + (diffX > 0 ? -1 : 1) + totalMemories) % totalMemories;
+            updateFanLayout();
+            setTimeout(() => { canRotate = true; }, rotationCooldown);
+        }
+    });
+
+    // Giro Automático
     setInterval(() => { 
-        if (!isCarouselPaused) { 
-            // Movimiento constante a la derecha
-            currentIndex = (currentIndex - 1 + totalMemories) % totalMemories; 
+        const triviaModal = document.getElementById('contenedor-trivia');
+        const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
+
+        if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
+            // Avanza hacia la derecha
+            currentIndex = (currentIndex + 1) % totalMemories; 
             updateFanLayout(); 
         } 
-    }, 2500); // 2.5 segundos para que sea un ritmo agradable pero constante
+    }, 4000); // Lo subí a 4 segundos para que no maree tanto
 }
 
 function updateFanLayout() {

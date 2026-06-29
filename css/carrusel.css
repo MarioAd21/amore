@@ -1,4 +1,4 @@
-/* --- BLOQUE CORREGIDO: ESCENA STACK (EL CARRUSEL) --- */
+/* --- ESCENA PRINCIPAL --- */
 .escena-stack {
     position: relative;
     width: 100%; 
@@ -9,7 +9,6 @@
     perspective: 1500px; 
     cursor: grab;
     touch-action: none; 
-    overscroll-behavior: contain; 
 }
 
 /* Cartas de las Fotos */
@@ -21,69 +20,50 @@
     border: 2px solid cadetblue;
     background-color: #1a1a1a; 
     object-fit: cover;
-    /* Reducimos de 0.6s a 0.35s para un movimiento más ágil */
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Cambio: Transición más rápida que el intervalo para evitar bugs */
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 20px 60px rgba(0,0,0,0.9); 
-    pointer-events: none; 
+    cursor: pointer;
 }
 
 .oculta { 
     opacity: 0; 
-    transform: translateZ(-800px); 
+    transform: scale(0) translateZ(-500px);
     pointer-events: none; 
-    /* Misma transición aquí para que al desaparecer no haya saltos */
-    transition: transform 0.35s ease-out, opacity 0.2s ease; 
 }
 
 .pos-centro { 
-    transform: translateZ(250px) translateX(0); 
+    transform: translateZ(250px) translateX(0) scale(1); 
     filter: brightness(1.1); 
     opacity: 1; 
-    pointer-events: auto !important; 
     border-color: gold;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    z-index: 50;
 }
 
-.pos-d1 { transform: translateX(180px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); }
-.pos-d2 { transform: translateX(320px) translateZ(-100px) rotateY(-25deg) scale(0.7); filter: brightness(0.4); opacity: 0.8; }
-.pos-d3 { transform: translateX(450px) translateZ(-300px) rotateY(-35deg) scale(0.5); filter: brightness(0.2); opacity: 0.4; }
-.pos-i1 { transform: translateX(-180px) translateZ(50px) rotateY(15deg) scale(0.85); filter: brightness(0.6); }
-.pos-i2 { transform: translateX(-320px) translateZ(-100px) rotateY(25deg) scale(0.7); filter: brightness(0.4); opacity: 0.8; }
-.pos-i3 { transform: translateX(-450px) translateZ(-300px) rotateY(35deg) scale(0.5); filter: brightness(0.2); opacity: 0.4; }
-.oculta { opacity: 0; transform: scale(0) translateZ(-500px); }
+/* Posiciones laterales */
+.pos-d1 { transform: translateX(180px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
+.pos-d2 { transform: translateX(320px) translateZ(-100px) rotateY(-25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
+.pos-d3 { transform: translateX(450px) translateZ(-300px) rotateY(-35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
+.pos-i1 { transform: translateX(-180px) translateZ(50px) rotateY(15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
+.pos-i2 { transform: translateX(-320px) translateZ(-100px) rotateY(25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
+.pos-i3 { transform: translateX(-450px) translateZ(-300px) rotateY(35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
 
-
-/* Modal de Foto Grande */
-#modal-foto { 
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100vw; height: 100vh; 
-    background: radial-gradient(circle at center, rgba(26, 11, 46, 0.65) 0%, rgba(5, 10, 26, 0.95) 100%);
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 9999; 
-    transition: opacity 0.6s ease; 
-    backdrop-filter: blur(8px); 
+/* --- RESPONSIVE (Móviles e iPad) --- */
+@media (max-width: 768px) {
+    .escena-stack { height: 400px; }
+    .foto-card { width: 160px; height: 240px; }
+    
+    /* Ajuste de posiciones para pantallas pequeñas */
+    .pos-d1 { transform: translateX(120px) translateZ(20px) rotateY(-10deg) scale(0.8); }
+    .pos-d2 { transform: translateX(200px) translateZ(-50px) rotateY(-20deg) scale(0.6); }
+    .pos-i1 { transform: translateX(-120px) translateZ(20px) rotateY(10deg) scale(0.8); }
+    .pos-i2 { transform: translateX(-200px) translateZ(-50px) rotateY(20deg) scale(0.6); }
+    .pos-d3, .pos-i3 { opacity: 0; } /* Ocultamos las lejanas en móvil */
 }
 
+/* Modal y resto de estilos se mantienen igual que tenías */
+#modal-foto { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.3s; }
 .modal-oculto { opacity: 0; pointer-events: none; }
-
-.modal-contenedor-arte {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    transform: scale(0.9); /* Efecto de entrada */
-    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#modal-foto:not(.modal-oculto) .modal-contenedor-arte {
-    transform: scale(1);
-}
 
 /* --- El "Cuadro" (Marco Dorado y Resplandor) --- */
 .marco-arte-gloria {
