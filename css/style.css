@@ -18,6 +18,7 @@ html, body {
     padding: 0;
     overflow-x: hidden; /* Esto es vital para evitar el scroll horizontal */
     -webkit-overflow-scrolling: touch; /* Mejora la fluidez en dispositivos Apple */
+    position: relative;
 }
 
 body {
@@ -102,11 +103,13 @@ h2 { color: var(--color-titulo); font-family: 'Dancing Script', cursive; font-si
 }
 
 .palabra-magica {
-    color: #cccccc;
+color: #cccccc;
     cursor: pointer;
     font-weight: 600;
     transition: 0.3s;
     position: relative;
+    display: inline-block; 
+    -webkit-tap-highlight-color: transparent; 
     animation: resaltar-texto 60s ease-in-out infinite;
 }
 
