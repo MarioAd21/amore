@@ -25,12 +25,12 @@ for (let i = 1; i <= 50; i++) {
 
 // --- 3. VARIABLES DE CONTROL ---
 let currentIndex = 0;
-const totalMemories = memoryGallery.length; // Ahora sí detectará 50
+const totalMemories = memoryGallery.length; 
 let touchStartX = 0;
-let canRotate = true;
+let canRotate = true; 
 let isCarouselPaused = false; 
-const rotationCooldown = 400;      
-const touchSensitivity = 80;  
+const rotationCooldown = 250; 
+const touchSensitivity = 45;
 
 // --- 4. FUNCIÓN PRINCIPAL ---
 function initCarousel() {
@@ -50,74 +50,59 @@ function initCarousel() {
 
     updateFanLayout();
 
-    // Control Mouse
+    // --- Control Mouse (Rueda) ---
     container.addEventListener('wheel', (e) => {
         const triviaModal = document.getElementById('contenedor-trivia');
         if (triviaModal && triviaModal.style.display === 'block') return;
 
         e.preventDefault(); 
+        
+        // La rueda del mouse sí necesita el bloqueo de tiempo para no volverse loca
         if (!canRotate) return;
 
         if (Math.abs(e.deltaY) > 5) { 
             canRotate = false;
-            // CAMBIO AQUÍ: Invertimos el signo para que siga el movimiento natural
             currentIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
     }, { passive: false });
 
-// --- 1. NUEVO: Detectar dónde empieza a tocar el dedo ---
+    // --- Detectar inicio del toque ---
     container.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
     }, { passive: true });
 
-    // --- 2. Control Táctil (Corregido) ---
+    // --- Control Táctil (Fluido y proporcional SIN bloqueos de tiempo) ---
     container.addEventListener('touchmove', (e) => {
         const triviaModal = document.getElementById('contenedor-trivia');
         if (triviaModal && triviaModal.style.display === 'block') return;
 
-        if (!canRotate) return;
-        
-        // Ahora sí puede calcular la diferencia correctamente
         const diffX = touchStartX - e.touches[0].clientX;
         
+        // Si el dedo recorrió los 45px (touchSensitivity)
         if (Math.abs(diffX) > touchSensitivity) {
-            canRotate = false;
-            // Deslizar izquierda suma 1, deslizar derecha resta 1
+            // Giramos dependiendo de la dirección
             currentIndex = (currentIndex + (diffX > 0 ? 1 : -1) + totalMemories) % totalMemories;
             updateFanLayout();
             
-            // Actualizamos la posición inicial para que el arrastre sea fluido si el usuario no levanta el dedo
+            // Reiniciamos el punto de inicio para que, si el dedo sigue en pantalla, 
+            // siga calculando los siguientes 45px de forma continua y sin pausas.
             touchStartX = e.touches[0].clientX; 
-            
-            setTimeout(() => { canRotate = true; }, rotationCooldown);
         }
-    }, { passive: false }); // Recomendado para prevenir comportamientos raros de scroll al arrastrar
+    }, { passive: false }); 
 
-    // --- 3. Giro Automático (Corregido a la derecha) ---
+    // --- Giro Automático (ÚNICO Y CORREGIDO) ---
     setInterval(() => { 
         const triviaModal = document.getElementById('contenedor-trivia');
         const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
 
         if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            // CAMBIO AQUÍ: Restamos 1 para que visualmente gire hacia la derecha
+            // Restamos 1 para que visualmente gire hacia la derecha
             currentIndex = (currentIndex - 1 + totalMemories) % totalMemories; 
             updateFanLayout(); 
         } 
-    }, 4000);
-
-    // Giro Automático
-    setInterval(() => { 
-        const triviaModal = document.getElementById('contenedor-trivia');
-        const isTriviaOpen = triviaModal && triviaModal.style.display === 'block';
-
-        if(canRotate && !isCarouselPaused && !isTriviaOpen) { 
-            // Avanza hacia la derecha
-            currentIndex = (currentIndex + 1) % totalMemories; 
-            updateFanLayout(); 
-        } 
-    }, 4000); // Lo subí a 4 segundos para que no maree tanto
+    }, 4000); 
 }
 
 function updateFanLayout() {

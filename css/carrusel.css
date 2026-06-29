@@ -21,18 +21,18 @@
     border: 2px solid cadetblue;
     background-color: #1a1a1a; 
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, filter 0.4s ease;
+    /* Reducimos de 0.6s a 0.35s para un movimiento más ágil */
+    transition: transform 0.35s ease-out, opacity 0.3s ease, filter 0.35s ease;
     box-shadow: 0 20px 60px rgba(0,0,0,0.9); 
     pointer-events: none; 
 }
 
 .oculta { 
     opacity: 0; 
-    /* Quitamos el scale(0) para evitar que se encoja al desaparecer */
     transform: translateZ(-800px); 
     pointer-events: none; 
-    /* Transición suave para que la opacidad desaparezca antes de que se note el viaje al fondo */
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; 
+    /* Misma transición aquí para que al desaparecer no haya saltos */
+    transition: transform 0.35s ease-out, opacity 0.2s ease; 
 }
 
 .pos-centro { 
