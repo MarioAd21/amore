@@ -8,11 +8,16 @@
     --color-titulo: #B0C4DE;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 html, body {
-    overflow-x: hidden; /* Evita el scroll horizontal */
     width: 100%;
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Esto es vital para evitar el scroll horizontal */
+    -webkit-overflow-scrolling: touch; /* Mejora la fluidez en dispositivos Apple */
 }
 
 body {
@@ -24,6 +29,7 @@ body {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    padding: 20px 10px;
     position: relative; /* Necesario para que el pseudo-elemento se posicione bien */
     overflow-x: hidden;
 }
@@ -116,6 +122,10 @@ h2 { color: var(--color-titulo); font-family: 'Dancing Script', cursive; font-si
     transition: opacity 0.3s;
     /* La clave está aquí: 'forwards' hace que el subrayado se quede visible al terminar la primera vuelta */
     animation: mostrar-subrayado 60s ease-in-out forwards;
+}
+
+.palabra-magica:active {
+    transform: scale(0.95); /* El texto se encoge un poquito al tocarlo */
 }
 
 /* Animación del texto: Parpadea cada minuto */
