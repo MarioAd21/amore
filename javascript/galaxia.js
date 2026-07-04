@@ -1,4 +1,6 @@
 /* --- INICIALIZACIÓN --- */
+let misSusurros = JSON.parse(localStorage.getItem('misSusurros')) || [];
+const solEl = document.getElementById('corazon-central');
 const universeContainer = document.getElementById('universo');
 const cometEl = document.getElementById('cometa');
 const whispers = [
@@ -14,9 +16,15 @@ const yearsList = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
 
 if (cometEl) {
     cometEl.style.cursor = "pointer";
-    cometEl.style.zIndex = "9999";
     cometEl.onclick = () => {
+        cometEl.style.display = "none";
         const mensajeElegido = whispers[Math.floor(Math.random() * whispers.length)];
+
+        if (!misSusurros.includes(mensajeElegido)) {
+        misSusurros.push(mensajeElegido);
+        localStorage.setItem('misSusurros', JSON.stringify(misSusurros));
+    }
+
         Swal.fire({
             title: '✨ Mensaje Fugaz ✨',
             text: mensajeElegido,
@@ -157,6 +165,10 @@ function showLockedMessage(year){
 }
 
 function launchComet(){
+    const trivia = document.getElementById("contenedor-trivia");
+    if (trivia && trivia.style.display === "block") {
+        return; 
+    }
     const galaxySection = document.querySelector(".galaxybody");
     if(!galaxySection || !cometEl) return;
 
@@ -212,6 +224,9 @@ function spawnCometParticle(x, y) {
     const particula = document.createElement("div");
     particula.className = "cometa-particula";
     
+    // 👇 AGREGA ESTA LÍNEA 👇
+    particula.style.position = "absolute"; 
+    
     const dispersiónX = (Math.random() - 0.5) * 12;
     const dispersiónY = (Math.random() - 0.5) * 12;
     
@@ -263,3 +278,24 @@ function generarCieloEstrellado() {
     }
 }
 generarCieloEstrellado();
+
+if (solEl) {
+    solEl.style.cursor = "pointer";
+    solEl.onclick = () => {
+        const listaHtml = misSusurros.length > 0 
+            ? misSusurros.map(m => `<li>${m}</li>`).join('') 
+            : "<li>Aún no has atrapado ningún susurro con el cometa...</li>";
+
+        Swal.fire({
+            title: '❤️ Corazón del Universo ❤️',
+            html: `
+                <p>Aquí viven todos los recuerdos que hemos capturado:</p>
+                <ul style="text-align: left; margin-top: 15px;">${listaHtml}</ul>
+            `,
+            background: 'rgba(10, 10, 20, 0.95)',
+            color: '#ffffff',
+            confirmButtonText: 'Cerrar',
+            confirmButtonColor: 'cadetblue'
+        });
+    };
+}

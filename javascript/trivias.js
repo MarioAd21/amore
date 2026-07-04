@@ -177,7 +177,7 @@ function showTrivia(ref){
    }
  }
 
-function validarRespuesta(indice){
+  function validarRespuesta(indice){
    const data = preguntas[ref.preguntaActual];
    const opcionesDiv = document.getElementById("trivia-opciones");
    const preguntaEl = document.getElementById("trivia-pregunta");
@@ -188,32 +188,26 @@ function validarRespuesta(indice){
    // 2. Evaluamos si es correcta
    if(indice === data.correct){
       ref.aciertos++;
-
-      // AQUÍ VA LA ALERTA (Solo si acertó)
-      Swal.fire({
-          title: '¡Correcto! ✨',
-          html: data.message, // Usamos data.message
-          icon: 'success',
-          background: 'rgba(10, 10, 20, 0.95)',
-          color: '#ffffff',
-          confirmButtonColor: 'cadetblue',
-          customClass: { popup: 'modal-espacial-borde' }
-      });
       
-      // PANTALLA CORRECTA: Cambia título y muestra el botón "Siguiente"
+      // PANTALLA CORRECTA: Todo en un solo cuadro (eliminamos el Swal.fire)
       document.getElementById("trivia-titulo").innerText = "¡Excelente! ❤️";
+      
+      // Insertamos el mensaje especial directamente en el cuadro de la trivia
       preguntaEl.innerHTML = `
         <div style="text-align: center; padding: 10px;">
           <span style="color: #4CAF50; font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 15px;">
             ¡Respuesta correcta!
           </span>
-          <p style="font-size: 1.1rem; line-height: 1.4;">Cierra la alerta emergente y haz clic en siguiente.</p>
+          <div style="font-size: 1.1rem; line-height: 1.4; margin-bottom: 15px;">
+            ${data.message}
+          </div>
         </div>
       `;
 
+      // Creamos y agregamos el botón de Siguiente
       const btnSiguiente = document.createElement("button");
       btnSiguiente.className = "boton-opcion";
-      btnSiguiente.style.marginTop = "20px";
+      btnSiguiente.style.marginTop = "10px";
       btnSiguiente.innerText = "Siguiente pregunta ➡️";
       btnSiguiente.onclick = () => {
          ref.preguntaActual++; // Avanza al siguiente índice
@@ -222,7 +216,7 @@ function validarRespuesta(indice){
       opcionesDiv.appendChild(btnSiguiente);
 
    } else {
-      // PANTALLA INCORRECTA: Cambia título, da el aviso de fallo y botón "Reintentar"
+      // PANTALLA INCORRECTA: Se mantiene exactamente igual
       document.getElementById("trivia-titulo").innerText = "¡Oh no! 😢";
       preguntaEl.innerHTML = `
         <div style="text-align: center; padding: 10px;">
@@ -248,6 +242,7 @@ function validarRespuesta(indice){
  function finalizarTrivia(){
    const opcionesDiv = document.getElementById("trivia-opciones");
    const porcentaje = (ref.aciertos / preguntas.length) * 100;
+   document.body.style.overflow = "auto";
 
    if(porcentaje >= 70){
       ref.isCompleted = true;
