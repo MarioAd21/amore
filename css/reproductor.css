@@ -1,7 +1,7 @@
 #contenedor-reproductor {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: max(20px, env(safe-area-inset-bottom)); 
+    right: max(20px, env(safe-area-inset-right));
     z-index: 9999; 
     display: flex;
     flex-direction: column;
