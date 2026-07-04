@@ -12,11 +12,22 @@ const anniversaryData = {
    correct:0,
    message:"¡Gracias a ella pude conocerte! ✨"
   },
-  {
+{
    question:"¿Qué CANTANTE nos unía en el 2016 - 2017?",
    options:["Zarcort", "Kronno zomber", "Yandel", "Porta"],
    correct:0,
-   message:"https://www.youtube.com/watch?v=XXfntpmrQ08&list=RDXXfntpmrQ08&start_radio=1 🎵"
+   // Usamos comillas invertidas (backticks) para poder meter el reproductor
+   message: `
+    <div style="margin-bottom: 10px;">¡Esa es! Nuestra música 🎵</div>
+    <iframe width="100%" height="180" 
+            src="https://www.youtube.com/embed/XXfntpmrQ08" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen 
+            style="border-radius: 8px;">
+    </iframe>
+   `
   },
   {
    question:"¿Cuánto tiempo pasó desde que nos conocimos hasta que te pedí pololeo?",
@@ -85,20 +96,43 @@ window.cerrarTrivia = function(){
 };
 
 /* CORRECCIÓN: Cerrar con éxito y transformar el planeta */
+/* CORRECCIÓN: Cerrar con éxito y transformar el planeta */
 function cerrarTriviaExito(){
- document.getElementById("contenedor-trivia").style.display="none";
- 
- resetUniverse();
+    document.getElementById("contenedor-trivia").style.display="none";
+    resetUniverse();
 
- if(window.currentPlanet){
-   // 1. Reactivamos el planeta para el render
-   window.currentPlanet.isActive = true;
-   
-   // 2. Le añadimos la clase CSS para que tu galaxia.css lo pinte como un corazón ❤️
-   if(window.currentPlanet.el){
-     window.currentPlanet.el.classList.add("completado");
-   }
- }
+    if(window.currentPlanet){
+        window.currentPlanet.isActive = true; 
+        
+        if(window.currentPlanet.el){
+            window.currentPlanet.el.classList.add("completado");
+        }
+
+        // *** NUEVO: LÓGICA DE DESBLOQUEO DEL SIGUIENTE AÑO ***
+        const indiceActual = window.currentPlanet.index;
+        const siguientePlaneta = window.planetRefs.find(p => p.index === indiceActual + 1);
+
+        if (siguientePlaneta && siguientePlaneta.isLocked) {
+            siguientePlaneta.isLocked = false;
+            // Quitamos el filtro gris para que se vea a color
+            siguientePlaneta.el.style.filter = "none";
+            
+            // Opcional: Un pequeño aviso avisando que se desbloqueó
+            setTimeout(() => {
+                Swal.fire({
+                    title: '¡Nuevo Año Desbloqueado! 🚀',
+                    text: `Ya puedes viajar al año ${siguientePlaneta.year}`,
+                    icon: 'success',
+                    background: 'rgba(10, 10, 20, 0.95)',
+                    color: '#ffffff',
+                    confirmButtonColor: 'cadetblue',
+                    timer: 3500,
+                    showConfirmButton: false,
+                    customClass: { popup: 'modal-espacial-borde' }
+                });
+            }, 800); // Se lanza un poquito después de cerrar la trivia
+        }
+    }
 }
 
 function showTrivia(ref){
@@ -154,15 +188,26 @@ function validarRespuesta(indice){
    // 2. Evaluamos si es correcta
    if(indice === data.correct){
       ref.aciertos++;
+
+      // AQUÍ VA LA ALERTA (Solo si acertó)
+      Swal.fire({
+          title: '¡Correcto! ✨',
+          html: data.message, // Usamos data.message
+          icon: 'success',
+          background: 'rgba(10, 10, 20, 0.95)',
+          color: '#ffffff',
+          confirmButtonColor: 'cadetblue',
+          customClass: { popup: 'modal-espacial-borde' }
+      });
       
-      // PANTALLA CORRECTA: Cambia título, muestra mensaje y botón "Siguiente"
+      // PANTALLA CORRECTA: Cambia título y muestra el botón "Siguiente"
       document.getElementById("trivia-titulo").innerText = "¡Excelente! ❤️";
       preguntaEl.innerHTML = `
         <div style="text-align: center; padding: 10px;">
           <span style="color: #4CAF50; font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 15px;">
-            ¡Correcto!
+            ¡Respuesta correcta!
           </span>
-          <p style="font-size: 1.1rem; line-height: 1.4;">${data.message}</p>
+          <p style="font-size: 1.1rem; line-height: 1.4;">Cierra la alerta emergente y haz clic en siguiente.</p>
         </div>
       `;
 
@@ -171,7 +216,7 @@ function validarRespuesta(indice){
       btnSiguiente.style.marginTop = "20px";
       btnSiguiente.innerText = "Siguiente pregunta ➡️";
       btnSiguiente.onclick = () => {
-         ref.preguntaActual++; // Aquí SÍ avanza al siguiente índice
+         ref.preguntaActual++; // Avanza al siguiente índice
          renderizarPregunta();
       };
       opcionesDiv.appendChild(btnSiguiente);
