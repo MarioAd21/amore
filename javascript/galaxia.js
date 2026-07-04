@@ -16,14 +16,18 @@ const yearsList = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
 
 if (cometEl) {
     cometEl.style.cursor = "pointer";
-    cometEl.onclick = () => {
+    
+    const atraparCometa = (e) => {
+        e.preventDefault(); 
         cometEl.style.display = "none";
+        cometEl.style.pointerEvents = "none"; 
+
         const mensajeElegido = whispers[Math.floor(Math.random() * whispers.length)];
 
         if (!misSusurros.includes(mensajeElegido)) {
-        misSusurros.push(mensajeElegido);
-        localStorage.setItem('misSusurros', JSON.stringify(misSusurros));
-    }
+            misSusurros.push(mensajeElegido);
+            localStorage.setItem('misSusurros', JSON.stringify(misSusurros));
+        }
 
         Swal.fire({
             title: '✨ Mensaje Fugaz ✨',
@@ -35,9 +39,10 @@ if (cometEl) {
             customClass: { popup: 'modal-espacial-borde' }
         });
     };
-}
 
-/* --- AQUÍ ESTABA EL ERROR: He eliminado las 3 líneas duplicadas que redeclaraban las variables --- */
+    cometEl.onclick = atraparCometa;
+    cometEl.ontouchstart = atraparCometa;
+}
 
 /* --- GENERACIÓN DE PLANETAS --- */
 yearsList.forEach((year, index) => {
@@ -166,9 +171,8 @@ function showLockedMessage(year){
 
 function launchComet(){
     const trivia = document.getElementById("contenedor-trivia");
-    if (trivia && trivia.style.display === "block") {
-        return; 
-    }
+    if (trivia && trivia.style.display === "block") return; 
+    if (document.querySelector('.swal2-container')) return;
     const galaxySection = document.querySelector(".galaxybody");
     if(!galaxySection || !cometEl) return;
 
@@ -186,6 +190,7 @@ function launchComet(){
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
     
     cometEl.style.display = "block";
+    cometEl.style.pointerEvents = "auto";
     cometEl.style.left = `${startX}px`;
     cometEl.style.top = `${startY}px`;
 
