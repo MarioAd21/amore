@@ -1,0 +1,124 @@
+.galaxybody {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+    background: transparent; /* 👈 Cambio clave: ahora es transparente */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 👈 Eliminamos el box-shadow para quitar el efecto de "caja" */
+    touch-action: pan-x pan-y;
+}
+
+@keyframes parpadeo-estelar {
+    0% { 
+        opacity: 0.1; 
+        transform: scale(0.5); 
+    }
+    50% {
+        opacity: 0.8; 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1.3); 
+        /* Agregamos una sola sombrita ligera solo en el punto máximo de brillo para que destelle */
+        box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+}
+
+#universo {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95), opacity 0.8s;
+    z-index: 1;
+}
+
+.corazon-central {
+    position: absolute;
+    font-size: 50px;
+    filter: drop-shadow(0 0 20px var(--color-amor));
+    animation: latido 2.2s infinite ease-in-out;
+    z-index: 10;
+}
+
+@keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+}
+
+.orbita-elipse {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* --- OBJETOS ORBITANTES --- */
+.planeta {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 20;
+    background: radial-gradient(circle at 30% 30%, #fff, var(--p-color) 60%, #000);
+    box-shadow: 0 0 15px var(--p-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Clase para cuando el año está completado */
+.planeta.completado {
+    background: none !important;
+    box-shadow: none !important;
+    cursor: default;
+}
+
+.planeta.completado::before {
+    content: '❤️';
+    font-size: 18px;
+    filter: drop-shadow(0 0 5px var(--p-color));
+}
+
+.planeta span {
+    position: absolute;
+    top: -24px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px #000;
+    pointer-events: none;
+}
+
+/* --- ADAPTACIÓN PARA TELÉFONOS --- */
+@media (max-width: 768px) {
+    .galaxybody {
+        height: 500px !important; 
+    }
+
+    .corazon-central {
+        font-size: 40px !important; 
+    }
+
+    .planeta {
+        width: 18px !important;  
+        height: 18px !important;
+    }
+
+    .planeta span {
+        font-size: 10px !important; 
+        top: -20px !important;
+    }
+
+    #universo {
+        transform: scale(0.7); 
+    }
+}
+
