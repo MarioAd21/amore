@@ -40,16 +40,22 @@
 }
 
 .corazon-central {
-    position: absolute;
-    font-size: 50px;
-    filter: drop-shadow(0 0 20px var(--color-amor));
-    animation: latido 2.2s infinite ease-in-out;
-    z-index: 10;
+    font-size: 80px !important; 
+    animation: latido-parpadeo 2s infinite ease-in-out !important;
+    opacity: 1 !important;
+    display: block !important;
+    z-index: 9999 !important;
 }
 
-@keyframes latido {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.18); }
+@keyframes latido-parpadeo {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.4); /* Latido más evidente */
+        opacity: 0.3;          /* Parpadeo más marcado */
+    }
 }
 
 .orbita-elipse {
