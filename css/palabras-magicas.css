@@ -1,0 +1,40 @@
+.palabra-magica {
+color: #cccccc;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    position: relative;
+    display: inline-block; 
+    -webkit-tap-highlight-color: transparent; 
+    animation: resaltar-texto 60s ease-in-out infinite;
+}
+
+.palabra-magica::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px; /*separacion del subrayado*/
+    width: 100%;
+    height: 1px;
+    background-color: #cccccc;
+    opacity: 0;
+    transition: opacity 0.3s;
+    animation: mostrar-subrayado 60s ease-in-out forwards;   /* La clave está aquí: 'forwards' hace que el subrayado se quede visible al terminar la primera vuelta */
+
+}
+
+.palabra-magica:active {
+    transform: scale(0.95); /* El texto se encoge un poquito al tocarlo */
+}
+
+/* Animación del texto: Parpadea cada minuto */
+@keyframes resaltar-texto {
+    0%, 95%, 100% { color: #cccccc; text-shadow: none; transform: scale(1); }
+    96%, 99% { color: var(--color-acento); transform: scale(1.1); text-shadow: 0 0 10px var(--color-acento); }
+}
+
+/* Animación del subrayado: Aparece en el primer destello y se queda */
+@keyframes mostrar-subrayado {
+    0%, 95% { opacity: 0; }
+    96%, 100% { opacity: 1; }
+}
