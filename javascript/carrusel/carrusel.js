@@ -1,19 +1,3 @@
-
-const mensajesAmor = [
-    "El día que nos conocimos... ❤️",
-    "Nuestra primera salida juntos.",
-    "Te veías hermosa esa tarde.",
-    "Construyendo sueños juntos.",
-    "10 años de pura magia.",
-    "Te amo cada día más.",
-    "Mi lugar favorito es a tu lado.",
-    "Por mil aventuras más.",
-    "Eres mi casualidad más hermosa.",
-    "Mi compañera de vida y de viajes.",
-    "Aún conservo cada una de tus cartas."
-];
-
-// --- 2. GENERAMOS LAS 50 CARTAS AUTOMÁTICAMENTE ---
 const memoryGallery = [];
 for (let i = 1; i <= 50; i++) {
     const msjAleatorio = mensajesAmor[Math.floor(Math.random() * mensajesAmor.length)];

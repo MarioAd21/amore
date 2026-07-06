@@ -87,7 +87,7 @@ const anniversaryData = {
 /* GLOBAL: Cerrar desde la X */
 window.cerrarTrivia = function(){
  document.getElementById("contenedor-trivia").style.display="none";
- document.body.classList.remove('modal-abierto');
+ 
  resetUniverse();
 
  if(window.currentPlanet){
@@ -99,7 +99,6 @@ window.cerrarTrivia = function(){
 /* CORRECCIÓN: Cerrar con éxito y transformar el planeta */
 function cerrarTriviaExito(){
     document.getElementById("contenedor-trivia").style.display="none";
-    document.body.classList.remove('modal-abierto');
     resetUniverse();
 
     if(window.currentPlanet){
@@ -137,47 +136,46 @@ function cerrarTriviaExito(){
 }
 
 function showTrivia(ref){
-  document.body.classList.add('modal-abierto');
-  window.currentPlanet = ref;
-  const contenedor = document.getElementById("contenedor-trivia");
-  const preguntas = anniversaryData[ref.year] || [];
+ window.currentPlanet = ref;
+ const contenedor = document.getElementById("contenedor-trivia");
+ const preguntas = anniversaryData[ref.year] || [];
 
-  // Persistencia de estado
-  if (ref.preguntaActual === undefined) {
-      ref.preguntaActual = 0;
-      ref.aciertos = 0;
-  }
+ // Persistencia de estado
+ if (ref.preguntaActual === undefined) {
+     ref.preguntaActual = 0;
+     ref.aciertos = 0;
+ }
 
-  if(!preguntas.length){
-    alert("Aún no hay preguntas para " + ref.year);
-    return;
-  }
+ if(!preguntas.length){
+   alert("Aún no hay preguntas para " + ref.year);
+   return;
+ }
 
-  contenedor.style.display = "block";
+ contenedor.style.display = "block";
 
-  function renderizarPregunta(){
-    if(ref.preguntaActual < preguntas.length){
-        const data = preguntas[ref.preguntaActual];
-        
-        document.getElementById("trivia-titulo").innerText = 
-        `Año ${ref.year} (${ref.preguntaActual + 1}/${preguntas.length})`;
-        document.getElementById("trivia-pregunta").innerText = data.question;
+ function renderizarPregunta(){
+   if(ref.preguntaActual < preguntas.length){
+      const data = preguntas[ref.preguntaActual];
+      
+      document.getElementById("trivia-titulo").innerText = 
+      `Año ${ref.year} (${ref.preguntaActual + 1}/${preguntas.length})`;
+      document.getElementById("trivia-pregunta").innerText = data.question;
 
-        const opcionesDiv = document.getElementById("trivia-opciones");
-        opcionesDiv.innerHTML = "";
+      const opcionesDiv = document.getElementById("trivia-opciones");
+      opcionesDiv.innerHTML = "";
 
-        data.options.forEach((opcion, index) => {
-          const btn = document.createElement("button");
-          btn.className = "boton-opcion";
-          btn.innerText = opcion;
-          // Al hacer clic, enviamos el índice
-          btn.onclick = () => { validarRespuesta(index); };
-          opcionesDiv.appendChild(btn);
-        });
-    } else {
-        finalizarTrivia();
-    }
-  }
+      data.options.forEach((opcion, index) => {
+        const btn = document.createElement("button");
+        btn.className = "boton-opcion";
+        btn.innerText = opcion;
+        // Al hacer clic, enviamos el índice
+        btn.onclick = () => { validarRespuesta(index); };
+        opcionesDiv.appendChild(btn);
+      });
+   } else {
+      finalizarTrivia();
+   }
+ }
 
   function validarRespuesta(indice){
    const data = preguntas[ref.preguntaActual];

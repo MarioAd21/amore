@@ -1,7 +1,13 @@
 /* --- INICIALIZACIÓN --- */
+let misSusurros = JSON.parse(localStorage.getItem('misSusurros')) || [];
+const solEl = document.getElementById('corazon-central');
 const universeContainer = document.getElementById('universo');
+
+
 window.planetRefs = [];
 const yearsList = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+
+
 
 /* --- GENERACIÓN DE PLANETAS --- */
 yearsList.forEach((year, index) => {
@@ -68,30 +74,6 @@ yearsList.forEach((year, index) => {
     };
 }); 
 
-/* --- GENERACIÓN DE ESTRELLAS --- */
-function generarCieloEstrellado() {
-    const galaxia = document.querySelector('.galaxybody');
-    if (!galaxia) return;
-    const esMovil = window.innerWidth <= 768;
-    const numeroEstrellas = esMovil ? 60 : 180;
-    for (let i = 0; i < numeroEstrellas; i++) {
-        const estrella = document.createElement('div');
-        estrella.style.position = 'absolute';
-        estrella.style.width = `${Math.random() * 1.8 + 0.8}px`;
-        estrella.style.height = estrella.style.width;
-        estrella.style.background = '#ffffff';
-        estrella.style.borderRadius = '50%';
-        estrella.style.left = `${Math.random() * 100}%`;
-        estrella.style.top = `${Math.random() * 100}%`;
-        estrella.style.opacity = Math.random() * 0.7 + 0.3;
-        estrella.style.pointerEvents = 'none';
-        estrella.style.zIndex = '0';
-        estrella.style.animation = `parpadeo-estelar ${Math.random() * 3 + 2}s infinite alternate ease-in-out`;
-        galaxia.appendChild(estrella);
-    }
-} generarCieloEstrellado();
-
-/* --- ANIMACION PLANETAS --- */
 function animationLoop(){
     planetRefs.forEach(p=>{
         if(!p.isActive) return;
@@ -101,9 +83,10 @@ function animationLoop(){
         p.el.style.transform= `translate3d(${p.posX}px,${p.posY}px,0)`;
     });
     requestAnimationFrame(animationLoop);
-} animationLoop();
+}
 
-/* --- ANIMACION ZOOM PLANETAS --- */
+animationLoop();
+
 function travelToPlanet(ref) {
     ref.isActive = false;
     cometEl.style.display = "none";
@@ -118,7 +101,6 @@ function resetUniverse() {
     universeContainer.style.opacity = "1";
 }
 
-/* --- MENSAJE DE PLANETAS DESPUES DE COMPLETAR LA TRIVIA--- */
 function showLockedMessage(year){
     const yearMessages={
         "2016":"Donde todo comenzó... nuestra primera micro. 🚌",
@@ -151,4 +133,27 @@ function showLockedMessage(year){
         customClass: { popup: 'modal-espacial-borde' }
     });
 }
+
+function generarCieloEstrellado() {
+    const galaxia = document.querySelector('.galaxybody');
+    if (!galaxia) return;
+    const esMovil = window.innerWidth <= 768;
+    const numeroEstrellas = esMovil ? 60 : 180;
+    for (let i = 0; i < numeroEstrellas; i++) {
+        const estrella = document.createElement('div');
+        estrella.style.position = 'absolute';
+        estrella.style.width = `${Math.random() * 1.8 + 0.8}px`;
+        estrella.style.height = estrella.style.width;
+        estrella.style.background = '#ffffff';
+        estrella.style.borderRadius = '50%';
+        estrella.style.left = `${Math.random() * 100}%`;
+        estrella.style.top = `${Math.random() * 100}%`;
+        estrella.style.opacity = Math.random() * 0.7 + 0.3;
+        estrella.style.pointerEvents = 'none';
+        estrella.style.zIndex = '0';
+        estrella.style.animation = `parpadeo-estelar ${Math.random() * 3 + 2}s infinite alternate ease-in-out`;
+        galaxia.appendChild(estrella);
+    }
+}
+generarCieloEstrellado();
 

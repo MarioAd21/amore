@@ -1,6 +1,5 @@
 const cometEl = document.getElementById('cometa');
 
-// Frases románticas para cuando se haga clic en el cometa
 const whispers = [
     "Eres mi estrella favorita en toda la galaxia.",
     "Cada órbita me recuerda lo mucho que te amo.",
@@ -9,37 +8,49 @@ const whispers = [
     "Atrapaste mi corazón como atrapaste este cometa."
 ];
 
-// Evento para atrapar el cometa
-cometEl.addEventListener('click', () => {
-    const modalCometa = document.getElementById('modal-cometa');
-    const textoCometa = document.getElementById('texto-cometa');
+if (cometEl) {
+    cometEl.style.cursor = "pointer";
     
-    const fraseAleatoria = whispers[Math.floor(Math.random() * whispers.length)];
-    textoCometa.innerText = fraseAleatoria;
-    
-    modalCometa.style.display = 'block';
-    
-    cometEl.style.display = 'none';
-});
+    const atraparCometa = (e) => {
+        e.preventDefault(); 
+        cometEl.style.display = "none";
+        cometEl.style.pointerEvents = "none"; 
 
-// Función para cerrar el modal del cometa (la llamamos desde el HTML)
-window.closeCometModal = function() {
-    document.getElementById('modal-cometa').style.display = 'none';
-};
+        const mensajeElegido = whispers[Math.floor(Math.random() * whispers.length)];
 
-//Funcion para lanzar el coemtas
+        if (!misSusurros.includes(mensajeElegido)) {
+            misSusurros.push(mensajeElegido);
+            localStorage.setItem('misSusurros', JSON.stringify(misSusurros));
+        }
+
+        Swal.fire({
+            title: '✨ Mensaje Fugaz ✨',
+            text: mensajeElegido,
+            background: 'rgba(10, 10, 20, 0.95)',
+            color: '#ffffff',
+            confirmButtonText: 'Guardar en el corazón ❤️',
+            confirmButtonColor: 'cadetblue',
+            customClass: { popup: 'modal-espacial-borde' }
+        });
+    };
+
+    cometEl.onclick = atraparCometa;
+    cometEl.ontouchstart = atraparCometa;
+}
+
 function launchComet(){
+    const trivia = document.getElementById("contenedor-trivia");
+    if (trivia && trivia.style.display === "block") return; 
+    if (document.querySelector('.swal2-container')) return;
     const galaxySection = document.querySelector(".galaxybody");
     if(!galaxySection || !cometEl) return;
 
     const width = window.innerWidth;
     const height = window.innerHeight;
     
-    // Calcular punto de inicio
     const startX = Math.random() < 0.5 ? -50 : Math.random() * (width / 2); 
     const startY = startX === -50 ? Math.random() * (height / 2) : -50; 
     
-    // Calcular punto final (fuera de la pantalla)
     const endX = width + 150;
     const endY = height + 150;
 
@@ -48,10 +59,10 @@ function launchComet(){
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
     
     cometEl.style.display = "block";
+    cometEl.style.pointerEvents = "auto";
     cometEl.style.left = `${startX}px`;
     cometEl.style.top = `${startY}px`;
 
-    // Animación principal del cometa
     const animation = cometEl.animate(
       [
        { transform: `translate3d(0,0,0) rotate(${angle}deg)`, opacity: 0, filter: 'drop-shadow(0 0 5px #fff)' },
@@ -62,7 +73,6 @@ function launchComet(){
       { duration: Math.random() * 6000 + 14000, easing: "linear" }
     );
 
-    // Generador de partículas que dejan la estela
     const relojPartculas = setInterval(() => {
         if (cometEl.style.display === "none") {
             clearInterval(relojPartculas);
@@ -70,31 +80,26 @@ function launchComet(){
         }
 
         const rectComet = cometEl.getBoundingClientRect();
-        
-        // Asumimos que universeContainer está declarado en galaxia.js
-        if(typeof universeContainer !== 'undefined') {
-            const rectUniverse = universeContainer.getBoundingClientRect();
-            const x = rectComet.left - rectUniverse.left + (rectComet.width / 2);
-            const y = rectComet.top - rectUniverse.top + (rectComet.height / 2);
-            spawnCometParticle(x, y);
-        }
+        const rectUniverse = universeContainer.getBoundingClientRect();
+
+        const x = rectComet.left - rectUniverse.left + (rectComet.width / 2);
+        const y = rectComet.top - rectUniverse.top + (rectComet.height / 2);
+
+        spawnCometParticle(x, y);
     }, 90);
 
-    // Limpieza al terminar la animación
     animation.onfinish = () => { 
         cometEl.style.display = "none"; 
         clearInterval(relojPartculas);
     };
 }
 
-// Particulas del cometa
 function spawnCometParticle(x, y) {
     const particula = document.createElement("div");
     particula.className = "cometa-particula";
     
-    // Ajustes cruciales para que la estela no interfiera con otros elementos
-    particula.style.position = 'absolute';
-    particula.style.pointerEvents = 'none';
+    // 👇 AGREGA ESTA LÍNEA 👇
+    particula.style.position = "absolute"; 
     
     const dispersiónX = (Math.random() - 0.5) * 12;
     const dispersiónY = (Math.random() - 0.5) * 12;
@@ -112,7 +117,6 @@ function spawnCometParticle(x, y) {
     particula.style.boxShadow = `0 0 ${tamano}px ${particula.style.background}`;
     particula.style.transition = "all 0.8s ease-out"; 
 
-    // Adjuntar la partícula al universo
     universeContainer.appendChild(particula);
     
     requestAnimationFrame(() => {
@@ -120,10 +124,29 @@ function spawnCometParticle(x, y) {
         particula.style.transform = "scale(0.2)";
     });
 
-    // Eliminar partícula del DOM
     setTimeout(() => { particula.remove(); }, 800);
 }
 
-// Iniciar el ciclo del cometa
 launchComet();
-setInterval(launchComet, 45000);
+setInterval(launchComet,35000);
+
+if (solEl) {
+    solEl.style.cursor = "pointer";
+    solEl.onclick = () => {
+        const listaHtml = misSusurros.length > 0 
+            ? misSusurros.map(m => `<li>${m}</li>`).join('') 
+            : "<li>Aún no has atrapado ningún susurro con el cometa...</li>";
+
+        Swal.fire({
+            title: '❤️ Corazón del Universo ❤️',
+            html: `
+                <p>Aquí viven todos los recuerdos que hemos capturado:</p>
+                <ul style="text-align: left; margin-top: 15px;">${listaHtml}</ul>
+            `,
+            background: 'rgba(10, 10, 20, 0.95)',
+            color: '#ffffff',
+            confirmButtonText: 'Cerrar',
+            confirmButtonColor: 'cadetblue'
+        });
+    };
+}

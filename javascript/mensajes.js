@@ -4,13 +4,13 @@ function mostrarMensaje(palabra) {
     // Aquí defines qué mensaje sale según la palabra tocada
     switch(palabra) {
         case 'Caburgua':
-            mensaje = "¡El mejor viaje! Aún recuerdo el que esa noche nos levantavamos a cada rato por los ruidos. ✨";
+            mensaje = "¡El mejor viaje! Aún recuerdo el frío que hacía esa noche y lo bien que la pasamos. ✨";
             break;
         case 'Luffy':
-            mensaje = "Este Luffy es el guardián del collar en mi estantería. 👒";
+            mensaje = "Este Luffy es el guardián de nuestra estantería. ¡Fue una gran compra! 👒";
             break;
-        case 'película':
-            mensaje = "Nuestra primera cita de cine... recuerdo que estaba súper nervioso por estar contigo. ";
+        case 'Spiderman':
+            mensaje = "Nuestra primera cita de cine... recuerdo que estaba súper nervioso por estar contigo. 🕷️";
             break;
         default:
             mensaje = "¡Un recuerdo especial escondido solo para ti! ❤️";

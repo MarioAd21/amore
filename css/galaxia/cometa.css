@@ -1,0 +1,55 @@
+#cometa {
+    position: absolute; 
+    width: 40px;  /* Mantenemos el área grande para facilitar el click */
+    height: 40px;
+    z-index: 50; 
+    cursor: pointer;
+    display: none;
+    pointer-events: auto; 
+}
+
+#modal-cometa {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; max-width: 400px;
+    background: rgba(8, 8, 20, 0.98);
+    border: 2px solid var(--color-primario);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 1000;
+    backdrop-filter: blur(15px);
+}
+
+#cometa::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #e0f7fa;
+}
+
+#cometa::after {
+    content: "";
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%);
+    right: 50%; /* Nace desde el centro de la cabeza */
+    width: 120px; /* Largo de la estela */
+    height: 3px; /* Grosor de la estela */
+    background: linear-gradient(to left, rgba(255,255,255,0.9), transparent);
+}
+
+.modal-espacial-borde {
+    border: 2px solid cadetblue !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(10px);
+}
+

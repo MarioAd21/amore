@@ -1,3 +1,4 @@
+// --- 1. MENSAJES ALEATORIOS ---
 const mensajesAmor = [
     "El día que nos conocimos... ❤️",
     "Nuestra primera salida juntos.",
@@ -14,7 +15,6 @@ const mensajesAmor = [
 
 function openPhotoModal(url, message) {
     isCarouselPaused = true; 
-    document.body.classList.add('modal-abierto');
     document.getElementById('img-modal').src = url;
     document.getElementById('texto-mensaje').innerText = message;
     document.getElementById('modal-foto').classList.remove('modal-oculto');
@@ -22,7 +22,6 @@ function openPhotoModal(url, message) {
 
 function closePhotoModal() {
     isCarouselPaused = false; 
-    document.body.classList.remove('modal-abierto');
     const modal = document.getElementById('modal-foto');
     if (modal) {
         modal.classList.add('modal-oculto');
