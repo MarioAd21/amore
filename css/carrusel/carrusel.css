@@ -2,6 +2,8 @@
 .escena-stack {
     position: relative;
     width: 100%; 
+    max-width: 1200px; /* Evita que en pantallas gigantes se deforme demasiado */
+    margin: 0 auto;    /* Lo centra perfectamente en la pantalla */
     height: 500px;
     display: flex; 
     align-items: center; 
@@ -9,6 +11,7 @@
     perspective: 1500px; 
     cursor: grab;
     touch-action: none; 
+    overflow: visible !important; /* 🔥 Crucial: permite que el efecto 3D sobresalga sin cortarse */
 }
 
 /* Cartas de las Fotos */
@@ -20,7 +23,6 @@
     border: 2px solid cadetblue;
     background-color: #1a1a1a; 
     object-fit: cover;
-    /* Cambio: Transición más rápida que el intervalo para evitar bugs */
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 20px 60px rgba(0,0,0,0.9); 
     cursor: pointer;
@@ -40,59 +42,44 @@
     z-index: 50;
 }
 
-/* Posiciones laterales */
-.pos-d1 { transform: translateX(180px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
-.pos-d2 { transform: translateX(320px) translateZ(-100px) rotateY(-25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
-.pos-d3 { transform: translateX(450px) translateZ(-300px) rotateY(-35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
-.pos-i1 { transform: translateX(-180px) translateZ(50px) rotateY(15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
-.pos-i2 { transform: translateX(-320px) translateZ(-100px) rotateY(25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
-.pos-i3 { transform: translateX(-450px) translateZ(-300px) rotateY(35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
+/* --- NUEVAS POSICIONES LATERALES (Más separadas) --- */
+.pos-d1 { transform: translateX(240px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
+.pos-d2 { transform: translateX(420px) translateZ(-100px) rotateY(-25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
+.pos-d3 { transform: translateX(580px) translateZ(-300px) rotateY(-35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
+
+.pos-i1 { transform: translateX(-240px) translateZ(50px) rotateY(15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
+.pos-i2 { transform: translateX(-420px) translateZ(-100px) rotateY(25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
+.pos-i3 { transform: translateX(-580px) translateZ(-300px) rotateY(35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
 
 /* --- RESPONSIVE (Móviles e iPad) --- */
 @media (max-width: 768px) {
     .escena-stack { height: 400px; }
     .foto-card { width: 160px; height: 240px; }
     
-    /* Ajuste de posiciones para pantallas pequeñas */
     .pos-d1 { transform: translateX(120px) translateZ(20px) rotateY(-10deg) scale(0.8); }
     .pos-d2 { transform: translateX(200px) translateZ(-50px) rotateY(-20deg) scale(0.6); }
     .pos-i1 { transform: translateX(-120px) translateZ(20px) rotateY(10deg) scale(0.8); }
     .pos-i2 { transform: translateX(-200px) translateZ(-50px) rotateY(20deg) scale(0.6); }
-    .pos-d3, .pos-i3 { opacity: 0; } /* Ocultamos las lejanas en móvil */
+    .pos-d3, .pos-i3 { opacity: 0; } 
 }
 
-/* Modal y resto de estilos se mantienen igual que tenías */
-#modal-foto { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.3s; }
+/* Modal */
+#modal-foto { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background: rgba(0,0,0,0.85); 
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999; 
+    transition: opacity 0.3s; 
+    color: white;
+    font-family: sans-serif;
+}
 .modal-oculto { opacity: 0; pointer-events: none; }
-
-/* --- ADAPTACIÓN PARA TELÉFONOS (CARRUSEL) --- */
-@media (max-width: 768px) {
-    .carrusel-container {
-        width: 95% !important; 
-        max-width: none !important;
-        margin: 30px auto !important;
-        border-radius: 15px !important;
-    }
-    .carrusel-item {
-        height: 300px !important;
-    }
-    .carrusel-btn {
-        padding: 15px 10px !important; 
-        background: rgba(0, 0, 0, 0.3) !important; 
-        font-size: 18px !important;
-    }
-
-    .carrusel-caption {
-        font-size: 14px !important;
-        padding: 10px !important;
-    }
-
-    .marco-arte-gloria {
-        border-width: 6px;
-        padding: 8px;
-    }
-    #marco-mensaje-flotante {
-        font-size: 1.6rem;
-        margin-top: 15px;
-    }
-}
+#modal-img { max-width: 80%; max-height: 70%; border-radius: 8px; }
+#modal-texto { margin-top: 15px; font-size: 1.2rem; text-align: center; padding: 0 20px; }
