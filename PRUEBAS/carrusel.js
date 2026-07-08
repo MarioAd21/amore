@@ -1,5 +1,4 @@
 // --- 1. VARIABLES DE CONTROL GLOBALES ---
-// (Ya no declaramos mensajesAmor aquí porque viene de cards.js)
 let currentIndex = 0;
 let touchStartX = 0;
 let canRotate = true;
@@ -10,7 +9,6 @@ let isTabActive = true;
 
 // --- 2. GENERACIÓN DE LA GALERÍA ---
 const memoryGallery = [];
-// Usamos mensajesAmor que ya fue cargado por cards.js
 for (let i = 1; i <= 50; i++) {
     const msjAleatorio = mensajesAmor[Math.floor(Math.random() * mensajesAmor.length)];
     memoryGallery.push({ 
@@ -43,8 +41,7 @@ function initCarousel() {
         img.onclick = (e) => { 
             e.stopPropagation(); 
             if(img.classList.contains('pos-centro')) {
-                // openPhotoModal ahora es llamado desde cards.js
-                openPhotoModal(memory.url, memory.msj); 
+                abrirCarta3D(memory.url); 
             }
         };
         container.appendChild(img);

@@ -1,76 +1,124 @@
-.marco-arte-gloria {
-    position: relative;
-    padding: 12px; 
-    border-radius: 15px;
-    display: inline-block;
-    overflow: hidden; /* Corta el brillo para que no salga del borde */
-    background: #1a1a1a; /* Fondo de seguridad tras la foto */
-    box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
+/* =========================================
+   ESTILOS DEL MODAL Y CARTA 3D
+========================================= */
+
+/* Contenedor principal oculto por defecto */
+#modal-carta-3d {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9); /* Fondo oscuro */
+  perspective: 1200px;
+  display: none; /* Se cambia a flex con JS */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Por encima de todo el carrusel */
+  overflow: hidden;
 }
 
-.marco-arte-gloria::before {
-    content: "";
-    position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    /* Creamos un "abanico" de colores dorados */
-    background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        #b8860b 90deg, 
-        #ffd700 180deg, 
-        #e6c35c 270deg,
-        transparent 360deg
-    );
-    animation: rotarOro 4s linear infinite; /* Animación de giro */
-    z-index: 1;
+/* Botón para cerrar */
+.btn-cerrar-carta {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+  z-index: 20;
+  font-family: sans-serif;
+  transition: transform 0.2s;
 }
 
-/* La imagen dentro del cuadro */
-.marco-arte-gloria img { 
-    position: relative;
-    display: block;
-    max-width: 80vw;
-    max-height: 65vh;
-    border-radius: 8px;
-    z-index: 2; /* Importante para estar sobre el brillo */
-    border: 2px solid rgba(255, 215, 0, 0.3); /* Un fino borde interno */
+.btn-cerrar-carta:hover {
+  transform: scale(1.2);
 }
 
-@keyframes rotarOro {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* --- El Mensaje Flotante --- */
-#marco-mensaje-flotante { 
-    margin-top: 30px; /* Separación del cuadro */
-    padding: 10px 20px;
-    background: transparent; /* Ya no es un bloque blanco */
-    color: #f0e6d2; /* Blanco crema suave */
-    font-family: 'Dancing Script', cursive; 
-    font-size: 2.2rem; /* Más grande y legible */
-    text-align: center;
-    text-shadow: 0 0 15px rgba(240, 230, 210, 0.6); /* Resplandor en el texto */
-    
-    /* Efecto de entrada por letras (requiere JS) */
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease 0.4s, transform 0.8s ease 0.4s;
-}
-
-/* Mostrar el texto cuando el modal esté activo */
-#modal-foto:not(.modal-oculto) #marco-mensaje-flotante {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* --- Partículas de Polvo Estelar --- */
+/* Polvo Estelar */
 #polvo-estelar {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none; /* No interfiere con los clics */
-    z-index: -1; /* Detrás del cuadro */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Contenedor de la carta */
+.carta-container {
+  /* Tamaño ajustado a formato retrato/fotografía */
+  width: 350px; 
+  height: 500px; 
+  z-index: 10;
+  /* Animación más lenta y suave (3 segundos) */
+  animation: spin-intro 3s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes spin-intro {
+  0% { transform: rotateY(0deg) scale(0.5); }
+  /* Solo 2 vueltas completas (720 grados) para no marear */
+  100% { transform: rotateY(720deg) scale(1); } 
+}
+
+.carta-wrapper {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.giro-continuo {
+  animation: rotacion-infinita 12s linear infinite;
+}
+
+@keyframes rotacion-infinita {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); } 
+}
+
+/* Estilo general para las caras con marco elegante */
+.cara {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 50px rgba(0,0,0,0.2);
+  border: 6px solid #d4af37; /* Color dorado antiguo */
+  box-sizing: border-box; /* Crucial para que el borde no aumente el tamaño */
+}
+
+.cara-frontal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cara Trasera: Estilo Pergamino Antiguo */
+.cara-trasera {
+  transform: rotateY(180deg);
+  background-image: url('image_466166.jpg'); /* Tu imagen de papel antiguo */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+}
+
+/* Contenedor del mensaje en la cara trasera */
+.mensaje-texto {
+  font-family: 'Dancing Script', cursive;
+  font-size: 25px;
+  color: #4a3728; /* Marrón oscuro para efecto tinta */
+  text-align: center;
+  word-wrap: break-word;
+  pointer-events: none;
+  line-height: 1.4;
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
 }
 

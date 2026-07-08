@@ -19,33 +19,32 @@
         <h2 style="margin-top: 20px; text-align: center;">El Carrusel del Recuerdo</h2>
         <p style="font-size: 0.9rem; color: #888; text-align: center; margin: 5px auto;">(Desliza o usa la rueda del mouse para navegar)</p>
         
-        <div class="escena-stack" id="contenedor"></div>
-
-            <div id="modal-foto" class="modal-oculto" onclick="closePhotoModal()">
-            <div class="modal-contenedor-arte" onclick="event.stopPropagation()">
-                <div id="polvo-estelar"></div>
-                <div class="marco-arte-gloria">
-                    <img id="img-modal" src="" alt="Recuerdo">
-                </div>
-                <div id="marco-mensaje-flotante">
-                    <p id="texto-mensaje"></p>
+        <div id="contenedor" class="escena-stack"></div>
+        
+        <div id="modal-carta-3d">
+            <div class="btn-cerrar-carta" onclick="cerrarCarta3D()">✖</div>
+            
+            <div id="polvo-estelar"></div>
+            
+            <div class="carta-container" id="carta-animada">
+                <div class="carta-wrapper" id="tarjeta">
+                
+                    <div class="cara cara-frontal">
+                        <img id="img-carta-frente" src="" alt="Frente" />
+                    </div>
+                    
+                    <div class="cara cara-trasera" >
+                        <div id="mensaje-carta" class="mensaje-texto"> </div>
+                    </div>
+                
                 </div>
             </div>
         </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>        
         <script src="cards.js"></script>
         <script src="carrusel.js"></script>
     </section>
 
-
-
 </body>
-
 </html>
-
-
--->
-
-
-
