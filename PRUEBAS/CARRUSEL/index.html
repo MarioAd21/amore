@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>❤️ 21-11-2016</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTILOS OPTIMIZADOS --- */
+        body { 
+            margin: 0; 
+            background: #000; 
+            color: #fff; 
+            font-family: 'Dancing Script', cursive; 
+        }
+
+        .header-carrusel {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .header-carrusel p {
+            font-size: 0.9rem; 
+            color: #888; 
+            margin: 5px auto;
+        }
+        
+        .escena-stack {
+            position: relative;
+            width: 100%; 
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 500px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            perspective: 1500px; 
+            cursor: grab;
+            touch-action: none; 
+            overflow: visible !important;
+        }
+
+        .escena-stack:active {
+            cursor: grabbing;
+        }
+
+        .foto-card {
+            position: absolute; 
+            width: 220px; 
+            height: 340px;
+            border-radius: 12px; 
+            border: 2px solid cadetblue;
+            background-color: #1a1a1a; 
+            object-fit: cover;
+            /* Optimización para animaciones fluidas usando GPU */
+            will-change: transform, filter, opacity;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9); 
+            cursor: pointer;
+        }
+
+        .oculta { opacity: 0; transform: scale(0) translateZ(-500px); pointer-events: none; }
+        .pos-centro { transform: translateZ(250px) translateX(0) scale(1); filter: brightness(1.1); opacity: 1; border-color: gold; z-index: 50; }
+
+        .pos-d1 { transform: translateX(240px) translateZ(50px) rotateY(-15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
+        .pos-d2 { transform: translateX(420px) translateZ(-100px) rotateY(-25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
+        .pos-d3 { transform: translateX(580px) translateZ(-300px) rotateY(-35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
+        .pos-i1 { transform: translateX(-240px) translateZ(50px) rotateY(15deg) scale(0.85); filter: brightness(0.6); z-index: 40; }
+        .pos-i2 { transform: translateX(-420px) translateZ(-100px) rotateY(25deg) scale(0.7); filter: brightness(0.4); z-index: 30; }
+        .pos-i3 { transform: translateX(-580px) translateZ(-300px) rotateY(35deg) scale(0.5); filter: brightness(0.2); z-index: 20; }
+
+        @media (max-width: 768px) {
+            .escena-stack { height: 400px; }
+            .foto-card { width: 160px; height: 240px; }
+            .pos-d1 { transform: translateX(120px) translateZ(20px) rotateY(-10deg) scale(0.8); }
+            .pos-d2 { transform: translateX(200px) translateZ(-50px) rotateY(-20deg) scale(0.6); }
+            .pos-i1 { transform: translateX(-120px) translateZ(20px) rotateY(10deg) scale(0.8); }
+            .pos-i2 { transform: translateX(-200px) translateZ(-50px) rotateY(20deg) scale(0.6); }
+            .pos-d3, .pos-i3 { opacity: 0; } 
+        }
+    </style>
+</head>
+<body>
+
+    <section id="CARRUSEL">
+        <div class="header-carrusel">
+            <h2>El Carrusel del Recuerdo</h2>
+            <p>(Desliza o usa la rueda del mouse para navegar)</p>
+        </div>
+        
+        <div id="contenedor" class="escena-stack"></div>
+    </section>
+
+    <script>
+        // Array de mensajes por defecto para evitar errores
+        const mensajesAmor = typeof window.mensajesAmor !== 'undefined' ? window.mensajesAmor : ["Te amo", "Recuerdo inolvidable", "Siempre juntos"];
+
+        let currentIndex = 0;
+        let touchStartX = 0;
+        let canRotate = true;
+        let isCarouselPaused = false; 
+        let isTabActive = true; 
+        
+        const rotationCooldown = 800;      
+        const touchSensitivity = 80;  
+        const totalMemories = 50; 
+        
+        // Caching para evitar manipular/buscar el DOM repetitivamente
+        const container = document.getElementById('contenedor');
+        const cardElements = []; 
+
+        // Generar elementos de forma eficiente
+        function initGallery() {
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 1; i <= totalMemories; i++) {
+                const msjAleatorio = mensajesAmor[Math.floor(Math.random() * mensajesAmor.length)];
+                
+                const img = document.createElement('img');
+                img.src = `https://picsum.photos/220/340?random=${i}`;
+                img.className = 'foto-card oculta';
+                img.alt = msjAleatorio; // Accesibilidad
+                img.loading = "lazy";   // Optimización de carga de red
+                
+                cardElements.push(img); 
+                fragment.appendChild(img);
+            }
+            
+            container.appendChild(fragment); // Una sola inyección al DOM
+        }
+
+        function updateFanLayout() {
+            // Ocultar todas las tarjetas de forma optimizada desde el array
+            cardElements.forEach(card => { 
+                card.className = 'foto-card oculta'; 
+                card.style.zIndex = "0"; 
+            });
+            
+            const getIndexAtOffset = (offset) => (currentIndex + offset + totalMemories) % totalMemories;
+            
+            const layoutMap = [
+                { idx: getIndexAtOffset(0), className: 'pos-centro', z: 50 },
+                { idx: getIndexAtOffset(1), className: 'pos-d1', z: 40 },
+                { idx: getIndexAtOffset(2), className: 'pos-d2', z: 30 },
+                { idx: getIndexAtOffset(3), className: 'pos-d3', z: 20 },
+                { idx: getIndexAtOffset(-1), className: 'pos-i1', z: 40 },
+                { idx: getIndexAtOffset(-2), className: 'pos-i2', z: 30 },
+                { idx: getIndexAtOffset(-3), className: 'pos-i3', z: 20 }
+            ];
+            
+            // Posicionar solo las 7 tarjetas visibles
+            layoutMap.forEach(item => {
+                const element = cardElements[item.idx];
+                if (element) { 
+                    element.className = `foto-card ${item.className}`; 
+                    element.style.zIndex = item.z; 
+                }
+            });
+        }
+
+        // Inicialización
+        initGallery();
+        updateFanLayout();
+
+        // --- Manejadores de Eventos ---
+        document.addEventListener("visibilitychange", () => {
+            isTabActive = !document.hidden;
+            if (isTabActive) updateFanLayout();
+        });
+
+        // Rueda del mouse
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            if (!canRotate) return;
+            if (Math.abs(e.deltaY) > 10) { 
+                canRotate = false;
+                currentIndex = (currentIndex + (e.deltaY > 0 ? -1 : 1) + totalMemories) % totalMemories;
+                updateFanLayout();
+                setTimeout(() => { canRotate = true; }, rotationCooldown);
+            }
+        }, { passive: false });
+
+        // Táctil
+        container.addEventListener('touchstart', (e) => { 
+            touchStartX = e.touches[0].clientX; 
+        }, { passive: true });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!canRotate) return;
+            const diffX = touchStartX - e.touches[0].clientX;
+            if (Math.abs(diffX) > touchSensitivity) {
+                canRotate = false; 
+                currentIndex = (currentIndex + (diffX > 0 ? -1 : 1) + totalMemories) % totalMemories;
+                updateFanLayout();
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchend', () => { 
+            setTimeout(() => { canRotate = true; }, 300); 
+        });
+
+        // Autoplay
+        setInterval(() => { 
+            if(canRotate && !isCarouselPaused && isTabActive) { 
+                currentIndex = (currentIndex + 1) % totalMemories; 
+                updateFanLayout(); 
+            } 
+        }, 4000); 
+    </script>
+</body>
+</html>
