@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Carta: Entrada + Bucle Infinito (Sin Pausa)</title>
+    <title>Carta: Interactiva con Inercia</title>
     <style>
       body {
         background: #000;
@@ -13,24 +13,28 @@
         perspective: 1500px;
         margin: 0;
         overflow: hidden;
+        user-select: none; 
+        -webkit-user-select: none;
       }
 
-      /* 1. EL PADRE: Hace el efecto de entrada (escala y giro rápido que se va frenando) */
+      /* Si decides quitar la animación de entrada, borra la propiedad 'animation' de aquí abajo */
       .card-intro {
         width: 330px;
         height: 580px;
         transform-style: preserve-3d;
-        /* cubic-bezier ajustado para que frene con mucha suavidad */
         animation: intro-fast 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
       }
 
-      /* 2. EL HIJO: Hace el bucle constante infinito desde el principio */
-      .card-loop {
+      .card-interactive {
         width: 100%;
         height: 100%;
         position: relative;
         transform-style: preserve-3d;
-        animation: loop-slow 8s linear infinite;
+        cursor: grab; 
+      }
+      
+      .card-interactive:active {
+        cursor: grabbing;
       }
 
       .face {
@@ -38,9 +42,11 @@
         width: 100%;
         height: 100%;
         backface-visibility: hidden;
-        border-radius: 25px; /* Curvas más pronunciadas para que no sea cuadrada */
+        -webkit-backface-visibility: hidden;
+        border-radius: 25px; 
         overflow: hidden;
         border: 5px solid rgba(3, 206, 241, 0.2); 
+        pointer-events: none; 
       }
 
       .front { transform: rotateY(0deg); }
@@ -50,19 +56,12 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        
       }
 
-      /* --- Animación del Padre (Entrada) --- */
+      /* Animación de entrada inicial (4 segundos) */
       @keyframes intro-fast {
         0% { transform: rotateY(0deg) scale(0.5); }
-        100% { transform: rotateY(1440deg) scale(1); } /* Da 4 vueltas y se detiene */
-      }
-
-      /* --- Animación del Hijo (Bucle Constante) --- */
-      @keyframes loop-slow {
-        0% { transform: rotateY(0deg); }
-        100% { transform: rotateY(360deg); } /* Da 1 vuelta cada 6 segundos, para siempre */
+        100% { transform: rotateY(1440deg) scale(1); }
       }
 
       #frase-trasera {
@@ -76,49 +75,124 @@
         align-items: center;
         text-align: center;
         padding: 20px;
-        box-sizing: border-box; /* Evita que el padding desborde la carta */
+        box-sizing: border-box;
         color: white;
         font-size: 1.8rem;
         font-family: 'Dancing Script', cursive;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.8); /* Sombra para que se lea bien sobre cualquier foto */
-        z-index: 10;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(1px); 
+        
+        /* Si quitas la pausa inicial, también debes cambiar esto. (Ver instrucciones abajo) */
+        opacity: 0;
+        animation: fade-in-texto 1s ease-in forwards 4s;
+      }
+
+      @keyframes fade-in-texto {
+        to { opacity: 1; }
       }
     </style>
-
   </head>
   <body>
 
     <div class="card-intro">
-      
-      <div class="card-loop">
+      <div class="card-interactive" id="tarjeta">
         
         <div class="face front">
-          <img src="https://picsum.photos/300/300?random=20" alt="Frente" />
+          <img src="https://s3.amazonaws.com/suda-web-blog-files.sudacdn.net/2022/02/176133242_1158438034616628_3116350239865750600_n-1.jpg" alt="Frente" />
         </div>
         
         <div class="face back">
-          <img src="https://picsum.photos/300/300?random=21" alt="Atrás" />
+                    <img src="https://images.unsplash.com/photo-1505506874110-6a7a69069a08?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2FsYXhpYXxlbnwwfHwwfHx8MA==" alt="Atrás" />
           <div id="frase-trasera"></div> 
         </div>
         
       </div>
-      
     </div>
 
     <script>
       const frases = [
-        "Te amo hoy y siempre",
-        "Eres mi mejor recuerdo",
-        "21-11-2016: Nuestro inicio",
-        "Cada momento contigo es magia",
-        "Juntos es mi lugar favorito"
+        "HOLAAAAAA"
+
+
       ];
 
-      // Selecciona una frase aleatoria
       const fraseAleatoria = frases[Math.floor(Math.random() * frases.length)];
-
-      // La inyecta en el div de la cara trasera
       document.getElementById('frase-trasera').innerText = fraseAleatoria;
+
+      const tarjeta = document.getElementById('tarjeta');
+      
+      let rotacionY = 0; 
+      let rotacionX = 0; 
+      
+      let interactuando = false;
+      let inicioMouseX = 0;
+      let inicioMouseY = 0;
+      let ultimoX = 0; // Guardará la última posición X para calcular la velocidad de tu dedo
+      
+      let velocidadAutomatica = 0.5; 
+      let velocidadImpulso = 0; // La velocidad extra al "lanzar" la carta
+
+      function iniciarInteraccion(x, y) {
+        interactuando = true;
+        inicioMouseX = x;
+        inicioMouseY = y;
+        ultimoX = x;
+        velocidadImpulso = 0; // Reinicia el impulso al volver a tocar
+      }
+
+      function moverInteraccion(x, y) {
+        if (!interactuando) return;
+        
+        const diferenciaX = x - inicioMouseX;
+        const diferenciaY = y - inicioMouseY;
+        
+        rotacionY += diferenciaX * 0.4; 
+        rotacionX -= diferenciaY * 0.4; 
+        rotacionX = Math.max(-45, Math.min(45, rotacionX));
+
+        // Calculamos qué tan rápido estás moviendo el dedo
+        velocidadImpulso = (x - ultimoX) * 0.5;
+        
+        ultimoX = x;
+        inicioMouseX = x;
+        inicioMouseY = y;
+      }
+
+      function terminarInteraccion() {
+        interactuando = false;
+      }
+
+      window.addEventListener('mousedown', (e) => iniciarInteraccion(e.clientX, e.clientY));
+      window.addEventListener('mousemove', (e) => moverInteraccion(e.clientX, e.clientY));
+      window.addEventListener('mouseup', terminarInteraccion);
+
+      window.addEventListener('touchstart', (e) => iniciarInteraccion(e.touches[0].clientX, e.touches[0].clientY));
+      window.addEventListener('touchmove', (e) => moverInteraccion(e.touches[0].clientX, e.touches[0].clientY));
+      window.addEventListener('touchend', terminarInteraccion);
+
+      function animar() {
+        if (!interactuando) {
+          // La inercia del lanzamiento se va frenando multiplicándola por 0.95 (Fricción)
+          velocidadImpulso *= 0.95;
+          
+          // La carta gira con su velocidad normal MÁS la velocidad del impulso
+          rotacionY += velocidadAutomatica + velocidadImpulso;
+          
+          // El eje vertical vuelve a su sitio suavemente
+          rotacionX = rotacionX * 0.95; 
+        }
+        
+        tarjeta.style.transform = `rotateX(${rotacionX}deg) rotateY(${rotacionY}deg)`;
+        requestAnimationFrame(animar);
+      }
+
+      // LA PAUSA ESTÁ AQUÍ (Sigue leyendo para saber cómo quitarla)
+      setTimeout(() => {
+        animar();
+      }, 4000);
     </script>
 
   </body>
