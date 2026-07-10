@@ -84,11 +84,11 @@ function launchComet(){
 launchComet();
 setInterval(launchComet,35000);
 
-if (solEl) {
-    solEl.style.cursor = "pointer";
-    solEl.onclick = () => {
-        const listaHtml = misSusurros.length > 0 
-            ? misSusurros.map(m => `<li>${m}</li>`).join('') 
+if (window.solEl) {
+    window.solEl.style.cursor = "pointer";
+    window.solEl.onclick = () => {
+        const listaHtml = window.misSusurros.length > 0 
+            ? window.misSusurros.map(m => `<li>${m}</li>`).join('') 
             : "<li>Aún no has atrapado ningún susurro con el cometa...</li>";
 
         Swal.fire({

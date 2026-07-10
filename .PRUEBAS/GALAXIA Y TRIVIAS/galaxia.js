@@ -1,8 +1,8 @@
 /* --- INICIALIZACIÓN --- */
-let misSusurros = JSON.parse(localStorage.getItem('misSusurros')) || [];
-const solEl = document.getElementById('corazon-central');
+// 🚀 OPTIMIZACIÓN: Variables ancladas a 'window' para evitar errores asíncronos
+window.misSusurros = JSON.parse(localStorage.getItem('misSusurros')) || [];
+window.solEl = document.getElementById('corazon-central');
 const universeContainer = document.getElementById('universo');
-
 
 window.planetRefs = [];
 const yearsList = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
@@ -95,7 +95,42 @@ function travelToPlanet(ref) {
     universeContainer.style.transformOrigin = `calc(50% + ${ref.posX}px) calc(50% + ${ref.posY}px)`;
     universeContainer.style.transform = "scale(6)";
     universeContainer.style.opacity = "0.4";
-    setTimeout(() => { if (typeof showTrivia === "function") showTrivia(ref); }, 1000);
+    
+    // 🚀 NUEVO: Cargador Dinámico de Minijuegos
+    setTimeout(() => { 
+        cargarMinijuego(ref);
+    }, 1000);
+}
+
+function cargarMinijuego(ref) {
+    // Definimos qué archivo le toca a cada año
+    const rutaScript = `juegos/${ref.year}.js`; // Ej: buscará "juegos/2016.js"
+
+    // Verificamos si ya cargamos este script antes para no repetirlo
+    if (document.querySelector(`script[src="${rutaScript}"]`)) {
+        if (typeof window[`iniciarJuego${ref.year}`] === "function") {
+            window[`iniciarJuego${ref.year}`](ref);
+        }
+        return;
+    }
+
+    // Si no existe, creamos la etiqueta <script> y la inyectamos
+    const script = document.createElement("script");
+    script.src = rutaScript;
+    script.onload = () => {
+        // Una vez que descarga el archivo, ejecuta la función principal de ese año
+        if (typeof window[`iniciarJuego${ref.year}`] === "function") {
+            window[`iniciarJuego${ref.year}`](ref);
+        } else {
+            console.error(`La función iniciarJuego${ref.year} no existe en ${rutaScript}`);
+        }
+    };
+    script.onerror = () => {
+        Swal.fire('Error', 'No se pudo cargar el recuerdo de este año.', 'error');
+        resetUniverse();
+    };
+    
+    document.body.appendChild(script);
 }
 
 function resetUniverse() {
