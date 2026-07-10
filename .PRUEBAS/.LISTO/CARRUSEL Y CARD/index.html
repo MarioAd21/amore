@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>❤️ 21-11-2016</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="carrusel.css">
+    <link rel="stylesheet" href="card.css">
+    <link rel="stylesheet" href="polvo-estelar.css"> 
+</head>
+<body>
+
+    <section id="CARRUSEL">
+        <div class="header-carrusel">
+            <h2>El Carrusel del Recuerdo</h2>
+            <p>(Desliza, usa la rueda del mouse, o haz CLICK en una foto)</p>
+        </div>
+        <div id="contenedor" class="escena-stack"></div>
+    </section>
+
+    <section id="CARTA_MODAL" style="display: none;">
+        <div id="polvo-estelar"></div>
+
+        <button id="btn-cerrar" onclick="cerrarCarta()">⬅ Volver al Carrusel</button>
+
+        <div class="card-intro">
+            <div class="card-interactive" id="tarjeta">
+                <div class="face front">
+                    <img id="img-frente" src="" alt="Frente" />
+                </div>
+                <div class="face back">
+                    <img src="https://images.unsplash.com/photo-1505506874110-6a7a69069a08?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2FsYXhpYXxlbnwwfHwwfHx8MA==" alt="Atrás" />
+                    <div id="frase-trasera"></div> 
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="carrusel.js"></script>
+    <script src="card.js"></script>
+    <script src="polvo-estelar.js"></script> 
+</body>
+</html>

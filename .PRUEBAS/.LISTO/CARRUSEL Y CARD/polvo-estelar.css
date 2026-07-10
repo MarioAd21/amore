@@ -1,0 +1,40 @@
+/* Contenedor del polvo estelar */
+#polvo-estelar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Evita que las estrellas bloqueen tus clics o gestos */
+    overflow: hidden;
+    z-index: 0; /* Lo pone por detrás de la carta interactiva */
+}
+
+/* Estilos base de cada estrella */
+.estrella {
+    position: absolute;
+    background-color: rgba(255, 245, 230, 0.9);
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    
+    /* Nacen totalmente invisibles */
+    opacity: 0; 
+    
+    /* El "both" asegura que respeten el 0% durante su tiempo de retraso */
+    animation: flotar var(--duracion) ease-in-out var(--retraso) infinite alternate both;
+}
+
+/* Animación nativa fluida y orgánica */
+@keyframes flotar {
+    0% {
+        /* Inician pequeñas y totalmente invisibles */
+        transform: translate(0, 0) scale(0.3);
+        opacity: 0; 
+    }
+    100% {
+        /* Terminan en su tamaño real, movidas y con su opacidad máxima */
+        transform: translate(var(--mov-x), var(--mov-y)) scale(1);
+        opacity: var(--opacidad-max);
+    }
+}

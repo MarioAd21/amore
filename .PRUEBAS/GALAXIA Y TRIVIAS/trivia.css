@@ -1,0 +1,94 @@
+#contenedor-trivia {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 99999 !important; /* Capa máxima */
+    background: rgba(10, 10, 20, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid cadetblue;
+    color: white;
+    width: 85%;
+    max-width: 400px;
+    text-align: center;
+    max-height: 85vh; 
+    overflow-y: auto;
+}
+
+.boton-opcion {
+    background: rgba(95, 158, 160, 0.15);
+    border: 1px solid rgba(95, 158, 160, 0.5);
+    color: white;
+    margin: 10px 0;
+    padding: 15px;
+    width: 100%;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+@media (hover: hover) {
+    .boton-opcion:hover {
+        background: cadetblue;
+        transform: translateY(-2px);
+    }
+}
+.pixel {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--p-color);
+    border-radius: 1px;
+    z-index: 2000;
+    box-shadow: 0 0 8px var(--p-color);
+}
+
+body.modal-abierto {
+    overflow: hidden;
+    position: fixed; /* Esto asegura el bloqueo total en iOS */
+    width: 100%;
+}
+
+#btn-cerrar-trivia {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: cadetblue;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: 0.3s;
+    z-index: 10001; /* Por encima del contenido interno */
+}
+
+#btn-cerrar-trivia:hover {
+    color: white;
+    transform: scale(1.2);
+}
+
+/* Ajuste para que el título no choque con la X */
+#trivia-titulo {
+    padding-top: 10px;
+    margin-right: 20px;
+}
+
+/* --- ADAPTACIÓN PARA TELÉFONOS Y TABLETS --- */
+
+/* Para iPads y Tablets (Regla Nueva) */
+@media (max-width: 1024px) {
+    #universo {
+        transform: scale(0.85); 
+    }
+}
+
+/* Asegura que los mensajes de SweetAlert siempre estén por encima de todo */
+.swal2-container {
+    z-index: 100000 !important; 
+}

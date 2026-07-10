@@ -1,0 +1,162 @@
+/* --- CONTENEDOR ESPECÍFICO --- */
+.galaxybody {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+    background: transparent; /* 👈 Cambio clave: ahora es transparente */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 👈 Eliminamos el box-shadow para quitar el efecto de "caja" */
+    touch-action: pan-x pan-y;
+}
+
+@keyframes parpadeo-estelar {
+    0% { 
+        opacity: 0.1; 
+        transform: scale(0.5); 
+    }
+    50% {
+        opacity: 0.8; 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1.3); 
+        /* Agregamos una sola sombrita ligera solo en el punto máximo de brillo para que destelle */
+        box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* Agrega will-change a los planetas y al universo */
+#universo {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95), opacity 0.8s;
+    z-index: 1;
+    will-change: transform, opacity; /* 🚀 Aceleración por hardware del contenedor */
+}
+
+/* Cambiamos el punto por el # */
+#corazon-central {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 70px;
+    z-index: 100;
+    transition: transform 0.3s;
+    animation: latido 1.5s infinite ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+#corazon-central:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    cursor: pointer;
+}
+
+@keyframes latido {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.18); }
+}
+
+.orbita-elipse {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.planeta {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 20;
+    background: radial-gradient(circle at 30% 30%, #fff, var(--p-color) 60%, #000);
+    box-shadow: 0 0 15px var(--p-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    will-change: transform; /* 🚀 Evita tirones al recalcular la posición en la órbita */
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Clase para cuando el año está completado */
+.planeta.completado {
+    background: none !important;
+    box-shadow: none !important;
+    cursor: default;
+}
+
+.planeta.completado::before {
+    content: '❤️';
+    font-size: 18px;
+    filter: drop-shadow(0 0 5px var(--p-color));
+}
+
+.planeta span {
+    position: absolute;
+    top: -24px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px #000;
+    pointer-events: none;
+}
+
+
+/* Para Teléfonos (Modificación de tu regla existente) */
+@media (max-width: 768px) {
+    .galaxybody {
+        min-height: 100vh !important; 
+        min-height: 100svh !important;
+    }
+
+    .corazon-central {
+        font-size: 40px !important; 
+    }
+
+    .planeta {
+        width: 18px !important;  
+        height: 18px !important;
+    }
+
+    .planeta span {
+        font-size: 10px !important; 
+        top: -20px !important;
+    }
+
+    #universo {
+       transform: scale(0.6); 
+    }
+
+    #contenedor-trivia, #modal-cometa {
+        width: 95% !important;
+        padding: 20px !important;
+    }
+
+    .boton-opcion {
+        padding: 15px !important; 
+        font-size: 16px !important;
+    }
+}
+
+/* Asegura que los mensajes de SweetAlert siempre estén por encima de todo */
+.swal2-container {
+    z-index: 100000 !important; 
+}

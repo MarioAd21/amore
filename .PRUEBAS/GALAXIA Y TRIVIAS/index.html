@@ -1,0 +1,159 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>❤️ 21-11-2016</title>
+    
+    <link rel="stylesheet" href="galaxia.css">
+    <link rel="stylesheet" href="trivia.css">
+    <link rel="stylesheet" href="cometa.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+/* Variables de Color */
+:root {
+    --color-fondo: #000000;
+    --color-primario: cadetblue;
+    --color-acento: #7FFFD4; /* Electric Mint */
+    --color-tarjeta: #121212; /* Un gris muy oscuro para la tarjeta */
+    --color-texto: #E0E0E0;
+    --color-titulo: #B0C4DE;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Esto es vital para evitar el scroll horizontal */
+    -webkit-overflow-scrolling: touch; /* Mejora la fluidez en dispositivos Apple */
+    position: relative;
+}
+
+body {
+    background-color: #000000; /* Color base negro */
+    margin: 0;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 10px;
+    position: relative; /* Necesario para que el pseudo-elemento se posicione bien */
+    overflow-x: hidden;
+}
+
+/* Esta capa es el fondo real que cubre todo */
+body::before {
+    content: "";
+    position: absolute; /* Cambiamos a absolute para que se desplace con el scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Cubre todo el alto de la página */
+    z-index: -1;
+    background-color: #05050a;
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(95, 158, 160, 0.25), transparent 60%),
+        radial-gradient(circle at 85% 30%, rgba(127, 255, 212, 0.15), transparent 60%);
+    background-attachment: scroll; /* Ahora sí se moverá con el contenido */
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#CUERPO {
+    max-width: 750px;
+    background-color: var(--color-tarjeta);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(95, 158, 160, 0.2);
+    margin: 40px auto;
+    text-align: center;
+    border: 1px solid #222;
+}
+
+#CUERPO p, #CUERPO h3 {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: #cccccc;
+}
+
+/* Poema con estilo destacado */
+.poema-aniversario {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem !important;
+    color: var(--color-acento) !important;
+    margin-top: 40px !important;
+    padding: 30px;
+    border: 2px solid var(--color-acento);
+    border-radius: 15px;
+    background: rgba(127, 255, 212, 0.05);
+}
+
+h1 { color: var(--color-primario); font-family: "Dancing Script", cursive; font-size: 3.5rem; text-align: center; }
+h2 { color: var(--color-titulo); font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-align: center; }
+
+.separador {
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--color-acento), transparent);
+    margin: 40px auto;
+}
+
+
+.introduccion-amor { 
+    max-width: 600px; 
+    text-align: center; 
+    font-style: italic; 
+    color: #999999; 
+    margin: 35px auto 30px auto; 
+    font-family: 'Poppins', sans-serif;
+}
+
+
+    </style>
+
+</head>
+<body>
+
+    <h1 style="text-align: center; color: white; padding: 20px; font-size: 1.2rem; z-index: 10;">
+        Esta galaxia se encuentra como yo antes de conocerte, si quieres darle vida y color tendrás que responder en cada planeta las trivias que dejé
+    </h1>
+    
+    <div class="separador"></div>
+
+    <section id="GALAXIA">
+        <div class="galaxybody">
+            <div id="cometa"></div>
+            <div id="universo">
+                <div id="corazon-central">❤️</div> 
+            </div>
+
+            <div id="contenedor-trivia" style="display:none;">
+                <button id="btn-cerrar-trivia" onclick="cerrarTrivia()">×</button>
+                <h2 id="trivia-titulo">Cargando...</h2>
+                <p id="trivia-pregunta">Preparando preguntas...</p>
+                <div id="trivia-opciones"></div>
+            </div>
+
+            <div id="modal-cometa">
+                <h3 style="color:var(--color-primario);">✨ Susurro del Espacio ✨</h3>
+                <p id="texto-cometa"></p>
+                <button class="boton-opcion" onclick="closeCometModal()">Cerrar</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="trivias.js"></script>
+    <script src="galaxia.js"></script>
+    <script src="cometa.js"></script>
+
+</body>
+</html>
