@@ -59,7 +59,7 @@ yearsList.forEach((year, index) => {
                 text: 'Debes completar las trivias de los años anteriores para viajar a este recuerdo.',
                 icon: 'warning',
                 background: 'rgba(10, 10, 20, 0.95)',
-                color: '#ffffff',
+                color: '',
                 confirmButtonColor: 'cadetblue',
                 customClass: { popup: 'modal-espacial-borde' }
             });
@@ -96,41 +96,71 @@ function travelToPlanet(ref) {
     universeContainer.style.transform = "scale(6)";
     universeContainer.style.opacity = "0.4";
     
-    // 🚀 NUEVO: Cargador Dinámico de Minijuegos
     setTimeout(() => { 
-        cargarMinijuego(ref);
+        // 🚀 SOLUCIÓN: Si es 2016, llamamos a tu trivia actual. 
+        if (ref.year === 2016) {
+            if (typeof showTrivia === "function") {
+                showTrivia(ref);
+            } else {
+                console.error("No se encontró la función showTrivia");
+                resetUniverse();
+                ref.isActive = true; // Si falla, que vuelva a girar
+            }
+        } else {
+            // Del 2017 en adelante, busca los archivos externos
+            cargarMinijuego(ref);
+        }
     }, 1000);
 }
 
 function cargarMinijuego(ref) {
-    // Definimos qué archivo le toca a cada año
-    const rutaScript = `juegos/${ref.year}.js`; // Ej: buscará "juegos/2016.js"
+    const rutaScript = `juegos/${ref.year}.js`; 
 
-    // Verificamos si ya cargamos este script antes para no repetirlo
+    // Si la etiqueta ya existe en el HTML
     if (document.querySelector(`script[src="${rutaScript}"]`)) {
         if (typeof window[`iniciarJuego${ref.year}`] === "function") {
             window[`iniciarJuego${ref.year}`](ref);
+        } else {
+            // Si la etiqueta existe pero la función falló o se borró, mostramos la alerta
+            mostrarAlertaConstruccion(ref);
         }
         return;
     }
 
-    // Si no existe, creamos la etiqueta <script> y la inyectamos
     const script = document.createElement("script");
     script.src = rutaScript;
+    
     script.onload = () => {
-        // Una vez que descarga el archivo, ejecuta la función principal de ese año
         if (typeof window[`iniciarJuego${ref.year}`] === "function") {
             window[`iniciarJuego${ref.year}`](ref);
         } else {
-            console.error(`La función iniciarJuego${ref.year} no existe en ${rutaScript}`);
+            console.error(`La función iniciarJuego${ref.year} no existe en el archivo.`);
+            mostrarAlertaConstruccion(ref);
+            script.remove(); // 🚀 Limpiamos la etiqueta si el archivo no tenía la función correcta
         }
     };
+    
     script.onerror = () => {
-        Swal.fire('Error', 'No se pudo cargar el recuerdo de este año.', 'error');
-        resetUniverse();
+        mostrarAlertaConstruccion(ref);
+        script.remove(); // 🚀 CLAVE: Borramos la etiqueta fallida para que el 2do clic no se trabe
     };
     
     document.body.appendChild(script);
+}
+
+// Extraemos la alerta para que tu código quede más limpio y profesional
+function mostrarAlertaConstruccion(ref) {
+    Swal.fire({
+        title: 'Recuerdo en construcción 🛠️',
+        text: `Aún estoy programando el recuerdo del año ${ref.year}.`,
+        icon: 'info',
+        background: 'rgba(10, 10, 20, 0.95)',
+        color: '#ffffff',
+        confirmButtonColor: 'cadetblue',
+        customClass: { popup: 'modal-espacial-borde' }
+    });
+    resetUniverse();
+    ref.isActive = true; // Le devolvemos el movimiento al planeta
 }
 
 function resetUniverse() {

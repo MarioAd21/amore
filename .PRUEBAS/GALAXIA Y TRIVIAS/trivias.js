@@ -68,7 +68,7 @@ const anniversaryData = {
   {
    question:"Simpre te decia que eras mi...",
    options:["Amor", "Mi vida", "Mi alma Gemela", "Mi mundo"],
-   correct:3,
+   correct:2,
    message:"Simpre seras mi alma Gemela aunque ya no lo diga ❤️"
   },
  ],
