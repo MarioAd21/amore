@@ -1,11 +1,42 @@
 #cometa {
     position: absolute; 
-    width: 40px;  /* Mantenemos el área grande para facilitar el click */
+    width: 40px;  
     height: 40px;
-    z-index: 50; 
+    z-index: 5; /* ⬇️ Reducimos el z-index para que pase por detrás de la trivia */
     cursor: pointer;
     display: none;
     pointer-events: auto; 
+}
+
+/* La cabeza del cometa */
+#cometa::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    /* Un resplandor más amplio y realista */
+    box-shadow: 0 0 20px 6px rgba(224, 247, 250, 0.9);
+}
+
+/* La cola del cometa */
+#cometa::after {
+    content: "";
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%);
+    right: 50%; 
+    width: 130px; 
+    height: 4px; 
+    /* Degradado que va de transparente a blanco brillante */
+    background: linear-gradient(to right, transparent, rgba(135,206,235,0.3), rgba(255,255,255,0.9));
+    /* Redondeamos solo la punta izquierda para simular el rastro */
+    border-radius: 100% 0 0 100%;
+    box-shadow: -5px 0 15px rgba(224, 247, 250, 0.5); 
 }
 
 #modal-cometa {
@@ -23,32 +54,12 @@
     backdrop-filter: blur(15px);
 }
 
-#cometa::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 15px #e0f7fa;
+.cometa-oculto {
+    opacity: 0 !important;
+    transition: opacity 0.8s ease-out !important;
+    pointer-events: none !important;
 }
 
-#cometa::after {
-    content: "";
-    position: absolute;
-    top: 50%; 
-    transform: translateY(-50%);
-    right: 50%; 
-    width: 150px; 
-    height: 4px; 
-    background: linear-gradient(to left, rgba(255,255,255,1), rgba(135,206,235,0.8), rgba(95,158,160,0.4), transparent);
-    border-radius: 50px;
-    /* 🚀 OPTIMIZACIÓN: box-shadow en lugar de filter para no trabar iPads/iPhones */
-    box-shadow: -5px 0 10px rgba(224, 247, 250, 0.8); 
-}
 
 .modal-espacial-borde {
     border: 2px solid cadetblue !important;

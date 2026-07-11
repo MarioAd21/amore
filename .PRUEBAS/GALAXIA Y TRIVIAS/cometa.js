@@ -40,9 +40,8 @@ if (cometEl) {
 
 // Reemplaza launchComet por esta versión más limpia
 function launchComet(){
-    const trivia = document.getElementById("contenedor-trivia");
-    if (trivia && trivia.style.display === "block") return; 
-    if (document.querySelector('.swal2-container')) return;
+    // 🗑️ ELIMINADAS: Las validaciones que detenían el cometa si la trivia o SweetAlert estaban abiertos.
+    
     const galaxySection = document.querySelector(".galaxybody");
     if(!galaxySection || !cometEl) return;
 
@@ -63,7 +62,7 @@ function launchComet(){
     cometEl.style.pointerEvents = "auto";
     cometEl.style.left = `${startX}px`;
     cometEl.style.top = `${startY}px`;
-    cometEl.style.willChange = 'transform, opacity'; // 🚀 GPU Boost
+    cometEl.style.willChange = 'transform, opacity';
 
     const animation = cometEl.animate(
       [
@@ -75,7 +74,6 @@ function launchComet(){
       { duration: Math.random() * 6000 + 14000, easing: "linear" }
     );
 
-    // Adiós al setInterval y a spawnCometParticle. El rendimiento mejorará un 100%.
     animation.onfinish = () => { 
         cometEl.style.display = "none"; 
     };
