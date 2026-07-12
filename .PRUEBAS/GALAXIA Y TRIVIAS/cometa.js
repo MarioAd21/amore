@@ -13,14 +13,22 @@ if (cometEl) {
     
     const atraparCometa = (e) => {
         e.preventDefault(); 
-        cometEl.style.display = "none";
+        
+        // 🚀 MEJORA: Hacemos que se desvanezca suavemente al ser atrapado en vez de cortarlo de golpe
+        cometEl.classList.add("cometa-oculto");
         cometEl.style.pointerEvents = "none"; 
+
+        setTimeout(() => {
+            cometEl.style.display = "none";
+            cometEl.classList.remove("cometa-oculto"); // Lo reseteamos para el próximo vuelo
+        }, 800); // 800ms es lo que dura la transición en CSS
 
         const mensajeElegido = whispers[Math.floor(Math.random() * whispers.length)];
 
-        if (!misSusurros.includes(mensajeElegido)) {
-            misSusurros.push(mensajeElegido);
-            localStorage.setItem('misSusurros', JSON.stringify(misSusurros));
+        // Usamos window.misSusurros para mantener coherencia con galaxia.js
+        if (!window.misSusurros.includes(mensajeElegido)) {
+            window.misSusurros.push(mensajeElegido);
+            localStorage.setItem('misSusurros', JSON.stringify(window.misSusurros));
         }
 
         Swal.fire({
@@ -38,10 +46,7 @@ if (cometEl) {
     cometEl.ontouchstart = atraparCometa;
 }
 
-// Reemplaza launchComet por esta versión más limpia
 function launchComet(){
-    // 🗑️ ELIMINADAS: Las validaciones que detenían el cometa si la trivia o SweetAlert estaban abiertos.
-    
     const galaxySection = document.querySelector(".galaxybody");
     if(!galaxySection || !cometEl) return;
 
@@ -80,7 +85,7 @@ function launchComet(){
 }
 
 launchComet();
-setInterval(launchComet,35000);
+setInterval(launchComet, 35000);
 
 if (window.solEl) {
     window.solEl.style.cursor = "pointer";
