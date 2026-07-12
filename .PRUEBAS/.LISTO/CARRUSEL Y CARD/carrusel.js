@@ -114,7 +114,7 @@ container.addEventListener('touchend', () => {
     setTimeout(() => { canRotate = true; }, 300); 
 });
 
-// Evento de click para interactuar con las fotos y abrir la carta
+// Evento de click para interactuar con las fotos
 container.addEventListener('click', (e) => {
     const carta = e.target;
     
@@ -146,17 +146,31 @@ container.addEventListener('click', (e) => {
             const direccion = pasos > 0 ? 1 : -1;
             let pasosFaltantes = Math.abs(pasos);
             
-            // Función recursiva para girar la rueda paso a paso
+            const esSaltoLargo = pasosFaltantes > 1;
+            
+            // 1. AUMENTAMOS EL TIEMPO A 450ms PARA UN GIRO MÁS SUAVE Y ELEGANTE
+            const tiempoPorPaso = esSaltoLargo ? 450 : 0; 
+            
+            if (esSaltoLargo) {
+                // 2. USAMOS 'linear' PARA QUE LA VELOCIDAD SEA CONSTANTE (COMO UNA RUEDA REAL)
+                cardElements.forEach(card => card.style.transition = `all ${tiempoPorPaso}ms linear`);
+            }
+            
             function girarPasoAPaso() {
                 currentIndex = (currentIndex + direccion + totalMemories) % totalMemories;
                 updateFanLayout();
                 pasosFaltantes--;
                 
                 if (pasosFaltantes > 0) {
-                    // Espera 150 milisegundos entre cada carta para simular el giro
-                    setTimeout(girarPasoAPaso, 150);
+                    setTimeout(girarPasoAPaso, tiempoPorPaso);
                 } else {
-                    setTimeout(() => { canRotate = true; }, rotationCooldown);
+                    setTimeout(() => { 
+                        if (esSaltoLargo) {
+                            // Le devolvemos el control al CSS original (0.8s) al terminar
+                            cardElements.forEach(card => card.style.transition = '');
+                        }
+                        canRotate = true; 
+                    }, esSaltoLargo ? tiempoPorPaso : rotationCooldown);
                 }
             }
             
@@ -164,5 +178,4 @@ container.addEventListener('click', (e) => {
         }
     }
 });
-
 iniciarTemporizador();
