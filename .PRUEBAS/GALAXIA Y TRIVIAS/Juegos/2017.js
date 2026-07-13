@@ -1,102 +1,111 @@
 window.iniciarJuego2017 = function(ref) {
-    // 1. El Mapa del Crucigrama (Usa puntos '.' para los espacios vacíos y letras para las palabras)
-    const mapa = [
-        "............F.......",
-        "............U.......",
-        "...PLAYA....T.......",
-        ".......L....U.......",
-        ".......M....R.......",
-        "...CASAA....O.......",
-        ".......G............",
-        ".......E............",
-        ".......M............",
-        "...MAXIMILIANO......",
-        ".......L...N........",
-        ".......A...F........",
-        "...........I........",
-        "....BARBARA.........",
-        "...........I........",
-        ".....TEAMO.T........",
-        "...........O........",
-        ".......CORAZON......"
+    const palabrasData = [
+        { palabra: "MAXIMILIANO", pista: "Un nombre que llena nuestra vida de alegría inmensa." },
+        { palabra: "TEAMO", pista: "Lo que te digo cada día (y a veces te lo envío en un cometa)." },
+        { palabra: "NOVIEMBRE", pista: "El mes exacto en el que todo nuestro universo comenzó a brillar." },
+        { palabra: "ALMAGEMELA", pista: "Lo que fuiste, eres y siempre serás para mí." },
+        { palabra: "CORAZON", pista: "El motor que impulsa este viaje de 10 años." },
+        { palabra: "BELLA", pista: "La forma en la que te veo cada vez que me pierdo en tus ojos." },
+        { palabra: "DIEZ", pista: "La cantidad de años de luz y amor que llevamos orbitando juntos." },
+        { palabra: "BESOS", pista: "La mejor manera de decirte todo lo que siento sin usar palabras." },
+        { palabra: "AMORE", pista: "El título de esta página y la palabra que define nuestra historia." },
+        { palabra: "BARBARA", pista: "El nombre de la mujer más hermosa de toda esta galaxia." },
+        { palabra: "HIJO", pista: "Nuestro pedacito de cielo y el mayor tesoro que tenemos." },
+        { palabra: "CASA", pista: "Nuestro gran sueño, el refugio que algún día construiremos para vivir juntos." },
+        { palabra: "MICRO", pista: "El lugar exacto donde los nervios se transformaron en nuestro primer 'sí'." },
+        { palabra: "PLAYA", pista: "El destino inolvidable de nuestro primer viaje." },
+        { palabra: "UNIVERSO", pista: "Lo que estoy dispuesto a recorrer solo para verte sonreír." },
+        { palabra: "GALAXIA", pista: "El lugar mágico donde hemos guardado todos estos recuerdos." },
+        { palabra: "SUSURROS", pista: "Los mensajes fugaces que viajan escondidos en las estrellas." },
+        { palabra: "INFINITO", pista: "El tamaño exacto y la medida de lo que siento por ti." },
+        { palabra: "MAGIA", pista: "Lo que sentí aquella primera vez al conocerte." },
+        { palabra: "RECUERDOS", pista: "Lo que estamos coleccionando año tras año en estos planetas." },
+        { palabra: "FUTURO", pista: "Todo lo que me emociona vivir, siempre y cuando sea a tu lado." }
     ];
 
-    // 2. Las Pistas correspondientes a las palabras del mapa
-    const pistas = [
-        "Nuestro primer destino de viaje. (5)",
-        "El refugio que algún día construiremos. (4)",
-        "Un nombre que llena nuestra vida de alegría. (11)",
-        "La mujer más hermosa de toda esta galaxia. (7)",
-        "Lo que te digo cada día. (5)",
-        "El motor que impulsa este viaje. (7)",
-        "Todo lo que me emociona vivir a tu lado. (6)",
-        "Lo que fuiste, eres y siempre serás para mí. (10)",
-        "El tamaño exacto de lo que siento por ti. (8)"
-    ];
-
-    if (!document.getElementById("estilos-crucigrama-clasico")) {
+    if (!document.getElementById("estilos-crucigrama-2017")) {
         const style = document.createElement("style");
-        style.id = "estilos-crucigrama-clasico";
+        style.id = "estilos-crucigrama-2017";
         style.innerHTML = `
             #contenedor-2017 {
                 display: none; position: fixed; top: 50%; left: 50%;
                 transform: translate(-50%, -50%);
-                width: 95%; max-width: 800px; max-height: 90vh;
-                background: rgba(8, 8, 20, 0.98); border: 2px solid cadetblue;
-                padding: 20px; border-radius: 20px; z-index: 1000;
+                width: 95%; max-width: 700px; height: 90vh;
+                background: rgba(10, 10, 25, 0.98); border: 2px solid cadetblue;
+                border-radius: 15px; z-index: 1000;
                 backdrop-filter: blur(15px); color: white;
-                display: flex; flex-direction: column; align-items: center;
+                display: flex; flex-direction: column; overflow: hidden;
+                box-shadow: 0 0 30px rgba(95, 158, 160, 0.5);
+                font-family: monospace;
             }
-            .zona-juego {
-                display: flex; flex-direction: column; gap: 20px;
-                width: 100%; overflow-y: auto; align-items: center;
-                padding: 10px;
-            }
-            .zona-juego::-webkit-scrollbar { width: 8px; }
-            .zona-juego::-webkit-scrollbar-thumb { background: cadetblue; border-radius: 10px; }
-            
-            /* Contenedor del mapa que permite scroll horizontal si es muy grande */
-            .mapa-scroll {
-                max-width: 100%; overflow-x: auto; padding: 10px;
+            .cabecera-crucigrama {
+                padding: 15px; text-align: center;
+                background: rgba(0, 0, 0, 0.5);
+                border-bottom: 2px solid cadetblue;
             }
             
-            .cuadricula {
-                display: grid;
-                background: transparent;
-                gap: 0; /* Sin espacio para que los bordes se toquen como en el clásico */
+            /* Contenedor principal dividido en dos */
+            .cuerpo-crucigrama {
+                display: flex; flex-direction: column; flex-grow: 1; overflow: hidden;
             }
-            
-            .celda-wrapper {
-                position: relative;
-                width: 35px; height: 35px;
+
+            /* 1. ZONA DEL TABLERO (ARRIBA) */
+            .zona-tablero {
+                flex: 1.2; overflow-y: auto; padding: 20px;
+                display: flex; flex-direction: column; align-items: center; gap: 10px;
+                background: radial-gradient(circle, rgba(95,158,160,0.1) 0%, rgba(0,0,0,0) 70%);
             }
-            
-            .numero-pista {
-                position: absolute; top: 2px; left: 2px;
-                font-size: 0.55rem; color: #333; font-weight: bold;
-                z-index: 2; pointer-events: none;
+            .zona-tablero::-webkit-scrollbar { width: 4px; }
+            .zona-tablero::-webkit-scrollbar-thumb { background: cadetblue; }
+
+            .fila-palabra {
+                display: flex; align-items: center; gap: 8px;
             }
-            
-            .celda-input {
-                width: 100%; height: 100%;
-                text-align: center; font-size: 1.2rem; font-weight: bold; text-transform: uppercase;
-                background: #ffffff; color: #000000; /* Diseño blanco como pediste */
-                border: 2px solid #5bc0be; /* Borde celeste */
-                outline: none; margin: 0; padding: 0;
-                transition: 0.2s; position: relative; z-index: 1;
+            .numero-casilla {
+                font-size: 0.8rem; color: cadetblue; font-weight: bold; width: 20px; text-align: right;
             }
-            
-            .celda-input:focus { background: #e0f7fa; z-index: 3; border-color: #008b8b; }
-            .celda-vacia { width: 35px; height: 35px; background: transparent; }
-            .celda-correcta { background: #c8e6c9 !important; color: #2e7d32; pointer-events: none; }
-            .celda-error { background: #ffcdd2 !important; color: #c62828; }
-            
-            .caja-pistas {
-                background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;
-                border-left: 3px solid cadetblue; width: 100%; max-width: 500px;
+            .casillas-contenedor {
+                display: flex; gap: 2px;
             }
-            .caja-pistas p { margin: 5px 0; font-size: 0.9rem; color: #e0f7fa; }
-            .botones-container { display: flex; gap: 10px; margin-top: 15px; }
+            .casilla-input {
+                width: 28px; height: 28px; text-align: center;
+                font-size: 1rem; font-weight: bold; text-transform: uppercase;
+                background: #fff; color: #000;
+                border: 1px solid #333; border-radius: 2px;
+                outline: none; transition: 0.2s;
+            }
+            .casilla-input:focus {
+                background: #e0f7fa; border: 2px solid cadetblue; transform: scale(1.1);
+            }
+            .casilla-correcta {
+                background: cadetblue !important; color: white !important; border-color: #fff !important; pointer-events: none;
+            }
+            .casilla-error {
+                background: #ffcdd2 !important; color: #d32f2f !important;
+            }
+
+            /* 2. ZONA DE PISTAS (ABAJO) */
+            .zona-pistas {
+                flex: 0.8; background: rgba(0, 0, 0, 0.7);
+                border-top: 2px solid cadetblue; padding: 15px;
+                overflow-y: auto;
+            }
+            .zona-pistas::-webkit-scrollbar { width: 4px; }
+            .zona-pistas::-webkit-scrollbar-thumb { background: cadetblue; }
+            
+            .lista-pistas {
+                list-style: none; padding: 0; margin: 0;
+            }
+            .pista-item {
+                font-size: 0.9rem; padding: 8px; border-bottom: 1px dashed rgba(95,158,160,0.3);
+                cursor: pointer; transition: 0.2s;
+            }
+            .pista-item:hover { background: rgba(95,158,160,0.2); }
+            .pista-resuelta { color: cadetblue; text-decoration: line-through; opacity: 0.5; }
+
+            .pie-crucigrama {
+                padding: 10px; display: flex; justify-content: center; gap: 15px; background: #000;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -106,117 +115,108 @@ window.iniciarJuego2017 = function(ref) {
         contenedor = document.createElement("div");
         contenedor.id = "contenedor-2017";
         
-        let htmlBase = `
-            <h2 style="color: cadetblue; margin: 0 0 10px 0; text-align:center;">Memoria 2017</h2>
-            <div class="zona-juego">
-                <div class="mapa-scroll">
-                    <div class="cuadricula" id="grilla-crucigrama"></div>
-                </div>
-                <div class="caja-pistas" id="lista-pistas">
-                    <h3 style="margin-top:0; color:cadetblue; font-size:1.1rem;">Pistas Mágicas:</h3>
+        let htmlTablero = "";
+        let htmlPistas = "";
+
+        palabrasData.forEach((item, index) => {
+            // Generar tablero
+            htmlTablero += `<div class="fila-palabra" id="fila-${index}">
+                <div class="numero-casilla">${index + 1}</div>
+                <div class="casillas-contenedor">`;
+            for(let i = 0; i < item.palabra.length; i++){
+                htmlTablero += `<input type="text" maxlength="1" class="casilla-input" data-letra="${item.palabra[i]}" data-fila="${index}">`;
+            }
+            htmlTablero += `</div></div>`;
+
+            // Generar pistas
+            htmlPistas += `<li class="pista-item" id="pista-${index}"><strong>${index + 1}.</strong> ${item.pista}</li>`;
+        });
+
+        contenedor.innerHTML = `
+            <div class="cabecera-crucigrama">
+                <h3 style="margin: 0; color: cadetblue; letter-spacing: 2px;">CRUCIGRAMA 2017</h3>
+            </div>
+            <div class="cuerpo-crucigrama">
+                <div class="zona-tablero">${htmlTablero}</div>
+                <div class="zona-pistas">
+                    <h4 style="margin: 0 0 10px 0; color: white;">Pistas Horizontales:</h4>
+                    <ul class="lista-pistas">${htmlPistas}</ul>
                 </div>
             </div>
-            <div class="botones-container">
+            <div class="pie-crucigrama">
                 <button id="btn-verificar-2017" class="boton-opcion">Verificar</button>
-                <button id="btn-cerrar-2017" class="boton-opcion" style="background: #f44336;">Volver</button>
+                <button id="btn-cerrar-2017" class="boton-opcion" style="background: #f44336;">Salir</button>
             </div>
         `;
-        contenedor.innerHTML = htmlBase;
         document.body.appendChild(contenedor);
-    }
-
-    const grilla = document.getElementById("grilla-crucigrama");
-    const listaPistas = document.getElementById("lista-pistas");
-    grilla.innerHTML = "";
-    
-    // Solo renderizar pistas si no existen
-    if (listaPistas.children.length === 1) {
-        pistas.forEach((p, i) => {
-            listaPistas.innerHTML += `<p><strong>${i + 1}.</strong> ${p}</p>`;
-        });
-    }
-
-    const filas = mapa.length;
-    const columnas = mapa[0].length;
-    grilla.style.gridTemplateColumns = `repeat(${columnas}, 35px)`;
-    grilla.style.gridTemplateRows = `repeat(${filas}, 35px)`;
-
-    let contadorPalabras = 1;
-
-    // Procesador automático del mapa
-    for (let r = 0; r < filas; r++) {
-        for (let c = 0; c < columnas; c++) {
-            const letra = mapa[r][c];
-            if (letra !== '.' && letra !== ' ') {
-                const wrapper = document.createElement("div");
-                wrapper.className = "celda-wrapper";
-
-                // Lógica para detectar inicios de palabras y ponerles el número
-                let esInicioHorizontal = (c === 0 || mapa[r][c-1] === '.' || mapa[r][c-1] === ' ') && (c+1 < columnas && mapa[r][c+1] !== '.' && mapa[r][c+1] !== ' ');
-                let esInicioVertical = (r === 0 || mapa[r-1][c] === '.' || mapa[r-1][c] === ' ') && (r+1 < filas && mapa[r+1][c] !== '.' && mapa[r+1][c] !== ' ');
-
-                if (esInicioHorizontal || esInicioVertical) {
-                    const numSpan = document.createElement("span");
-                    numSpan.className = "numero-pista";
-                    numSpan.innerText = contadorPalabras;
-                    wrapper.appendChild(numSpan);
-                    contadorPalabras++;
-                }
-
-                const input = document.createElement("input");
-                input.type = "text";
-                input.maxLength = 1;
-                input.className = "celda-input";
-                input.dataset.correcta = letra;
-                
-                // Salto automático al escribir
-                input.addEventListener('input', function() {
-                    this.value = this.value.toUpperCase();
-                    this.classList.remove("celda-error");
-                });
-
-                wrapper.appendChild(input);
-                grilla.appendChild(wrapper);
-            } else {
-                const vacia = document.createElement("div");
-                vacia.className = "celda-vacia";
-                grilla.appendChild(vacia);
-            }
-        }
     }
 
     contenedor.style.display = "flex";
     const cometaVisual = document.getElementById('cometa');
     if (cometaVisual) cometaVisual.classList.add("cometa-oculto");
 
-    const cerrarJuego = () => {
-        contenedor.style.display = "none";
-        if (cometaVisual) cometaVisual.classList.remove("cometa-oculto");
-        document.getElementById("universo").style.transform = "scale(1)";
-        document.getElementById("universo").style.opacity = "1";
-        ref.isActive = true;
-    };
-
-    document.getElementById("btn-cerrar-2017").onclick = cerrarJuego;
-
-    document.getElementById("btn-verificar-2017").onclick = () => {
-        let todasCorrectas = true;
-        const inputs = document.querySelectorAll('.celda-input');
-
-        inputs.forEach(input => {
-            const ingresada = input.value.toUpperCase();
-            const correcta = input.dataset.correcta;
-
-            if (ingresada !== correcta) {
-                todasCorrectas = false;
-                if (ingresada !== "") input.classList.add("celda-error");
-            } else {
-                input.classList.add("celda-correcta");
-                input.classList.remove("celda-error");
+    // Lógica de saltos automáticos
+    const inputs = contenedor.querySelectorAll('.casilla-input');
+    inputs.forEach((input, idx) => {
+        input.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+            this.classList.remove('casilla-error'); 
+            
+            if(this.value.length === 1 && idx < inputs.length - 1) {
+                if(inputs[idx + 1].dataset.fila === this.dataset.fila) {
+                    inputs[idx + 1].focus();
+                }
             }
         });
 
-        if (todasCorrectas) {
+        input.addEventListener('keydown', function(e) {
+            if(e.key === "Backspace" && this.value === "" && idx > 0) {
+                if(inputs[idx - 1].dataset.fila === this.dataset.fila) {
+                    inputs[idx - 1].focus();
+                    inputs[idx - 1].value = "";
+                }
+            }
+        });
+    });
+
+    const cerrarJuego = () => {
+        contenedor.style.display = "none";
+        if (cometaVisual) cometaVisual.classList.remove("cometa-oculto");
+        ref.isActive = true;
+    };
+    document.getElementById("btn-cerrar-2017").onclick = cerrarJuego;
+
+    document.getElementById("btn-verificar-2017").onclick = () => {
+        let completadas = 0;
+
+        palabrasData.forEach((_, index) => {
+            const fila = document.getElementById(`fila-${index}`);
+            const letras = fila.querySelectorAll('.casilla-input');
+            const pista = document.getElementById(`pista-${index}`);
+            let filaCorrecta = true;
+
+            letras.forEach(letra => {
+                const valor = letra.value.toUpperCase();
+                const correcto = letra.dataset.letra;
+
+                if (valor !== correcto) {
+                    filaCorrecta = false;
+                    if (valor !== "") letra.classList.add("casilla-error");
+                } else {
+                    letra.classList.remove("casilla-error");
+                    letra.classList.add("casilla-correcta");
+                }
+            });
+
+            if (filaCorrecta) {
+                pista.classList.add("pista-resuelta");
+                completadas++;
+            } else {
+                pista.classList.remove("pista-resuelta");
+            }
+        });
+
+        if (completadas === palabrasData.length) {
             ref.isCompleted = true;
             ref.el.classList.add("completado");
             
@@ -231,14 +231,23 @@ window.iniciarJuego2017 = function(ref) {
             }
 
             Swal.fire({
-                title: '¡Memoria Desbloqueada!',
-                text: 'Has resuelto este recuerdo a la perfección.',
+                title: '¡Tablero Completado! 🧩',
+                text: 'Las palabras encajan perfectamente.',
                 icon: 'success',
                 background: 'rgba(10, 10, 20, 0.95)',
                 color: '#ffffff',
                 confirmButtonColor: 'cadetblue',
                 customClass: { popup: 'modal-espacial-borde' }
             }).then(() => cerrarJuego());
+        } else {
+            Swal.fire({
+                title: 'Revisa el tablero',
+                text: `Tienes ${completadas} de 21 palabras correctas.`,
+                icon: 'info',
+                background: 'rgba(10, 10, 20, 0.95)',
+                color: '#ffffff',
+                confirmButtonColor: 'cadetblue'
+            });
         }
     };
 };

@@ -169,16 +169,32 @@ function resetUniverse() {
 }
 
 function showLockedMessage(year){
-    const yearMessages={
-        "2016":"Donde todo comenzó... nuestra primera micro. 🚌",
-        "2017":"El año de nuestro primer viaje inolvidable. 🌊",
-        "2018":"Cuando aprendimos que juntos todo es mejor. ✨"
+    const yearMessages = {
+        "2016": "Donde todo comenzó... nuestra primera micro. 🚌",
+        "2017": "El año de nuestro primer viaje inolvidable. 🌊",
+        "2018": "Cuando aprendimos que juntos todo es mejor. ✨",
+        "2019": "El año que cambió nuestras vidas para siempre con la llegada de nuestro hijo. 👶❤️",
+        "2020": "Un año de pruebas y distancia, pero el amor nos volvió a encontrar al final. 🌪️💞",
+        "2021": "El mundo se detuvo por la pandemia, pero nosotros fuimos nuestro mejor refugio. 😷🏡",
+        "2022": "Pasamos por momentos muy difíciles, pero demostramos que seguimos firmes y de la mano. ⛈️🤝",
+        "2023": "Más juntos que nunca, Amor, eligiéndonos cada día con más fuerza. ✨💑",
+        "2024": "Soportando nuestras locuras por otro año más (y las que nos faltan). 🤪❤️",
+        "2025": "Un año pesado y cuesta arriba, pero nuestra constancia nos mantuvo a flote. 💪❤️‍🩹",
+        "2026": "¡Una década! 10 hermosos años juntos desde aquella primera vez en la me flechaste. 🥂🔟✨"
     };
 
-    const yearGifs={
-        "2016": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWdtcm9wYnk1Y2Z3Y29wZXBlbXg1M3N5bXN0Yms1cXA0d3F0Ym02byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vERfN7D9c7rSo/giphy.gif",
-        "2017": "https://media.giphy.com/media/3oriO0OEd9hmgFsi5O/giphy.gif",
-        "2018": "https://media.giphy.com/media/l41JWm5vUeWSkvFp6/giphy.gif"
+    const yearGifs = {
+        "2016": "imagenes/2016.gif",
+        "2017": "imagenes/2017.gif",
+        "2018": "imagenes/2018.gif",
+        "2019": "imagenes/2019.gif",
+        "2020": "imagenes/2020.gif",
+        "2021": "imagenes/2021.gif",
+        "2022": "imagenes/2022.gif",
+        "2023": "imagenes/2023.gif",
+        "2024": "imagenes/2024.gif",
+        "2025": "imagenes/2025.gif",
+        "2026": "imagenes/2026.gif"
     };
 
     const mensaje = yearMessages[year] || "Este recuerdo ya vive en nuestro corazón. ❤️";

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodyCross Memoria 2017</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            background-color: #05050a; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .btn-lanzar {
+            padding: 15px 30px; font-size: 1.2rem; background-color: cadetblue; color: white;
+            border: none; border-radius: 10px; cursor: pointer; z-index: 10;
+        }
+
+        #contenedor-2017 {
+            display: none; 
+            position: relative;
+            width: 100%; 
+            max-width: 900px; 
+            height: 90vh; 
+            background: rgba(10, 10, 25, 0.98); 
+            border: 2px solid cadetblue; 
+            border-radius: 15px; 
+            color: white;
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 0 0 30px rgba(95, 158, 160, 0.5);
+            overflow: hidden;
+        }
+        
+        .caja-pista-activa {
+            background: radial-gradient(circle, rgba(95,158,160,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            padding: 15px 25px; 
+            text-align: center; 
+            border-bottom: 3px solid cadetblue;
+            min-height: 80px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+        }
+        .numero-pista { color: #7FFFD4; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .texto-pista { font-size: 1.1rem; line-height: 1.3; }
+
+        /* Contenedor del tablero: Permite scroll si la pantalla es chica */
+        .zona-tablero {
+            flex-grow: 1; 
+            overflow-y: auto; 
+            overflow-x: auto; 
+            padding: 40px 0; 
+            position: relative;
+            /* Asegura que haya espacio para arrastrar a los lados en móvil */
+            min-width: 100%;
+        }
+        .zona-tablero::-webkit-scrollbar { width: 6px; height: 6px; }
+        .zona-tablero::-webkit-scrollbar-thumb { background: cadetblue; border-radius: 4px; }
+
+        .fila-palabra {
+            position: relative;
+            width: 100%;
+            height: 40px; 
+            margin-bottom: 8px;
+            transition: 0.3s; 
+            cursor: pointer;
+            opacity: 0.4;
+        }
+        .fila-activa { opacity: 1; transform: scale(1.02); z-index: 5; }
+        
+        /* Posicionamiento Matemático Absoluto para evitar deformaciones */
+        .casilla-input {
+            position: absolute;
+            top: 0;
+            width: 38px; 
+            height: 38px; 
+            transform: translateX(-50%); /* Centrado exacto sobre su coordenada left */
+            text-align: center; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            background: rgba(255, 255, 255, 0.9); 
+            color: #000;
+            border: 2px solid #555; 
+            border-radius: 6px; 
+            outline: none; 
+            transition: 0.2s; 
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        
+        .casilla-activa { border-color: cadetblue; background: #fff; pointer-events: auto; box-shadow: 0 0 8px cadetblue; }
+        
+        /* Columna Central Dorada (Recta) */
+        .casilla-columna-central { background: rgba(255, 215, 0, 0.2); border: 2px solid gold; color: #fff; } 
+        
+        /* Estados de Validación */
+        .casilla-correcta { background: cadetblue !important; color: white !important; border-color: #2e8b57 !important; pointer-events: none; }
+        .casilla-correcta.casilla-columna-central { background: gold !important; color: black !important; border-color: #daa520 !important; }
+        .casilla-error { background: #ffcdd2 !important; color: #d32f2f !important; border-color: #d32f2f !important; }
+        
+        /* Estilo Letra Pista Cruzada */
+        .casilla-pista-cruzada { background: #004d40 !important; color: #7FFFD4 !important; border-color: #00bfa5 !important; pointer-events: none; }
+
+        .pie-juego { padding: 12px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); }
+        .boton-cerrar { padding: 8px 18px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <button class="btn-lanzar" id="btn-iniciar" onclick="abrirJuegoPrueba()">Probar Crucigrama</button>
+    <div id="contenedor-2017"></div>
+
+    <script>
+        // Mensaje Vertical: P R O M E S A D E A M O R I N F I N I T O (20 palabras sin corazones)
+        const palabrasData = [
+            { palabra: "PLAYA", letraClaveIndex: 0, pista: "El destino inolvidable de nuestro primer viaje." }, // P
+            { palabra: "BARBARA", letraClaveIndex: 2, pista: "El nombre de la mujer más hermosa de toda esta galaxia." }, // R
+            { palabra: "CORAZON", letraClaveIndex: 1, pista: "El motor que impulsa este viaje de 10 años." }, // O
+            { palabra: "MAXIMILIANO", letraClaveIndex: 0, pista: "Un nombre que llena nuestra vida de alegría inmensa." }, // M
+            { palabra: "BELLA", letraClaveIndex: 1, pista: "La forma en la que te veo cada vez que me pierdo en tus ojos." }, // E
+            { palabra: "BESOS", letraClaveIndex: 2, pista: "La mejor manera de decirte todo lo que siento sin usar palabras." }, // S
+            { palabra: "CASA", letraClaveIndex: 1, pista: "Nuestro gran sueño, el refugio que algún día construiremos para vivir juntos." }, // A
+            { palabra: "DIEZ", letraClaveIndex: 0, pista: "La cantidad de años de luz y amor que llevamos orbitando juntos." }, // D
+            { palabra: "RECUERDOS", letraClaveIndex: 1, pista: "Lo que estamos coleccionando año tras año en estos planetas." }, // E
+            { palabra: "ALMAGEMELA", letraClaveIndex: 0, pista: "Lo que fuiste, eres y siempre serás para mí." }, // A
+            { palabra: "MICRO", letraClaveIndex: 0, pista: "El lugar exacto donde los nervios se transformaron en nuestro primer 'sí'." }, // M
+            { palabra: "AMORE", letraClaveIndex: 2, pista: "El título de esta página y la palabra que define nuestra historia." }, // O
+            { palabra: "SUSURROS", letraClaveIndex: 4, pista: "Los mensajes fugaces que viajan escondidos en las estrellas." }, // R
+            { palabra: "HIJO", letraClaveIndex: 1, pista: "Nuestro pedacito de cielo y el mayor tesoro que tenemos." }, // I
+            { palabra: "INFINITO", letraClaveIndex: 1, pista: "El tamaño exacto y la medida de lo que siento por ti." }, // N
+            { palabra: "FUTURO", letraClaveIndex: 0, pista: "Todo lo que me emociona vivir, siempre y cuando sea a tu lado." }, // F
+            { palabra: "GALAXIA", letraClaveIndex: 5, pista: "El lugar mágico donde hemos guardado todos estos recuerdos." }, // I
+            { palabra: "NOVIEMBRE", letraClaveIndex: 0, pista: "El mes exacto en el que todo nuestro universo comenzó a brillar." }, // N
+            { palabra: "UNIVERSO", letraClaveIndex: 2, pista: "Lo que estoy dispuesto a recorrer solo para verte sonreír." }, // I
+            { palabra: "TEAMO", letraClaveIndex: 0, pista: "Lo que te digo cada día (y a veces te lo envío en un cometa)." } // T
+        ];
+
+        let filaActual = 0;
+        const CASILLA_WIDTH = 42; // 38px de ancho + 4px de espacio imaginario entre letras
+
+        function abrirJuegoPrueba() {
+            document.getElementById("btn-iniciar").style.display = "none";
+            const contenedor = document.getElementById("contenedor-2017");
+            let htmlTablero = "";
+
+            palabrasData.forEach((item, index) => {
+                htmlTablero += `<div class="fila-palabra" id="fila-${index}" onclick="seleccionarFila(${index})">`;
+                
+                // Sistema Absoluto: Calculamos la distancia de cada letra respecto a la letra clave central
+                for(let i = 0; i < item.palabra.length; i++){
+                    const esColumnaCentral = (i === item.letraClaveIndex) ? 'casilla-columna-central' : '';
+                    
+                    // Si i == letraClaveIndex, offset es 0 y queda exactamente en el 50% de la pantalla.
+                    let offset = i - item.letraClaveIndex;
+                    let posLeft = `calc(50% + ${offset * CASILLA_WIDTH}px)`;
+                    
+                    htmlTablero += `<input style="left: ${posLeft};" type="text" maxlength="1" class="casilla-input ${esColumnaCentral}" value="" data-letra="${item.palabra[i]}" data-fila="${index}" data-col="${i}">`;
+                }
+                htmlTablero += `</div>`;
+            });
+
+            contenedor.innerHTML = `
+                <div class="caja-pista-activa">
+                    <div class="numero-pista" id="ui-numero">Memoria 1</div>
+                    <div class="texto-pista" id="ui-pista">Selecciona una fila para ver la pista</div>
+                </div>
+                <div class="zona-tablero">${htmlTablero}</div>
+                <div class="pie-juego">
+                    <button onclick="cerrarJuego()" class="boton-cerrar">Salir</button>
+                </div>
+            `;
+
+            contenedor.style.display = "flex";
+            inyectarPistasCruzadas(); // Revela una letra cada 3 palabras como pista
+            configurarInputs();
+            seleccionarFila(0); 
+        }
+
+        function inyectarPistasCruzadas() {
+            // Cada 3 palabras, busca una letra en común de la palabra anterior y la revela
+            for (let i = 2; i < palabrasData.length; i += 3) {
+                let palabraActual = palabrasData[i].palabra;
+                let palabraAnterior = palabrasData[i-1].palabra;
+
+                for(let c = 0; c < palabraActual.length; c++) {
+                    if (c === palabrasData[i].letraClaveIndex) continue; // No regalar la columna central
+                    
+                    if(palabraAnterior.includes(palabraActual[c])) {
+                        const filaInputs = document.getElementById(`fila-${i}`).querySelectorAll('.casilla-input');
+                        filaInputs.forEach(input => {
+                            if(parseInt(input.dataset.col) === c) {
+                                input.value = palabraActual[c];
+                                input.classList.add('casilla-pista-cruzada', 'casilla-correcta');
+                            }
+                        });
+                        break; // Solo revelar 1 letra
+                    }
+                }
+            }
+        }
+
+        function seleccionarFila(index) {
+            filaActual = index;
+            document.getElementById("ui-numero").innerText = `Memoria ${index + 1} de ${palabrasData.length}`;
+            document.getElementById("ui-pista").innerText = palabrasData[index].pista;
+
+            document.querySelectorAll('.fila-palabra').forEach(f => f.classList.remove('fila-activa'));
+            document.querySelectorAll('.casilla-input').forEach(i => i.classList.remove('casilla-activa'));
+
+            const fila = document.getElementById(`fila-${index}`);
+            if(!fila) return;
+            fila.classList.add('fila-activa');
+            
+            const inputs = fila.querySelectorAll('.casilla-input');
+            let focoAsignado = false;
+            
+            inputs.forEach(input => {
+                if (!input.classList.contains('casilla-correcta')) {
+                    input.classList.add('casilla-activa');
+                    if(!focoAsignado) {
+                        input.focus();
+                        focoAsignado = true;
+                    }
+                }
+            });
+        }
+
+        function configurarInputs() {
+            const inputs = document.querySelectorAll('.casilla-input');
+            
+            inputs.forEach((input) => {
+                input.addEventListener('input', function() {
+                    let valorIngresado = this.value.toUpperCase();
+                    let valorCorrecto = this.dataset.letra;
+                    
+                    if (valorIngresado === "") {
+                        this.classList.remove('casilla-error');
+                        return;
+                    }
+
+                    if (valorIngresado === valorCorrecto) {
+                        this.classList.remove('casilla-error', 'casilla-activa');
+                        this.classList.add('casilla-correcta'); 
+                        
+                        let filaContenedor = document.getElementById(`fila-${this.dataset.fila}`);
+                        let hermanos = filaContenedor.querySelectorAll('.casilla-input');
+                        let todosCompletos = true;
+
+                        for(let i = 0; i < hermanos.length; i++){
+                            if(!hermanos[i].classList.contains('casilla-correcta')){
+                                hermanos[i].focus();
+                                todosCompletos = false;
+                                break;
+                            }
+                        }
+
+                        if(todosCompletos) verificarVictoria();
+                    } else {
+                        this.classList.add('casilla-error');
+                    }
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if(e.key === "Backspace") {
+                        this.value = "";
+                        this.classList.remove('casilla-error');
+                        
+                        let hermanos = document.getElementById(`fila-${this.dataset.fila}`).querySelectorAll('.casilla-input');
+                        let indexLocal = Array.from(hermanos).indexOf(this);
+                        
+                        if (indexLocal > 0) {
+                            // Salta hacia atrás ignorando las letras ya correctas
+                            for(let j = indexLocal - 1; j >= 0; j--){
+                                if(!hermanos[j].classList.contains('casilla-correcta')){
+                                    hermanos[j].focus();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function verificarVictoria() {
+            const todasCorrectas = document.querySelectorAll('.casilla-correcta').length;
+            const totalInputs = document.querySelectorAll('.casilla-input').length;
+            
+            if (todasCorrectas === totalInputs) {
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                setTimeout(() => {
+                    Swal.fire({
+                        title: '¡Mensaje Revelado! ✨',
+                        text: 'PROMESA DE AMOR INFINITO ❤️',
+                        icon: 'success',
+                        background: 'rgba(10, 10, 20, 0.95)',
+                        color: '#ffffff',
+                        confirmButtonColor: 'cadetblue'
+                    });
+                }, 500);
+            } else {
+                let siguienteFila = filaActual + 1;
+                if(siguienteFila < palabrasData.length) {
+                    setTimeout(() => seleccionarFila(siguienteFila), 250); 
+                }
+            }
+        }
+
+        function cerrarJuego() {
+            document.getElementById("contenedor-2017").style.display = "none";
+            document.getElementById("btn-iniciar").style.display = "inline-block";
+        }
+    </script>
+</body>
+</html>
