@@ -2,13 +2,37 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodyCross Memoria 2017</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CodyCross Memoria</title>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
+        /* VARIABLES RESPONSIVAS: Aquí se ajusta el tamaño según el dispositivo */
+        :root {
+            --tamano-casilla: 42px;
+            --fuente-casilla: 1.2rem;
+            --ancho-contenedor: 1050px;
+        }
+
+        /* Para iPads y Tablets */
+        @media (max-width: 820px) {
+            :root {
+                --tamano-casilla: 34px;
+                --fuente-casilla: 1rem;
+                --ancho-contenedor: 95vw;
+            }
+        }
+
+        /* Para Celulares */
+        @media (max-width: 480px) {
+            :root {
+                --tamano-casilla: 26px; /* Lo suficientemente pequeño para que palabras de 11 letras entren en la pantalla */
+                --fuente-casilla: 0.9rem;
+            }
+        }
+
         body {
             background-color: #05050a; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,8 +41,9 @@
             align-items: center; 
             min-height: 100vh; 
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             box-sizing: border-box;
+            overflow: hidden;
         }
 
         .btn-lanzar {
@@ -30,7 +55,7 @@
             display: none; 
             position: relative;
             width: 100%; 
-            max-width: 900px; 
+            max-width: var(--ancho-contenedor);
             height: 90vh; 
             background: rgba(10, 10, 25, 0.98); 
             border: 2px solid cadetblue; 
@@ -39,39 +64,41 @@
             display: flex; 
             flex-direction: column; 
             box-shadow: 0 0 30px rgba(95, 158, 160, 0.5);
-            overflow: hidden;
+            overflow: hidden; 
         }
         
         .caja-pista-activa {
             background: radial-gradient(circle, rgba(95,158,160,0.3) 0%, rgba(0,0,0,0.8) 100%);
-            padding: 15px 25px; 
+            padding: 15px; 
             text-align: center; 
             border-bottom: 3px solid cadetblue;
-            min-height: 80px; 
+            min-height: 70px; 
             display: flex; 
             flex-direction: column; 
             justify-content: center;
         }
-        .numero-pista { color: #7FFFD4; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
-        .texto-pista { font-size: 1.1rem; line-height: 1.3; }
+        .numero-pista { color: #7FFFD4; font-weight: bold; font-size: 1rem; margin-bottom: 5px; }
+        .texto-pista { font-size: 1rem; line-height: 1.3; }
 
-        /* Contenedor del tablero: Permite scroll si la pantalla es chica */
         .zona-tablero {
             flex-grow: 1; 
-            overflow-y: auto; 
-            overflow-x: auto; 
-            padding: 40px 0; 
+            overflow-y: auto; /* Mantenemos el scroll vertical por si hay muchas filas */
+            overflow-x: hidden; /* ESTO ELIMINA LA BARRA INFERIOR */
+            padding: 30px 0; 
             position: relative;
-            /* Asegura que haya espacio para arrastrar a los lados en móvil */
-            min-width: 100%;
+            width: 100%;
+            scrollbar-width: none; /* Oculta barra en Firefox */
         }
-        .zona-tablero::-webkit-scrollbar { width: 6px; height: 6px; }
-        .zona-tablero::-webkit-scrollbar-thumb { background: cadetblue; border-radius: 4px; }
+        
+        /* Oculta la barra de desplazamiento visualmente en Chrome/Safari/Edge, pero permite hacer scroll con el dedo/rueda */
+        .zona-tablero::-webkit-scrollbar {
+            display: none; 
+        }
 
         .fila-palabra {
             position: relative;
             width: 100%;
-            height: 40px; 
+            height: var(--tamano-casilla); /* Altura dinámica */
             margin-bottom: 8px;
             transition: 0.3s; 
             cursor: pointer;
@@ -79,15 +106,16 @@
         }
         .fila-activa { opacity: 1; transform: scale(1.02); z-index: 5; }
         
-        /* Posicionamiento Matemático Absoluto para evitar deformaciones */
         .casilla-input {
             position: absolute;
             top: 0;
-            width: 38px; 
-            height: 38px; 
-            transform: translateX(-50%); /* Centrado exacto sobre su coordenada left */
+            width: var(--tamano-casilla); 
+            height: var(--tamano-casilla); 
+            /* Magia CSS: Calcula la posición basada en el offset y el tamaño dinámico */
+            left: calc(50% + (var(--offset) * var(--tamano-casilla)));
+            transform: translateX(-50%); 
             text-align: center; 
-            font-size: 1.2rem; 
+            font-size: var(--fuente-casilla); 
             font-weight: bold; 
             text-transform: uppercase; 
             background: rgba(255, 255, 255, 0.9); 
@@ -98,22 +126,60 @@
             transition: 0.2s; 
             pointer-events: none;
             box-sizing: border-box;
+            padding: 0; /* Evita que el padding deforme las casillas en iOS */
         }
         
         .casilla-activa { border-color: cadetblue; background: #fff; pointer-events: auto; box-shadow: 0 0 8px cadetblue; }
         
-        /* Columna Central Dorada (Recta) */
-        .casilla-columna-central { background: rgba(255, 215, 0, 0.2); border: 2px solid gold; color: #fff; } 
-        
-        /* Estados de Validación */
         .casilla-correcta { background: cadetblue !important; color: white !important; border-color: #2e8b57 !important; pointer-events: none; }
-        .casilla-correcta.casilla-columna-central { background: gold !important; color: black !important; border-color: #daa520 !important; }
         .casilla-error { background: #ffcdd2 !important; color: #d32f2f !important; border-color: #d32f2f !important; }
-        
-        /* Estilo Letra Pista Cruzada */
-        .casilla-pista-cruzada { background: #004d40 !important; color: #7FFFD4 !important; border-color: #00bfa5 !important; pointer-events: none; }
 
-        .pie-juego { padding: 12px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); }
+        @keyframes pulsoPista {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.25); box-shadow: 0 0 15px #00bfa5; }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .casilla-pista-cruzada { 
+            background: #004d40 !important; 
+            color: #7FFFD4 !important; 
+            border-color: #00bfa5 !important; 
+            pointer-events: none;
+            animation: pulsoPista 0.6s ease-out;
+        }
+
+        .letra-voladora {
+            position: absolute; 
+            background: #00bfa5;
+            color: #fff;
+            border: 2px solid #7FFFD4;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: var(--fuente-casilla);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            pointer-events: none;
+            box-shadow: 0 0 20px #00bfa5, inset 0 0 8px rgba(255,255,255,0.6);
+            transition: all 2s cubic-bezier(0.25, 1, 0.5, 1); 
+            text-transform: uppercase;
+        }
+
+        @keyframes revelarMagia {
+            0% { transform: translateX(-50%) scale(1); background-color: cadetblue; }
+            50% { transform: translateX(-50%) scale(1.3); background-color: #ffd700; box-shadow: 0 0 20px #ffd700; z-index: 20; }
+            100% { transform: translateX(-50%) scale(1.1); background-color: gold; color: black; border-color: #daa520; box-shadow: 0 0 15px gold; z-index: 10; }
+        }
+
+        .casilla-revelada {
+            animation: revelarMagia 0.6s ease forwards !important;
+            background: gold !important; 
+            color: black !important; 
+            border-color: #daa520 !important;
+        }
+
+        .pie-juego { padding: 10px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); }
         .boton-cerrar { padding: 8px 18px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
@@ -123,50 +189,45 @@
     <div id="contenedor-2017"></div>
 
     <script>
-        // Mensaje Vertical: P R O M E S A D E A M O R I N F I N I T O (20 palabras sin corazones)
         const palabrasData = [
-            { palabra: "PLAYA", letraClaveIndex: 0, pista: "El destino inolvidable de nuestro primer viaje." }, // P
-            { palabra: "BARBARA", letraClaveIndex: 2, pista: "El nombre de la mujer más hermosa de toda esta galaxia." }, // R
-            { palabra: "CORAZON", letraClaveIndex: 1, pista: "El motor que impulsa este viaje de 10 años." }, // O
-            { palabra: "MAXIMILIANO", letraClaveIndex: 0, pista: "Un nombre que llena nuestra vida de alegría inmensa." }, // M
-            { palabra: "BELLA", letraClaveIndex: 1, pista: "La forma en la que te veo cada vez que me pierdo en tus ojos." }, // E
-            { palabra: "BESOS", letraClaveIndex: 2, pista: "La mejor manera de decirte todo lo que siento sin usar palabras." }, // S
-            { palabra: "CASA", letraClaveIndex: 1, pista: "Nuestro gran sueño, el refugio que algún día construiremos para vivir juntos." }, // A
-            { palabra: "DIEZ", letraClaveIndex: 0, pista: "La cantidad de años de luz y amor que llevamos orbitando juntos." }, // D
-            { palabra: "RECUERDOS", letraClaveIndex: 1, pista: "Lo que estamos coleccionando año tras año en estos planetas." }, // E
-            { palabra: "ALMAGEMELA", letraClaveIndex: 0, pista: "Lo que fuiste, eres y siempre serás para mí." }, // A
-            { palabra: "MICRO", letraClaveIndex: 0, pista: "El lugar exacto donde los nervios se transformaron en nuestro primer 'sí'." }, // M
-            { palabra: "AMORE", letraClaveIndex: 2, pista: "El título de esta página y la palabra que define nuestra historia." }, // O
-            { palabra: "SUSURROS", letraClaveIndex: 4, pista: "Los mensajes fugaces que viajan escondidos en las estrellas." }, // R
-            { palabra: "HIJO", letraClaveIndex: 1, pista: "Nuestro pedacito de cielo y el mayor tesoro que tenemos." }, // I
-            { palabra: "INFINITO", letraClaveIndex: 1, pista: "El tamaño exacto y la medida de lo que siento por ti." }, // N
-            { palabra: "FUTURO", letraClaveIndex: 0, pista: "Todo lo que me emociona vivir, siempre y cuando sea a tu lado." }, // F
-            { palabra: "GALAXIA", letraClaveIndex: 5, pista: "El lugar mágico donde hemos guardado todos estos recuerdos." }, // I
-            { palabra: "NOVIEMBRE", letraClaveIndex: 0, pista: "El mes exacto en el que todo nuestro universo comenzó a brillar." }, // N
-            { palabra: "UNIVERSO", letraClaveIndex: 2, pista: "Lo que estoy dispuesto a recorrer solo para verte sonreír." }, // I
-            { palabra: "TEAMO", letraClaveIndex: 0, pista: "Lo que te digo cada día (y a veces te lo envío en un cometa)." } // T
+            { palabra: "TEAMO", letraClaveIndex: 0, pista: "Lo que te digo cada día (y a veces te lo envío en un cometa)." },
+            { palabra: "DIEZ", letraClaveIndex: 2, pista: "La cantidad de años de luz y amor que llevamos orbitando juntos." },
+            { palabra: "BARBARA", letraClaveIndex: 1, pista: "El nombre de la mujer más hermosa de toda esta galaxia." },
+            { palabra: "MAXIMILIANO", letraClaveIndex: 0, pista: "Un nombre que llena nuestra vida de alegría inmensa." },
+            { palabra: "CORAZON", letraClaveIndex: 1, pista: "El motor que impulsa este viaje de 10 años." },
+            { palabra: "MAGIA", letraClaveIndex: 0, pista: "Lo que sentí aquella primera vez al conocerte." },
+            { palabra: "HIJO", letraClaveIndex: 1, pista: "Nuestro pedacito de cielo y el mayor tesoro que tenemos." },
+            { palabra: "CASA", letraClaveIndex: 0, pista: "Nuestro gran sueño, el refugio que algún día construiremos para vivir juntos." },
+            { palabra: "INFINITO", letraClaveIndex: 0, pista: "El tamaño exacto y la medida de lo que siento por ti." },
+            { palabra: "RECUERDOS", letraClaveIndex: 1, pista: "Lo que estamos coleccionando año tras año en estos planetas." },
+            { palabra: "PLAYA", letraClaveIndex: 1, pista: "El destino inolvidable de nuestro primer viaje." },
+            { palabra: "NOVIEMBRE", letraClaveIndex: 1, pista: "El mes exacto en el que todo nuestro universo comenzó a brillar." },
+            { palabra: "BELLA", letraClaveIndex: 1, pista: "La forma en la que te veo cada vez que me pierdo en tus ojos." },
+            { palabra: "MICRO", letraClaveIndex: 3, pista: "El lugar exacto donde los nervios se transformaron en nuestro primer 'sí'." },
+            { palabra: "AMORE", letraClaveIndex: 4, pista: "El título de esta página y la palabra que define nuestra historia." },
+            { palabra: "BESOS", letraClaveIndex: 2, pista: "La mejor manera de decirte todo lo que siento sin usar palabras." },
+            { palabra: "FUTURO", letraClaveIndex: 2, pista: "Todo lo que me emociona vivir, siempre y cuando sea a tu lado." },
+            { palabra: "UNIVERSO", letraClaveIndex: 0, pista: "Lo que estoy dispuesto a recorrer solo para verte sonreír." }
         ];
 
         let filaActual = 0;
-        const CASILLA_WIDTH = 42; // 38px de ancho + 4px de espacio imaginario entre letras
-
+        let filasResueltas = new Set(); 
+        
         function abrirJuegoPrueba() {
             document.getElementById("btn-iniciar").style.display = "none";
             const contenedor = document.getElementById("contenedor-2017");
             let htmlTablero = "";
+            filasResueltas.clear();
 
             palabrasData.forEach((item, index) => {
                 htmlTablero += `<div class="fila-palabra" id="fila-${index}" onclick="seleccionarFila(${index})">`;
                 
-                // Sistema Absoluto: Calculamos la distancia de cada letra respecto a la letra clave central
                 for(let i = 0; i < item.palabra.length; i++){
-                    const esColumnaCentral = (i === item.letraClaveIndex) ? 'casilla-columna-central' : '';
-                    
-                    // Si i == letraClaveIndex, offset es 0 y queda exactamente en el 50% de la pantalla.
+                    const esClave = (i === item.letraClaveIndex) ? 'es-clave' : '';
                     let offset = i - item.letraClaveIndex;
-                    let posLeft = `calc(50% + ${offset * CASILLA_WIDTH}px)`;
                     
-                    htmlTablero += `<input style="left: ${posLeft};" type="text" maxlength="1" class="casilla-input ${esColumnaCentral}" value="" data-letra="${item.palabra[i]}" data-fila="${index}" data-col="${i}">`;
+                    // Ahora pasamos el "offset" directo como una variable CSS para que el navegador calcule la posición dinámicamente
+                    htmlTablero += `<input style="--offset: ${offset};" type="text" maxlength="1" class="casilla-input ${esClave}" value="" data-letra="${item.palabra[i]}" data-fila="${index}" data-col="${i}">`;
                 }
                 htmlTablero += `</div>`;
             });
@@ -183,32 +244,8 @@
             `;
 
             contenedor.style.display = "flex";
-            inyectarPistasCruzadas(); // Revela una letra cada 3 palabras como pista
             configurarInputs();
             seleccionarFila(0); 
-        }
-
-        function inyectarPistasCruzadas() {
-            // Cada 3 palabras, busca una letra en común de la palabra anterior y la revela
-            for (let i = 2; i < palabrasData.length; i += 3) {
-                let palabraActual = palabrasData[i].palabra;
-                let palabraAnterior = palabrasData[i-1].palabra;
-
-                for(let c = 0; c < palabraActual.length; c++) {
-                    if (c === palabrasData[i].letraClaveIndex) continue; // No regalar la columna central
-                    
-                    if(palabraAnterior.includes(palabraActual[c])) {
-                        const filaInputs = document.getElementById(`fila-${i}`).querySelectorAll('.casilla-input');
-                        filaInputs.forEach(input => {
-                            if(parseInt(input.dataset.col) === c) {
-                                input.value = palabraActual[c];
-                                input.classList.add('casilla-pista-cruzada', 'casilla-correcta');
-                            }
-                        });
-                        break; // Solo revelar 1 letra
-                    }
-                }
-            }
         }
 
         function seleccionarFila(index) {
@@ -237,55 +274,213 @@
             });
         }
 
+        function validarFilaActiva(filaIndex) {
+            let filaContenedor = document.getElementById(`fila-${filaIndex}`);
+            let inputs = filaContenedor.querySelectorAll('.casilla-input');
+            let todasLlenas = true;
+            let todasCorrectas = true;
+            
+            inputs.forEach(input => {
+                if(input.value === "") todasLlenas = false;
+            });
+            
+            if(!todasLlenas) return; 
+
+            inputs.forEach(input => {
+                let valorIngresado = input.value.toUpperCase();
+                let valorCorrecto = input.dataset.letra;
+                
+                if (valorIngresado === valorCorrecto) {
+                    input.classList.remove('casilla-error', 'casilla-activa');
+                    input.classList.add('casilla-correcta');
+                } else {
+                    input.classList.add('casilla-error');
+                    todasCorrectas = false;
+                }
+            });
+            
+            if (todasCorrectas) {
+                inputs.forEach(input => input.classList.remove('casilla-activa'));
+                
+                if (!filasResueltas.has(filaIndex)) {
+                    filasResueltas.add(filaIndex);
+                    
+                    if (filasResueltas.size > 0 && filasResueltas.size % 3 === 0) {
+                        lanzarAyudaVoladora(filaIndex);
+                    }
+                }
+                
+                verificarVictoria(); 
+            } else {
+                for(let i = inputs.length - 1; i >= 0; i--) {
+                    if(!inputs[i].classList.contains('casilla-correcta')) {
+                        inputs[i].focus();
+                        break;
+                    }
+                }
+            }
+        }
+
+        function lanzarAyudaVoladora(filaOrigenIndex) {
+            const letrasResueltas = new Set();
+            filasResueltas.forEach(idx => {
+                const palabra = palabrasData[idx].palabra;
+                for (let char of palabra) {
+                    letrasResueltas.add(char);
+                }
+            });
+
+            const candidatosMatch = [];
+            const candidatosOtros = [];
+
+            palabrasData.forEach((item, idx) => {
+                if (filasResueltas.has(idx)) return; 
+                
+                const filaContenedor = document.getElementById(`fila-${idx}`);
+                const inputs = filaContenedor.querySelectorAll('.casilla-input');
+                
+                inputs.forEach(input => {
+                    if (!input.classList.contains('casilla-correcta')) {
+                        const letraCorrecta = input.dataset.letra;
+                        if (letrasResueltas.has(letraCorrecta)) {
+                            candidatosMatch.push(input);
+                        } else {
+                            candidatosOtros.push(input);
+                        }
+                    }
+                });
+            });
+
+            const shuffle = array => array.sort(() => 0.5 - Math.random());
+            shuffle(candidatosMatch);
+            shuffle(candidatosOtros);
+
+            let destinos = [];
+            if (candidatosMatch.length >= 2) {
+                destinos = candidatosMatch.slice(0, 2);
+            } else {
+                destinos = [...candidatosMatch, ...candidatosOtros.slice(0, 2 - candidatosMatch.length)];
+            }
+
+            if (destinos.length === 0) return;
+
+            const contenedorPrincipal = document.getElementById('contenedor-2017');
+            const contenedorRect = contenedorPrincipal.getBoundingClientRect();
+
+            const origenFila = document.getElementById(`fila-${filaOrigenIndex}`);
+            const origenRect = origenFila.getBoundingClientRect();
+            
+            const origenX = (origenRect.left - contenedorRect.left) + (origenRect.width / 2) - 19;
+            const origenY = (origenRect.top - contenedorRect.top) + (origenRect.height / 2) - 19;
+
+            destinos.forEach((targetInput, index) => {
+                setTimeout(() => {
+                    const targetRect = targetInput.getBoundingClientRect();
+                    const targetX = targetRect.left - contenedorRect.left;
+                    const targetY = targetRect.top - contenedorRect.top;
+                    const letra = targetInput.dataset.letra;
+
+                    const flyer = document.createElement('div');
+                    flyer.className = 'letra-voladora';
+                    flyer.innerText = letra;
+                    flyer.style.width = `${targetRect.width}px`;
+                    flyer.style.height = `${targetRect.height}px`;
+                    flyer.style.left = `${origenX}px`;
+                    flyer.style.top = `${origenY}px`;
+                    
+                    contenedorPrincipal.appendChild(flyer);
+                    flyer.offsetHeight; 
+
+                    flyer.style.left = `${targetX}px`;
+                    flyer.style.top = `${targetY}px`;
+
+                    setTimeout(() => {
+                        targetInput.value = letra;
+                        targetInput.classList.remove('casilla-error', 'casilla-activa');
+                        targetInput.classList.add('casilla-pista-cruzada', 'casilla-correcta');
+                        
+                        flyer.remove();
+
+                        const targetFilaIdx = parseInt(targetInput.dataset.fila);
+                        chequearFilaCompletadaSilenciosa(targetFilaIdx);
+                    }, 2000); 
+
+                }, index * 500); 
+            });
+        }
+
+        function chequearFilaCompletadaSilenciosa(filaIndex) {
+            let filaContenedor = document.getElementById(`fila-${filaIndex}`);
+            let inputs = filaContenedor.querySelectorAll('.casilla-input');
+            let todasCorrectas = true;
+            
+            inputs.forEach(input => {
+                let valorIngresado = input.value.toUpperCase();
+                let valorCorrecto = input.dataset.letra;
+                if (valorIngresado !== valorCorrecto) {
+                    todasCorrectas = false;
+                }
+            });
+            
+            if (todasCorrectas) {
+                inputs.forEach(input => {
+                    input.classList.remove('casilla-error', 'casilla-activa');
+                    input.classList.add('casilla-correcta');
+                });
+                
+                if (!filasResueltas.has(filaIndex)) {
+                    filasResueltas.add(filaIndex);
+                }
+                verificarVictoria();
+            }
+        }
+
         function configurarInputs() {
             const inputs = document.querySelectorAll('.casilla-input');
             
             inputs.forEach((input) => {
                 input.addEventListener('input', function() {
                     let valorIngresado = this.value.toUpperCase();
-                    let valorCorrecto = this.dataset.letra;
-                    
-                    if (valorIngresado === "") {
-                        this.classList.remove('casilla-error');
-                        return;
-                    }
+                    this.classList.remove('casilla-error');
 
-                    if (valorIngresado === valorCorrecto) {
-                        this.classList.remove('casilla-error', 'casilla-activa');
-                        this.classList.add('casilla-correcta'); 
+                    if (valorIngresado !== "") {
+                        this.value = valorIngresado; 
                         
-                        let filaContenedor = document.getElementById(`fila-${this.dataset.fila}`);
-                        let hermanos = filaContenedor.querySelectorAll('.casilla-input');
-                        let todosCompletos = true;
-
-                        for(let i = 0; i < hermanos.length; i++){
-                            if(!hermanos[i].classList.contains('casilla-correcta')){
-                                hermanos[i].focus();
-                                todosCompletos = false;
+                        let hermanos = document.getElementById(`fila-${this.dataset.fila}`).querySelectorAll('.casilla-input');
+                        let currentIndex = Array.from(hermanos).indexOf(this);
+                        
+                        let nextInput = null;
+                        for(let i = currentIndex + 1; i < hermanos.length; i++) {
+                            if(!hermanos[i].classList.contains('casilla-correcta')) {
+                                nextInput = hermanos[i];
                                 break;
                             }
                         }
-
-                        if(todosCompletos) verificarVictoria();
-                    } else {
-                        this.classList.add('casilla-error');
+                        
+                        if (nextInput) {
+                            nextInput.focus();
+                        } else {
+                            validarFilaActiva(this.dataset.fila);
+                        }
                     }
                 });
 
                 input.addEventListener('keydown', function(e) {
-                    if(e.key === "Backspace") {
-                        this.value = "";
+                    if (e.key === "Enter") {
+                        validarFilaActiva(this.dataset.fila);
+                    } else if (e.key === "Backspace") {
                         this.classList.remove('casilla-error');
                         
-                        let hermanos = document.getElementById(`fila-${this.dataset.fila}`).querySelectorAll('.casilla-input');
-                        let indexLocal = Array.from(hermanos).indexOf(this);
-                        
-                        if (indexLocal > 0) {
-                            // Salta hacia atrás ignorando las letras ya correctas
-                            for(let j = indexLocal - 1; j >= 0; j--){
-                                if(!hermanos[j].classList.contains('casilla-correcta')){
-                                    hermanos[j].focus();
-                                    break;
+                        if (this.value === "") {
+                            let hermanos = document.getElementById(`fila-${this.dataset.fila}`).querySelectorAll('.casilla-input');
+                            let indexLocal = Array.from(hermanos).indexOf(this);
+                            
+                            if (indexLocal > 0) {
+                                for(let j = indexLocal - 1; j >= 0; j--){
+                                    if(!hermanos[j].classList.contains('casilla-correcta')){
+                                        hermanos[j].focus();
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -295,25 +490,39 @@
         }
 
         function verificarVictoria() {
-            const todasCorrectas = document.querySelectorAll('.casilla-correcta').length;
-            const totalInputs = document.querySelectorAll('.casilla-input').length;
-            
-            if (todasCorrectas === totalInputs) {
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            if (filasResueltas.size === palabrasData.length) {
+                const letrasClave = document.querySelectorAll('.es-clave');
+                
+                letrasClave.forEach((casilla, index) => {
+                    setTimeout(() => {
+                        casilla.classList.add('casilla-revelada');
+                    }, index * 120); 
+                });
+
+                setTimeout(() => {
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                }, letrasClave.length * 120);
+
                 setTimeout(() => {
                     Swal.fire({
                         title: '¡Mensaje Revelado! ✨',
-                        text: 'PROMESA DE AMOR INFINITO ❤️',
+                        text: 'TE AMO MI CIELO ERES TU',
                         icon: 'success',
                         background: 'rgba(10, 10, 20, 0.95)',
                         color: '#ffffff',
                         confirmButtonColor: 'cadetblue'
                     });
-                }, 500);
+                }, (letrasClave.length * 120) + 800);
+
             } else {
-                let siguienteFila = filaActual + 1;
-                if(siguienteFila < palabrasData.length) {
-                    setTimeout(() => seleccionarFila(siguienteFila), 250); 
+                if (filasResueltas.has(filaActual)) {
+                    let siguienteFila = filaActual + 1;
+                    while (siguienteFila < palabrasData.length && filasResueltas.has(siguienteFila)) {
+                        siguienteFila++;
+                    }
+                    if(siguienteFila < palabrasData.length) {
+                        setTimeout(() => seleccionarFila(siguienteFila), 250); 
+                    }
                 }
             }
         }
