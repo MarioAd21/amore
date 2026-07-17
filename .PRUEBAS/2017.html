@@ -9,14 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* VARIABLES RESPONSIVAS: Aquí se ajusta el tamaño según el dispositivo */
         :root {
             --tamano-casilla: 42px;
             --fuente-casilla: 1.2rem;
             --ancho-contenedor: 1050px;
         }
 
-        /* Para iPads y Tablets */
         @media (max-width: 820px) {
             :root {
                 --tamano-casilla: 34px;
@@ -25,10 +23,9 @@
             }
         }
 
-        /* Para Celulares */
         @media (max-width: 480px) {
             :root {
-                --tamano-casilla: 26px; /* Lo suficientemente pequeño para que palabras de 11 letras entren en la pantalla */
+                --tamano-casilla: 26px; 
                 --fuente-casilla: 0.9rem;
             }
         }
@@ -82,15 +79,14 @@
 
         .zona-tablero {
             flex-grow: 1; 
-            overflow-y: auto; /* Mantenemos el scroll vertical por si hay muchas filas */
-            overflow-x: hidden; /* ESTO ELIMINA LA BARRA INFERIOR */
+            overflow-y: auto; 
+            overflow-x: hidden; 
             padding: 30px 0; 
             position: relative;
             width: 100%;
-            scrollbar-width: none; /* Oculta barra en Firefox */
+            scrollbar-width: none; 
         }
         
-        /* Oculta la barra de desplazamiento visualmente en Chrome/Safari/Edge, pero permite hacer scroll con el dedo/rueda */
         .zona-tablero::-webkit-scrollbar {
             display: none; 
         }
@@ -98,7 +94,7 @@
         .fila-palabra {
             position: relative;
             width: 100%;
-            height: var(--tamano-casilla); /* Altura dinámica */
+            height: var(--tamano-casilla); 
             margin-bottom: 8px;
             transition: 0.3s; 
             cursor: pointer;
@@ -111,7 +107,6 @@
             top: 0;
             width: var(--tamano-casilla); 
             height: var(--tamano-casilla); 
-            /* Magia CSS: Calcula la posición basada en el offset y el tamaño dinámico */
             left: calc(50% + (var(--offset) * var(--tamano-casilla)));
             transform: translateX(-50%); 
             text-align: center; 
@@ -126,7 +121,7 @@
             transition: 0.2s; 
             pointer-events: none;
             box-sizing: border-box;
-            padding: 0; /* Evita que el padding deforme las casillas en iOS */
+            padding: 0; 
         }
         
         .casilla-activa { border-color: cadetblue; background: #fff; pointer-events: auto; box-shadow: 0 0 8px cadetblue; }
@@ -190,19 +185,19 @@
 
     <script>
         const palabrasData = [
-            { palabra: "TEAMO", letraClaveIndex: 0, pista: "Lo que te digo cada día (y a veces te lo envío en un cometa)." },
+            { palabra: "TEAMO", letraClaveIndex: 0, pista: "Lo que te digo cada vez que te veo." },
             { palabra: "DIEZ", letraClaveIndex: 2, pista: "La cantidad de años de luz y amor que llevamos orbitando juntos." },
             { palabra: "BARBARA", letraClaveIndex: 1, pista: "El nombre de la mujer más hermosa de toda esta galaxia." },
             { palabra: "MAXIMILIANO", letraClaveIndex: 0, pista: "Un nombre que llena nuestra vida de alegría inmensa." },
             { palabra: "CORAZON", letraClaveIndex: 1, pista: "El motor que impulsa este viaje de 10 años." },
-            { palabra: "MAGIA", letraClaveIndex: 0, pista: "Lo que sentí aquella primera vez al conocerte." },
+            { palabra: "MAGIA", letraClaveIndex: 0, pista: "Lo que siento cada vez que te veo." },
             { palabra: "HIJO", letraClaveIndex: 1, pista: "Nuestro pedacito de cielo y el mayor tesoro que tenemos." },
-            { palabra: "CASA", letraClaveIndex: 0, pista: "Nuestro gran sueño, el refugio que algún día construiremos para vivir juntos." },
+            { palabra: "CASA", letraClaveIndex: 0, pista: "Nuestro gran sueño y refugio que algún día tendremos para vivir juntos." },
             { palabra: "INFINITO", letraClaveIndex: 0, pista: "El tamaño exacto y la medida de lo que siento por ti." },
             { palabra: "RECUERDOS", letraClaveIndex: 1, pista: "Lo que estamos coleccionando año tras año en estos planetas." },
-            { palabra: "PLAYA", letraClaveIndex: 1, pista: "El destino inolvidable de nuestro primer viaje." },
+            { palabra: "PLAYA", letraClaveIndex: 1, pista: "El destino que tenemos cada vez que vamos a caburgua." },
             { palabra: "NOVIEMBRE", letraClaveIndex: 1, pista: "El mes exacto en el que todo nuestro universo comenzó a brillar." },
-            { palabra: "BELLA", letraClaveIndex: 1, pista: "La forma en la que te veo cada vez que me pierdo en tus ojos." },
+            { palabra: "BELLA", letraClaveIndex: 1, pista: "Siempre te encuentro .... cada vez que te veo." },
             { palabra: "MICRO", letraClaveIndex: 3, pista: "El lugar exacto donde los nervios se transformaron en nuestro primer 'sí'." },
             { palabra: "AMORE", letraClaveIndex: 4, pista: "El título de esta página y la palabra que define nuestra historia." },
             { palabra: "BESOS", letraClaveIndex: 2, pista: "La mejor manera de decirte todo lo que siento sin usar palabras." },
@@ -226,7 +221,6 @@
                     const esClave = (i === item.letraClaveIndex) ? 'es-clave' : '';
                     let offset = i - item.letraClaveIndex;
                     
-                    // Ahora pasamos el "offset" directo como una variable CSS para que el navegador calcule la posición dinámicamente
                     htmlTablero += `<input style="--offset: ${offset};" type="text" maxlength="1" class="casilla-input ${esClave}" value="" data-letra="${item.palabra[i]}" data-fila="${index}" data-col="${i}">`;
                 }
                 htmlTablero += `</div>`;
@@ -261,20 +255,41 @@
             fila.classList.add('fila-activa');
             
             const inputs = fila.querySelectorAll('.casilla-input');
-            let focoAsignado = false;
             
             inputs.forEach(input => {
                 if (!input.classList.contains('casilla-correcta')) {
                     input.classList.add('casilla-activa');
-                    if(!focoAsignado) {
-                        input.focus();
-                        focoAsignado = true;
-                    }
                 }
             });
+
+            let inputParaEnfocar = null;
+
+            for (let i = 0; i < inputs.length; i++) {
+                if (!inputs[i].classList.contains('casilla-correcta') && inputs[i].value === "") {
+                    inputParaEnfocar = inputs[i];
+                    break;
+                }
+            }
+
+            if (!inputParaEnfocar) {
+                for (let i = inputs.length - 1; i >= 0; i--) {
+                    if (!inputs[i].classList.contains('casilla-correcta')) {
+                        inputParaEnfocar = inputs[i];
+                        break;
+                    }
+                }
+            }
+
+            if (inputParaEnfocar) {
+                inputParaEnfocar.focus();
+                const val = inputParaEnfocar.value;
+                inputParaEnfocar.value = '';
+                inputParaEnfocar.value = val;
+            }
         }
 
-        function validarFilaActiva(filaIndex) {
+        function validarFilaActiva(filaIndexStr) {
+            let filaIndex = parseInt(filaIndexStr); 
             let filaContenedor = document.getElementById(`fila-${filaIndex}`);
             let inputs = filaContenedor.querySelectorAll('.casilla-input');
             let todasLlenas = true;
@@ -300,13 +315,43 @@
             });
             
             if (todasCorrectas) {
-                inputs.forEach(input => input.classList.remove('casilla-activa'));
+                inputs.forEach(input => {
+                    input.classList.remove('casilla-activa', 'casilla-pista-cruzada');
+                    input.blur(); 
+                });
                 
                 if (!filasResueltas.has(filaIndex)) {
                     filasResueltas.add(filaIndex);
                     
                     if (filasResueltas.size > 0 && filasResueltas.size % 3 === 0) {
                         lanzarAyudaVoladora(filaIndex);
+                    }
+                }
+
+                // Salto automático infalible
+                if (filasResueltas.size < palabrasData.length) {
+                    let siguienteFila = -1;
+                    
+                    for (let i = filaIndex + 1; i < palabrasData.length; i++) {
+                        if (!filasResueltas.has(i)) {
+                            siguienteFila = i;
+                            break;
+                        }
+                    }
+                    
+                    if (siguienteFila === -1) {
+                        for (let i = 0; i < filaIndex; i++) {
+                            if (!filasResueltas.has(i)) {
+                                siguienteFila = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (siguienteFila !== -1) {
+                        setTimeout(() => {
+                            seleccionarFila(siguienteFila); 
+                        }, 350); 
                     }
                 }
                 
@@ -322,86 +367,88 @@
         }
 
         function lanzarAyudaVoladora(filaOrigenIndex) {
-            const letrasResueltas = new Set();
-            filasResueltas.forEach(idx => {
-                const palabra = palabrasData[idx].palabra;
-                for (let char of palabra) {
-                    letrasResueltas.add(char);
+            filaOrigenIndex = parseInt(filaOrigenIndex);
+            const filaContenedor = document.getElementById(`fila-${filaOrigenIndex}`);
+            const inputsOrigen = Array.from(filaContenedor.querySelectorAll('.casilla-input'));
+            
+            let inputsPendientes = Array.from(document.querySelectorAll('.casilla-input:not(.casilla-correcta)'));
+            if (inputsPendientes.length === 0) return;
+
+            inputsPendientes.sort(() => 0.5 - Math.random());
+
+            let envios = []; 
+            let origenesUsados = new Set();
+
+            for (let target of inputsPendientes) {
+                if (envios.length >= 2) break;
+                
+                let letraNecesitada = target.dataset.letra;
+                
+                let inputOrigenMatch = inputsOrigen.find((inp, idx) => 
+                    inp.dataset.letra === letraNecesitada && !origenesUsados.has(idx)
+                );
+
+                if (inputOrigenMatch) {
+                    envios.push({
+                        origen: inputOrigenMatch,
+                        destino: target,
+                        letra: letraNecesitada
+                    });
+                    origenesUsados.add(inputsOrigen.indexOf(inputOrigenMatch));
                 }
-            });
-
-            const candidatosMatch = [];
-            const candidatosOtros = [];
-
-            palabrasData.forEach((item, idx) => {
-                if (filasResueltas.has(idx)) return; 
-                
-                const filaContenedor = document.getElementById(`fila-${idx}`);
-                const inputs = filaContenedor.querySelectorAll('.casilla-input');
-                
-                inputs.forEach(input => {
-                    if (!input.classList.contains('casilla-correcta')) {
-                        const letraCorrecta = input.dataset.letra;
-                        if (letrasResueltas.has(letraCorrecta)) {
-                            candidatosMatch.push(input);
-                        } else {
-                            candidatosOtros.push(input);
-                        }
-                    }
-                });
-            });
-
-            const shuffle = array => array.sort(() => 0.5 - Math.random());
-            shuffle(candidatosMatch);
-            shuffle(candidatosOtros);
-
-            let destinos = [];
-            if (candidatosMatch.length >= 2) {
-                destinos = candidatosMatch.slice(0, 2);
-            } else {
-                destinos = [...candidatosMatch, ...candidatosOtros.slice(0, 2 - candidatosMatch.length)];
             }
 
-            if (destinos.length === 0) return;
+            if (envios.length < 2) {
+                for (let target of inputsPendientes) {
+                    if (envios.length >= 2) break;
+                    if (!envios.find(e => e.destino === target)) {
+                        let randomOrigin = inputsOrigen.find((inp, idx) => !origenesUsados.has(idx)) || inputsOrigen[0];
+                        envios.push({
+                            origen: randomOrigin,
+                            destino: target,
+                            letra: target.dataset.letra 
+                        });
+                        origenesUsados.add(inputsOrigen.indexOf(randomOrigin));
+                    }
+                }
+            }
 
-            const contenedorPrincipal = document.getElementById('contenedor-2017');
-            const contenedorRect = contenedorPrincipal.getBoundingClientRect();
+            const zonaTablero = document.querySelector('.zona-tablero');
+            const tableroRect = zonaTablero.getBoundingClientRect();
 
-            const origenFila = document.getElementById(`fila-${filaOrigenIndex}`);
-            const origenRect = origenFila.getBoundingClientRect();
-            
-            const origenX = (origenRect.left - contenedorRect.left) + (origenRect.width / 2) - 19;
-            const origenY = (origenRect.top - contenedorRect.top) + (origenRect.height / 2) - 19;
-
-            destinos.forEach((targetInput, index) => {
+            envios.forEach((envio, index) => {
                 setTimeout(() => {
-                    const targetRect = targetInput.getBoundingClientRect();
-                    const targetX = targetRect.left - contenedorRect.left;
-                    const targetY = targetRect.top - contenedorRect.top;
-                    const letra = targetInput.dataset.letra;
+                    const origenRect = envio.origen.getBoundingClientRect();
+                    const targetRect = envio.destino.getBoundingClientRect();
+
+                    const origenX = origenRect.left - tableroRect.left + zonaTablero.scrollLeft;
+                    const origenY = origenRect.top - tableroRect.top + zonaTablero.scrollTop;
+
+                    const targetX = targetRect.left - tableroRect.left + zonaTablero.scrollLeft;
+                    const targetY = targetRect.top - tableroRect.top + zonaTablero.scrollTop;
 
                     const flyer = document.createElement('div');
                     flyer.className = 'letra-voladora';
-                    flyer.innerText = letra;
+                    flyer.innerText = envio.letra; 
                     flyer.style.width = `${targetRect.width}px`;
                     flyer.style.height = `${targetRect.height}px`;
                     flyer.style.left = `${origenX}px`;
                     flyer.style.top = `${origenY}px`;
                     
-                    contenedorPrincipal.appendChild(flyer);
+                    zonaTablero.appendChild(flyer); 
                     flyer.offsetHeight; 
 
                     flyer.style.left = `${targetX}px`;
                     flyer.style.top = `${targetY}px`;
 
                     setTimeout(() => {
-                        targetInput.value = letra;
-                        targetInput.classList.remove('casilla-error', 'casilla-activa');
-                        targetInput.classList.add('casilla-pista-cruzada', 'casilla-correcta');
+                        envio.destino.value = envio.letra;
+                        envio.destino.classList.remove('casilla-error', 'casilla-activa');
+                        envio.destino.classList.add('casilla-pista-cruzada', 'casilla-correcta');
                         
                         flyer.remove();
 
-                        const targetFilaIdx = parseInt(targetInput.dataset.fila);
+                        const targetFilaIdx = parseInt(envio.destino.dataset.fila);
                         chequearFilaCompletadaSilenciosa(targetFilaIdx);
                     }, 2000); 
 
@@ -409,7 +456,8 @@
             });
         }
 
-        function chequearFilaCompletadaSilenciosa(filaIndex) {
+        function chequearFilaCompletadaSilenciosa(filaIndexStr) {
+            let filaIndex = parseInt(filaIndexStr); 
             let filaContenedor = document.getElementById(`fila-${filaIndex}`);
             let inputs = filaContenedor.querySelectorAll('.casilla-input');
             let todasCorrectas = true;
@@ -424,8 +472,9 @@
             
             if (todasCorrectas) {
                 inputs.forEach(input => {
-                    input.classList.remove('casilla-error', 'casilla-activa');
+                    input.classList.remove('casilla-error', 'casilla-activa', 'casilla-pista-cruzada');
                     input.classList.add('casilla-correcta');
+                    input.blur();
                 });
                 
                 if (!filasResueltas.has(filaIndex)) {
@@ -513,17 +562,6 @@
                         confirmButtonColor: 'cadetblue'
                     });
                 }, (letrasClave.length * 120) + 800);
-
-            } else {
-                if (filasResueltas.has(filaActual)) {
-                    let siguienteFila = filaActual + 1;
-                    while (siguienteFila < palabrasData.length && filasResueltas.has(siguienteFila)) {
-                        siguienteFila++;
-                    }
-                    if(siguienteFila < palabrasData.length) {
-                        setTimeout(() => seleccionarFila(siguienteFila), 250); 
-                    }
-                }
             }
         }
 
